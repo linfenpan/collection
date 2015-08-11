@@ -1,0 +1,10 @@
+脱离jquery: http://youmightnotneedjquery.com/
+
+漂亮的随机码：
+Math.random().toString(8).substring(2); // 10位
+Math.random().toString(16).substring(2); // 8位
+Math.random().toString(32).substring(2); // 7位
+Math.random().toString(36).substring(2); // 7位
+
+是否ie:
+var ie = /*@cc_on !@*/false;

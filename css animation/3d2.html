@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>3D旋转2</title>
+    <style>
+        body{
+            background:#eee;
+        }
+        *{
+            padding:0;
+            margin:0;
+        }
+        #container{
+            margin:100px;
+
+            /** 在距离屏幕 1000px 的位置观察，观察的中心点是 50% 50% 的位置 */
+            /** 观察距离，不应该放在执行动画的元素上，不然，会造成观察点絮乱 */
+            perspective: 1000px;
+            perspective-origin: 50% 50%;
+        }
+
+        #box{
+            width:300px;height:300px;position: relative;
+            margin:0 auto;
+
+
+            /** 以3d模式，进行观察 */
+            transform-style: preserve-3d;
+            /** 不能看到背后的元素 */
+            backface-visibility: hidden;
+
+            animation:rotate 3s linear infinite;
+        }
+        .box{
+            position:absolute;
+            top:0;left:0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, .8);
+            font-size: 30px;
+            line-height:300px;
+            font-weight: bold;
+            color:#222;
+            text-align:center;
+            border-radius: 10px;
+
+
+        }
+
+        /** translateZ 的值，是 中心点，到元素的距离，通过勾股定理，可以计算  */
+        .box1{
+            transform: rotateY(0deg) translateZ(160px);
+        }
+        .box2{
+            transform:rotateY(90deg) translateZ(160px);
+        }
+        .box3{
+            transform: rotateY(180deg) translateZ(160px);
+        }
+        .box4{
+            transform: rotateY(270deg) translateZ(160px);
+        }
+
+        @keyframes rotate{
+            0%{
+                transform: rotateY(360deg);
+            }
+            100%{
+                transform: rotateY(0deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="box">
+        <div class="box box1">1</div>
+        <div class="box box2">2</div>
+        <div class="box box3">3</div>
+        <div class="box box4">4</div>
+    </div>
+</div>
+
+</body>
+</html>

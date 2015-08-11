@@ -1,0 +1,9 @@
+css3 hover 的动画集合： http://www.yyyweb.com/demo/hover-effects/index.html
+
+整个页面切换效果：http://www.yyyweb.com/demo/page-transitions/
+
+动画制作：http://bouncejs.com/
+
+各种样式动画： http://www.minimamente.com/example/magic_animations/
+
+flex box在线布局：http://the-echoplex.net/flexyboxes/
