@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>滑动门</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        html{
+            height:100%;
+        }
+        body{
+            height:100%;
+        }
+        #container{
+            width:98%;
+            min-height:90%;
+            border:1px solid #ddd;
+            box-shadow:2px 2px 2px #ccc;
+            margin:10px auto;
+            background:#f9f9f9;
+
+            transition: transform .3s linear;
+        }
+        /** 做一个黑色遮罩层 */
+        #container:after{
+            content: '';
+            opacity:0;
+            background:rgba(0, 0, 0, .6);
+            position:absolute;
+            top:0;left:0;
+            width:100%;height:100%;
+            visibility:hidden;
+            /** 第3个参数，是延迟 */
+            /** opacity 执行完成之后，执行 visibility */
+            transition: opacity .5s, visibility .0s .5s;
+        }
+        .overlay-open{
+            transform: scale(.8);
+        }
+        #container.overlay-open:after{
+            opacity:1;
+            visibility: visible;
+            /** 覆盖掉默认的transition，让只有 opacity 生效 */
+            transition: opacity .5s;
+        }
+
+        .overlay{
+            position:fixed;top:0;left:0;
+            width:100%;height:100%;
+            background:rgba(153,204,51,0.9);
+            visibility:hidden;
+        }
+        .overlay-scale{
+            transform:scale(0);
+            transition: visibility .5s linear, transform .5s ease;
+        }
+        .overlay-scale.open{
+            visibility: visible;
+            transform:scale(1);
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container">
+        <a href="javascript:;" id="open">打开</a>
+    </div>
+    <div id="overlay" class="overlay overlay-scale"></div>
+</body>
+<script src="../jquery.js"></script>
+<script type="text/javascript">
+    $("#open").click(function(){
+        $("#overlay").addClass("open");
+        $("#container").addClass("overlay-open");
+    });
+    $("#overlay").click(function(){
+        $(this).removeClass("open");
+        $("#container").removeClass("overlay-open");
+    });
+</script>
+</html>
