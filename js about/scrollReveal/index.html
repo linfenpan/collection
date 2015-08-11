@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>scrollReveal测试</title>
+    <script src="scrollReveal.js"></script>
+    <style>
+        body{
+            -webkit-perspective:1000px;
+                    perspective:1000px;
+            background : -webkit-linear-gradient(bottom, black, white);
+            background : linear-gradient(to top, black, white);
+            border-radius:10px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <!-- Using easing with move -->
+    <div data-sr='move 50px'> Foo </div>
+    <div data-sr='ease-in 50px'> Bar </div>
+
+    <!-- Using easing with scale -->
+    <div data-sr='scale 30%'> Bun </div>
+    <div data-sr='hustle 30%'> Baz </div>
+    <div data-sr='ease down 20%'> Boo </div>
+
+    <div data-sr='wait 0.2s, scale up 30%'> Foo </div>
+    <div data-sr='wait 0.4s, scale up 25%'> Bar </div>
+    <div data-sr='wait 0.6s, scale up 20%'> Bun </div>
+    <div data-sr='wait 0.8s, scale up 15%'> Baz </div>
+
+    <!-- <p data-sr="enter left">
+        <img src="http://pic15.nipic.com/20110619/6766382_083134745527_2.jpg" />
+    </p> -->
+    <p data-sr="enter left move 200px over 2s">
+        <!-- enter 进入, left 从左侧, move 左侧进入的距离 -->
+        <!-- 不设置Move，好像都会从右侧进入的说.. -->
+        看到这行文字没?
+    </p>
+    <p data-sr="flip 90deg">
+        沿x轴翻转
+    </p>
+    <p data-sr='spin 45deg'>
+        沿y轴翻转
+    </p>
+    <p data-sr='enter roll 100deg'>
+        沿z轴翻转
+    </p>
+    <p data-sr='scale up 20%'>
+        缩放: 80% -> 100%
+    </p>
+    <p data-sr='scale down 20%'>;
+        缩放: 120% -> 100%
+    </p>
+    <div data-sr="enter left, hustle 20px"> Foo </div>
+    <div data-sr="wait 2.5s, ease-in-out 100px"> Bar </div>
+    <div data-sr="move 16px scale up 20%, over 2s"> Baz </div>
+    <div data-sr="enter bottom, roll 45deg, over 2s"> Bun </div>
+
+</body>
+<script>
+    window.sr = new scrollReveal({
+        reset: true
+    })
+</script>
+</html>
