@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>滚动动画</title>
+    <style>
+        *{
+            padding:0;margin:0;
+        }
+        .box{
+            width:200px;
+            height:200px;
+            margin-top:100px;
+            border:1px solid #ccc;
+            font-size:40px;
+            line-height:200px;
+            text-align:center;
+        }
+        .box1{background:#ccc;}
+        .box2{background:#ECA9A9;}
+        .box3{background:#B0ECA9;}
+        .box4{background:#A9ECE9;}
+        .box5{background:#ECD2A9;}
+        .box6{background:#A6B0C8;}
+        .box7{background:#C8A6AB;}
+    </style>
+</head>
+<body>
+
+    <p class="box box1" data-sr="enter x|10% y|20% rx|10deg ry|10deg rz|10deg s|1.2, over .5s, leave x|20%, wait .2s, over .5s">box1</p>
+    <p class="box box2" data-sr="">box2</p>
+    <p class="box box3" data-sr="">box3</p>
+    <p class="box box4" data-sr="">box4</p>
+    <p class="box box5" data-sr="">box5</p>
+    <p class="box box6" data-sr="">box5</p>
+    <p class="box box7" data-sr="">box5</p>
+
+</body>
+<script type="text/javascript">
+// 元素进入、离开屏幕的检测
+var _handler = function(){
+    for(var i = 0, max = domList.length; i < max; i++){
+        var elem = domList[i], id = elem.getAttribute(ID_KEY);
+        if( !id ){ return; }
+        ;(function(elem, id){
+            if( isElemInViewport(elem) ){
+                // 进入
+                removeClass(elem, getClass(id, "leave"));
+                addClass(elem, getClass(id, "enter"));
+            }else{
+                // 离开，这里只有曾经进入过，才能算是离开~
+                var time = parseFloat(elem.getAttribute(ID_TIME)) * 1000;
+
+                removeClass(elem, getClass(id, "enter"));
+                addClass(elem, getClass(id, "leave"));
+                setTimeout(function(){
+                    removeClass(elem, getClass(id, "leave"));
+                }, time);
+            }
+        })(elem, id);
+    }
+};
+// 添加css class
+function addClass(elem, cl){
+    if(elem.classList){
+        elem.classList.add(cl);
+    }else{
+        elem.className += " " + cl;
+    }
+}
+// 移除 css class
+function removeClass(elem, cl){
+    if(elem.classList){
+        elem.classList.remove(cl);
+    }else{
+        elem.className = elem.className.replace(new RegExp("\\b" + cl + "\\b"), "");
+    }
+}
+// 元素是否在视窗内
+function isElemInViewport(el){
+    var elHeight = el.offsetHeight,
+        elTop = getOffset(el).top,
+        elBottom = elTop + elHeight;
+
+    // 这里应该可以优化的，只在外层，读取一次数据，则OK
+    var scrollY = getScrollY(),
+        viewH = getViewportH();
+    // 如果是position:fixed，绝对就在屏幕内了
+    return (isPositionFixed(el) || isInViewPort(el));
+    // 是 fixed 定位
+    function isPositionFixed(el){
+        return el.style.position === "fixed";
+    };
+    // 在屏幕内
+    function isInViewPort(el){
+        var top        = elTop;
+        var bottom     = elBottom;
+        var viewBottom = scrollY + viewH;
+        var viewTop    = scrollY;
+        // 两种情况
+        if( elHeight < viewH ){
+            // 1、高度，小于 viewportHeight
+            return ( top >= viewTop ) && ( bottom <= viewBottom );
+        }else{
+            // 2、高度，大于 viewportHeight
+            return ( top < viewBottom ) || ( top < viewTop && bottom > viewTop );
+        }
+    }
+};
+// 获取 offset
+function getOffset(el){
+    var top = 0, left = 0;
+    do{
+        top += el.offsetTop;
+        left += el.offsetLeft;
+    }while(el = el.offsetParent);
+    return {top: top, left: left};
+};
+// 获取滚动屏的高度
+function getViewportH(){
+    // 考虑到，dom可能不是 document 对象，也可能是有滚动轴的元素
+    var client = dom["clientHeight"],
+        inner = window["innerHeight"];
+    if( dom === window.document.documentElement ){
+        return Math.min(client, inner);
+    }
+    return client;
+};
+// 获取滚动的距离
+function getScrollY(){
+    if(dom === window.document.documentElement){
+        return window.pageYOffset;
+    }else{
+        return dom.scrollTop + getOffset(dom).top;
+    }
+};
+
+window.addEventListener("scroll", _handler, false);
+
+// 样式的生成、插入dom
+var KEY = "data-sr", dom = document.documentElement;
+var ID_KEY = "data-sr-id", ID_TIME = "data-sr-time", ID = +new Date;
+var domList = dom.querySelectorAll("["+KEY+"]");
+
+// 默认配置
+var DEFAULT_CONFIG = lexicalAnalysis("enter x|10% opacity 0 over .5s wait 0s tf ease");
+
+// 分析每个元素的词法，生成对应的样式，插入 dom 中
+function analysisiDomList(){
+    var elem, obj, item;
+    var style = "", id, inline;
+    for(var i = 0, max = domList.length; i < max; i++){
+        elem = domList[i];
+        // 防止重复初始化
+        if( !elem.getAttribute(ID_KEY) ){
+            // 词法分析
+            obj = lexicalAnalysis( elem.getAttribute(KEY) );
+            // 与默认值合并
+            combineWithDefault(obj);
+            // 生成样式
+            item = createStyleClass(obj);
+            // 记录下样式ID
+            elem.setAttribute(ID_KEY, item.id);
+            elem.setAttribute(ID_TIME, item.time);
+
+            inline = elem.getAttribute("style") || "";
+            elem.setAttribute("style", inline ? ";" + item.elStyle : item.elStyle);
+            // 添加默认样式
+            if( elem.classList ){
+                elem.classList.add( getClass(item.id, "pre") );
+            }else{
+                elem.className += " " + getClass(item.id, "pre");
+            }
+
+            style += item.style;
+        }
+    }
+    // 样式插入 dom 中
+    if(style){
+        var css = document.createElement("style");
+        css.innerHTML = style;
+        document.getElementsByTagName("head")[0].appendChild(css);
+    }
+};
+
+// 当前配置，与默认配置合并
+function combineWithDefault(obj){
+    var map = DEFAULT_CONFIG;
+    for(var i in map){
+        obj[i] = obj[i] || map[i];
+    }
+    // 缺少 enter_opacity
+    obj["enter_opacity"] = typeof obj["dopacity"] != "undefined" ? obj["dopacity"] : 1;
+};
+
+// 生成样式
+function createStyleClass(obj){
+    var style = "", id = "scroll_reveal_" + ID++;
+    // obj: {pre, enter, leave, pre_wait, pre_over, pre_tf, leave_wait, leave_over, leave_tf}
+    var elemStyle = "-webkit-transform-style:preserve-3d; transform-style:preserve-3d;";
+    var preStyle = "." + getClass(id, "pre") + "{" + getCssTransform(obj["pre"]) + "opacity:" + obj["pre_opacity"] + ";" + getCssTransition(obj["pre_over"], obj["pre_tf"], obj["pre_wait"]) + "}";
+    var leaveStyle = "." + getClass(id, "leave") + "{" + getCssTransform(obj["leave"]) + "opacity:" + obj["leave_opacity"] + ";" + getCssTransition(obj["leave_over"], obj["leave_tf"], obj["leave_wait"]) + "}";
+    var enterStyle = "." + getClass(id, "enter") + "{" + getCssTransform(obj["enter"]) + "opacity:" + (obj["enter_opacity"] || 1) + ";}";
+    var leaveTime = parseFloat(obj["leave_wait"]) + parseFloat(obj["leave_over"]);
+    // 数序不要乱了哈~
+    style = [preStyle, enterStyle, leaveStyle].join("\n") + "\n\n\n";
+    return {
+        style: style,
+        elStyle: elemStyle,
+        time: leaveTime,
+        id: id
+    };
+}
+
+// 进入、离开、预设，3个类
+function getClass(key, suffix){
+    return key + "_" + suffix;
+}
+// 动画执行函数
+function getCssTransition(time, timeFn, delay){
+    return "-webkit-transition:transform $0, opacity: $0;-ms-transition:transform $0, opacity $0;transition:transform $0, opacity $0;".replace(/\$0/g, time + " " + timeFn + " " + delay);
+}
+// 变换函数
+function getCssTransform(transition){
+    return "-webkit-transform:$0;-ms-transform:$0;transform:$0;".replace(/\$0/g, transition);
+}
+
+// 词法分析
+// "enter x|10% y|20% rx|10deg ry|10deg rz|10deg s|1.2, over 2s, wait .6s, tf ease, leave x|20%, wait .2s, over .5s"
+function lexicalAnalysis(str){
+    var words = str.split(/[ ,]+/),
+        obj = {enter: "", pre: "", leave: ""},  // 进入、预设，离开 3 部分的样式
+        curKey = "pre";
+
+    // 参数对照表
+    var map = {
+        x: "translateX($1)",
+        y: "translateY($1)",
+        z: "translateZ($1)",
+        rx: "rotateX($1)",
+        ry: "rotateY($1)",
+        rz: "rotateZ($1)",
+        r: "rotate($1)",
+        sx: "scaleX($1)",
+        sy: "scaleY($1)",
+        sz: "scaleZ($1)",
+        s: "scale($1)"
+    };
+
+    var key = "";
+    for(var i = 0, max = words.length; i < max; i++){
+        key = words[i];
+        if(key){
+            switch(key){
+                case "enter":
+                    // 进入，其实在预处理样式里
+                    curKey = "pre";
+                    break;
+                case "opacity": // 透明度
+                case "wait":    // 延迟时间
+                case "over":    // 持续时间
+                case "tf":  // 动画时间函数
+                    obj[curKey + "_" + key] = words[++i];
+                    break;
+                case "dopacity": // 进入屏幕后的默认透明度
+                    obj["dopacity"] = words[++i];
+                    break;
+                case "leave":
+                    curKey = "leave";
+                    break;
+                default:
+                    var arr = key.split("|"), key = map[arr[0]];
+                    if(key){
+                        obj[curKey] += " " + replace(key, arr);
+                        if( curKey == "pre" ){
+                            // 进入时，应该把所有预处理的样式清空，所以，进入的样式，都是初始值
+                            obj["enter"] += " " + replace(key, [0, /^s[xyz]?/.test(key) ? 1 : 0]);
+                        }
+                    };
+            }
+        }
+    }
+    // 如果 leave 不存在，则使用 pre 的所有
+    var list = ["", "_opacity", "_wait", "_over", "_tf"];
+    for(var i = 0, max = list.length; i < max; i++){
+        var item = list[i];
+        if( !obj["leave" + item] ){
+            obj["leave" + item] = obj["pre" + item];
+        }
+    }
+
+    return obj;
+
+    // 替换字符串
+    function replace(str, arr){
+        return str.replace(/\$(\d+)/g, function(str, num){
+            return arr[num];
+        });
+    };
+};
+
+analysisiDomList();
+</script>
+</html>
