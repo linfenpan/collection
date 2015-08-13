@@ -8,7 +8,7 @@
     function createStyleInfo(obj){
         var style = "", id = "scroll_reveal_" + ID++;
         // obj: {pre, enter, leave, pre_wait, pre_over, pre_tf, leave_wait, leave_over, leave_tf}
-        var inline = "-webkit-transform-style:preserve-3d; transform-style:preserve-3d;";
+        var inline = "-webkit-transform-style:preserve-3d;transform-style:preserve-3d;";
         var preStyle = getClassContext(obj, id, "pre");
         var leaveStyle = getClassContext(obj, id, "leave", true);
         var enterStyle = getClassContext(obj, id, "enter", true);
@@ -43,7 +43,7 @@
     }
     // 动画执行函数
     function getCssTransition(time, timeFn, delay){
-        return "-webkit-transition:transform $0, opacity: $0;-ms-transition:transform $0, opacity $0;transition:transform $0, opacity $0;".replace(/\$0/g, time + " " + timeFn + " " + delay);
+        return "-webkit-transition:-webkit-transform $0, opacity $0;transition:transform $0, opacity $0;".replace(/\$0/g, time + " " + timeFn + " " + delay);
     }
     // 变换函数
     function getCssTransform(transition){
@@ -89,13 +89,14 @@
                         curKey = "enter";
                         break;
                     case "opacity": // 透明度
+                        if(curKey == "enter"){
+                            obj["pre_opacity"] = words[++i];
+                            break;
+                        }
                     case "wait":    // 延迟时间
                     case "over":    // 持续时间
                     case "tf":  // 动画时间函数
                         obj[curKey + "_" + key] = words[++i];
-                        break;
-                    case "dopacity": // 进入屏幕后的默认透明度
-                        obj["dopacity"] = words[++i];
                         break;
                     case "leave":
                         curKey = "leave";
@@ -113,10 +114,11 @@
                         };
                 }
             }
-        }
+        };
+
         // 如果 leave 不存在，则使用 enter 的所有
         // enter 就复制所有 pre 的属性
-        var list = ["_opacity", "_wait", "_over", "_tf"];
+        var list = ["_wait", "_over", "_tf"];
         for(var i = 0, max = list.length; i < max; i++){
             var item = list[i], val = obj["enter" + item];
             if( !obj["leave" + item] ){
@@ -144,22 +146,23 @@
     buildTransition.prototype = {
         // 重设配置
         reset: function(cf){
-            if( typeof cf === "object" ){
-                this.dom = cf.dom || DOM_ELEM;
+            cf = cf || {};
 
-                this.key = cf.key || "data-ctr";
-                this.keyId = this.key + "-id";      // 动画class的名字
-                this.keyTime = this.key + "-leavetime";  // 动画延迟
+            this.dom = cf.dom || DOM_ELEM;
 
-                // 内联样式
-                this.keyStyleInline = this.key + "-inlinestyle";
-                this.keyStyleLeave = this.key + "-leavestyle";
-                this.keyStyleEnter = this.key + "-enterstyle";
-                this.keyStylePre = this.key + "-prestyle";
+            this.key = cf.key || "data-ctr";
+            this.keyId = this.key + "-id";      // 动画class的名字
+            this.keyTime = this.key + "-leavetime";  // 动画延迟
 
-                // 默认动画配置
-                this.def_config = lexicalAnalysis(cf["default"] || "enter x|10% opacity 0 over .5s wait 0s tf ease");
-            }
+            // 内联样式
+            this.keyStyleInline = this.key + "-inlinestyle";
+            this.keyStyleLeave = this.key + "-leavestyle";
+            this.keyStyleEnter = this.key + "-enterstyle";
+            this.keyStylePre = this.key + "-prestyle";
+
+            // 默认动画配置，一般，必须配置齐全咧~
+            this.def_config = lexicalAnalysis(cf["default"] || "enter x|10% opacity 0 over .5s wait 0s tf ease");
+
             // 元素列表
             this.domList = this.dom.querySelectorAll("[" + this.key + "]");
 
@@ -215,15 +218,23 @@
         combineWithDefault: function(obj){
             var map = this.def_config;
             for(var i in map){
+                // 因为都是字符串，所以，不用担心
                 obj[i] = obj[i] || map[i];
             }
             // 缺少 enter_opacity
-            obj["enter_opacity"] = typeof obj["dopacity"] != "undefined" ? obj["dopacity"] : 1;
+            obj["pre_opacity"]   = obj["pre_opacity"] || "0";
+            obj["enter_opacity"] = obj["enter_opacity"] || "1";
+            obj["leave_opacity"] = obj["leave_opacity"] || obj["pre_opacity"] || "0";
         },
         // 某个孩子，执行动画
         enter: function(list){
+
             this._aEach(list, function(elem, id){
-                elem.setAttribute("style", elem.getAttribute(this.keyStyleEnter));
+                elem.setAttribute("style", elem.getAttribute(this.keyStylePre));
+                var self = this;
+                setTimeout(function(){
+                    elem.setAttribute("style", elem.getAttribute(self.keyStyleEnter));
+                }, 0);
             });
         },
         // 某个孩子，执行动画
