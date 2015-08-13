@@ -5,35 +5,33 @@
 
 /////////////////////////// 样式构建部分
     // 生成 pre, enter, leave 三中样式
-    function createStyleInfo(obj){
+    function createStyleClass(obj){
         var style = "", id = "scroll_reveal_" + ID++;
         // obj: {pre, enter, leave, pre_wait, pre_over, pre_tf, leave_wait, leave_over, leave_tf}
-        var inline = "-webkit-transform-style:preserve-3d; transform-style:preserve-3d;";
-        var preStyle = getClassContext(obj, id, "pre");
+        var elemStyle = "-webkit-transform-style:preserve-3d; transform-style:preserve-3d;";
+        var preStyle = getClassContext(obj, id, "pre", true);
         var leaveStyle = getClassContext(obj, id, "leave", true);
-        var enterStyle = getClassContext(obj, id, "enter", true);
+        var enterStyle = getClassContext(obj, id, "enter");
 
         // 离开时间
         var leaveTime = obj["leave"] ? parseFloat(obj["leave_wait"]) + parseFloat(obj["leave_over"]) : 0;
         // 数序不要乱了哈~
-        // style = [preStyle, enterStyle, leaveStyle].join("\n") + "\n\n\n";
+        style = [preStyle, enterStyle, leaveStyle].join("\n") + "\n\n\n";
         return {
-            pre    : preStyle,
-            enter  : enterStyle,
-            leave  : leaveStyle,
-            inline : inline,
-            time   : leaveTime,
-            id     : id
+            style: style,
+            elStyle: elemStyle,
+            time: leaveTime,
+            id: id
         };
     }
     // 获取 class 内容
     function getClassContext(obj, id, name, needTransition){
         var str = obj[name] ? [
-            //"." + getClass(id, name) + "{",
+            "." + getClass(id, name) + "{",
                 needTransition ? getCssTransition(obj[name + "_over"], obj[name + "_tf"], obj[name + "_wait"]) : "",
                 getCssTransform( obj[name] ),
-                "opacity:" + (obj[name + "_opacity"] || 0) + ";",
-            // "}"
+                "opacity:" + obj[name + "_opacity"] + ";",
+            "}"
         ].join(" ") : "";
         return str;
     }
@@ -77,7 +75,7 @@
     function lexicalAnalysis(str){
         var words = str.split(/[ ,]+/),
             obj = {enter: "", pre: "", leave: ""},  // 进入、预设，离开 3 部分的样式
-            curKey = "enter";
+            curKey = "pre";
 
         var map = lexicalAnalysisMap, key = "";
         for(var i = 0, max = words.length; i < max; i++){
@@ -86,7 +84,7 @@
                 switch(key){
                     case "enter":
                         // 进入，其实在预处理样式里
-                        curKey = "enter";
+                        curKey = "pre";
                         break;
                     case "opacity": // 透明度
                     case "wait":    // 延迟时间
@@ -103,33 +101,68 @@
                     default:
                         var arr = key.split("|"), key = map[arr[0]];
                         if(key){
-                            if( curKey == "enter" ){
+                            obj[curKey] += " " + lexicalAnalysisReplace(key, arr);
+                            if( curKey == "pre" ){
                                 // 进入时，应该把所有预处理的样式清空，所以，进入的样式，都是初始值
-                                obj[curKey] += " " + lexicalAnalysisReplace(key, [0, /^s[xyz]?/.test(key) ? 1 : 0]);
-                                obj["pre"] += " " + lexicalAnalysisReplace(key, arr);
-                            }else{
-                                obj[curKey] += " " + lexicalAnalysisReplace(key, arr);
+                                obj["enter"] += " " + lexicalAnalysisReplace(key, [0, /^s[xyz]?/.test(key) ? 1 : 0]);
                             }
                         };
                 }
             }
         }
-        // 如果 leave 不存在，则使用 enter 的所有
-        // enter 就复制所有 pre 的属性
+        // 如果 leave 不存在，则使用 pre 的所有
         var list = ["_opacity", "_wait", "_over", "_tf"];
         for(var i = 0, max = list.length; i < max; i++){
-            var item = list[i], val = obj["enter" + item];
+            var item = list[i];
             if( !obj["leave" + item] ){
-                obj["leave" + item] = val;
+                obj["leave" + item] = obj["pre" + item];
             }
         }
-        obj["leave"] = obj["leave"] || obj["pre"];
-
         // 生成的 object是:
         // {enter: "", pre: "", pre_opacity: "", pre_wait: "", pre_over: "", pre-tf: "", leave: "", leave_opacity: "", leave_wait: "", leave_over: "", leave_tf: ""}
         return obj;
     };
 /////////////////////////// 词法分析 部分
+
+/////////////////////////// 工具部分
+function addClass(elem, cl){
+    if(elem.classList){
+        elem.classList.add(cl);
+    }else{
+        elem.className += " " + cl;
+    }
+}
+// 移除 css class
+function removeClass(elem, cl){
+    if(elem.classList){
+        elem.classList.remove(cl);
+    }else{
+        elem.className = elem.className.replace(new RegExp("\\b" + cl + "\\b"), "");
+    }
+}
+function hasClass(elem, cl){
+    if(elem.classList){
+        return elem.classList.contains(cl);
+    }else{
+        return (new RegExp("\\b" + cl + "\\b")).test(elem.className);
+    }
+};
+// 元素添加 _enter 类
+function enter(elem, cl){
+    addClass(elem, cl);
+};
+// 元素添加 _leave 类
+function leave(elem, leave, enter, delay){
+    if( !hasClass(elem, leave) ){
+        addClass(elem, leave);
+        setTimeout(function(){
+            removeClass(elem, leave);
+            removeClass(elem, enter);
+        }, delay);
+    }
+};
+
+/////////////////////////// 工具部分
 
 
     /**
@@ -149,13 +182,7 @@
 
                 this.key = cf.key || "data-ctr";
                 this.keyId = this.key + "-id";      // 动画class的名字
-                this.keyTime = this.key + "-leavetime";  // 动画延迟
-
-                // 内联样式
-                this.keyStyleInline = this.key + "-inlinestyle";
-                this.keyStyleLeave = this.key + "-leavestyle";
-                this.keyStyleEnter = this.key + "-enterstyle";
-                this.keyStylePre = this.key + "-prestyle";
+                this.keyTime = this.key + "-time";  // 动画延迟
 
                 // 默认动画配置
                 this.def_config = lexicalAnalysis(cf["default"] || "enter x|10% opacity 0 over .5s wait 0s tf ease");
@@ -172,9 +199,10 @@
         },
         // 对元素进行词法分析
         analysisiDomList: function(){
-            var domList = this.domList, keyId = this.keyId, key = this.key;
+            var domList = this.domList, keyId = this.keyId, keyTime = this.keyTime, key = this.key;
 
             var elem, obj, item;
+            var style = "", inline;
             for(var i = 0, max = domList.length; i < max; i++){
                 elem = domList[i];
                 // 防止重复初始化
@@ -184,32 +212,25 @@
                     // 与默认值合并
                     this.combineWithDefault(obj);
                     // 生成样式
-                    item = createStyleInfo(obj);
-                    // 给元素设置相关属性
-                    this.setElemInfo(elem, item);
+                    item = createStyleClass(obj);
+                    // 记录下样式ID
+                    elem.setAttribute(keyId, item.id);
+                    elem.setAttribute(keyTime, item.time);
+                    // 设置inline样式
+                    inline = elem.getAttribute("style") || "";
+                    elem.setAttribute("style", inline ? ";" + item.elStyle : item.elStyle);
+                    // 添加默认样式
+                    addClass(elem, getClass(item.id, "pre"));
+
+                    style += item.style;
                 }
             }
-        },
-        // 设置元素相关的属性
-        setElemInfo: function(elem, item){
-            var keyId = this.keyId, keyTime = this.keyTime;
-
-            // 记录下样式ID
-            elem.setAttribute(keyId, item.id);
-            elem.setAttribute(keyTime, item.time);
-
-            var inline = (elem.getAttribute("style") || "") + item.inline;
-
-            // 设置inline样式
-            elem.setAttribute(this.keyStyleInline, inline);
-            // 设置 预设 样式
-            elem.setAttribute(this.keyStylePre, inline + item.pre);
-            // 设置 进入 样式
-            elem.setAttribute(this.keyStyleEnter, inline + item.enter);
-            // 设置 离开 样式
-            elem.setAttribute(this.keyStyleLeave, inline + item.leave);
-            // 把样式，设置为 预 设 样式
-            elem.setAttribute("style", inline + item.pre);
+            // 样式插入 dom 中
+            if(style){
+                var css = document.createElement("style");
+                css.innerHTML = style;
+                document.getElementsByTagName("head")[0].appendChild(css);
+            }
         },
         // 当前配置对象，与 def_config 对象，进行合并
         combineWithDefault: function(obj){
@@ -223,14 +244,14 @@
         // 某个孩子，执行动画
         enter: function(list){
             this._aEach(list, function(elem, id){
-                elem.setAttribute("style", elem.getAttribute(this.keyStyleEnter));
+                enter(elem, getClass(id, "enter"));
             });
         },
         // 某个孩子，执行动画
         leave: function(list){
             var keyTime = this.keyTime;
             this._aEach(list, function(elem, id){
-                elem.setAttribute("style", elem.getAttribute(this.keyStyleLeave));
+                leave(elem, getClass(id, "leave"), getClass(id, "enter"), parseFloat(elem.getAttribute(keyTime)) * 1000 );
             });
         },
         // 这个乱调用，会出错哦~
@@ -243,11 +264,12 @@
             for(var i = 0, max = list.length, elem, id; i < max; i++){
                 elem = list[i], id = elem.getAttribute(this.keyId);
                 if( id ){
-                    cb.call(this, elem, id);
+                    cb(elem, id);
                 }
             }
         }
     };
+
     window[NAME] = buildTransition;
 
 }(window, window.CSS3_TRANSITION_NAME || "Css3Transition");

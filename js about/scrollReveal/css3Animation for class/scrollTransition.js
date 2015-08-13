@@ -8,7 +8,6 @@
         cf.ckey = cf.ckey || "data-sr";
         cf.skey = cf.skey || "data-sd";
         cf.percent = cf.percent || .5;
-        cf.delay = cf.delay || 0; // 动画执行延迟
         cf.dom = cf.dom || document.documentElement;
 
         var c3 = this.c3 = new Css3Transition({
@@ -19,7 +18,6 @@
             dom: cf.dom,
             list: c3.getDomList(),
             key: cf.skey,
-            delay: cf.delay,
             enter: function(elem){
                 c3.enter(elem);
             },

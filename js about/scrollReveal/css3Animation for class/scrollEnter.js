@@ -30,7 +30,6 @@
      *  dom: 检测滚动的根元素，默认 document.documentElement
      *  list : 所有要检测的元素，有 list , 则会无视掉 key 的初始化选择哦~
      *  key  : 需要监听滚动的所有元素的属性，此属性决定，该元素，距离屏幕多长的位置开始，就开始滚动，仅支持小数，默认: data-sd
-     *  delay: 不滚动时，执行的延迟
      *  enter: 进入屏幕的回调
      *  leave: 离开屏幕的回调
      */
@@ -50,15 +49,11 @@
 
             this.enter_cb = cf.enter || this.noop;
             this.leave_cb = cf.leave || this.leave;
-            this.delay = cf.delay || 0;
 
             // 监听 滚动 的回调
             addCallback(this._handler, this);
             this.restart();
-
-            setTimeout(function(){
-                this._handler();
-            }.bind(this), this.delay);
+            this._handler();
         },
         noop: function(){},
         restart: function(){
