@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>移动端测试</title>
+    <style>
+        body{
+
+        }
+        #title{
+            width:200px;
+            height:200px;
+            margin:100px auto;
+            font-size:32px;
+            line-height:200px;
+            text-align: center;
+            background: #f90;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <a href="javascript:;" onclick="replay()">重试</a>
+        <h1 id="title" data-sr="enter x|100px y|100px s|1.5 r|45deg over .5s">测试</h1>
+    </div>
+</body>
+<script src="css3Transition.js"></script>
+<script type="text/javascript">
+    var c3 = new Css3Transition({
+        key: "data-sr"
+    });
+    var timer1;
+    function replay(){
+        clearTimeout(timer1);
+        c3.reset();
+
+        c3.enter();
+        timer1 = setTimeout(function(){
+            c3.leave();
+        }, 510);
+    }
+</script>
+</html>

@@ -1,4 +1,4 @@
-;!function(window, NAME){
+;!function(window, NAME, SCROLL_TIME){
 
     var callbackMap = {
         // key: {fn: 回调函数 , ctx: 执行上下文}
@@ -30,6 +30,7 @@
      *  dom: 检测滚动的根元素，默认 document.documentElement
      *  list : 所有要检测的元素，有 list , 则会无视掉 key 的初始化选择哦~
      *  key  : 需要监听滚动的所有元素的属性，此属性决定，该元素，距离屏幕多长的位置开始，就开始滚动，仅支持小数，默认: data-sd
+     *  delay: 不滚动时，执行的延迟，用于控制某些滚动太快的情况发生
      *  enter: 进入屏幕的回调
      *  leave: 离开屏幕的回调
      */
@@ -49,11 +50,17 @@
 
             this.enter_cb = cf.enter || this.noop;
             this.leave_cb = cf.leave || this.leave;
+            this.delay = cf.delay || 0;
+            this._delayTimer = null;
 
             // 监听 滚动 的回调
             addCallback(this._handler, this);
             this.restart();
-            this._handler();
+
+            var self = this;
+            setTimeout(function(){
+                self._handler();
+            }, this.delay);
         },
         noop: function(){},
         restart: function(){
@@ -65,7 +72,18 @@
         // 屏幕进入的处理函数
         _handler: function(){
             if( !this.checked ){return;}
-
+            // 加入延迟控制
+            if( this.delay > 0 ){
+                window.clearTimeout(this._delayTimer);
+                var self = this;
+                this._delayTimer = window.setTimeout(function(){
+                    self._callback();
+                }, this.delay);
+            }else{
+                this._callback();
+            }
+        },
+        _callback: function(){
             this._scrollY = this.getScrollY();
             this._viewH = this.getViewportH();
 
@@ -106,7 +124,7 @@
             var percent    = parseFloat(el.getAttribute(this.key)) || 0;
 
             // 两种情况
-            return top < viewBottom - elHeight * percent && bottom > viewTop + elHeight * percent;
+            return top <= viewBottom - elHeight * percent && bottom >= viewTop + elHeight * percent;
         },
         // 获取 offset
         getOffset: function(el){
@@ -138,4 +156,4 @@
     };
 
     window[NAME] = scrollEnter;
-}(window, window.SCROLL_ENTER || "ScrollEnter");
+}(window, window.SCROLL_ENTER || "ScrollEnter", window.SCROLL_ENTER_TIME || 200);

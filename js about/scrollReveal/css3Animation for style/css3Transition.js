@@ -29,11 +29,9 @@
     // 获取 class 内容
     function getClassContext(obj, id, name, needTransition){
         var str = obj[name] ? [
-            //"." + getClass(id, name) + "{",
                 needTransition ? getCssTransition(obj[name + "_over"], obj[name + "_tf"], obj[name + "_wait"]) : "",
                 getCssTransform( obj[name] ),
                 "opacity:" + (obj[name + "_opacity"] || 0) + ";",
-            // "}"
         ].join(" ") : "";
         return str;
     }
@@ -141,11 +139,11 @@
      *  default: 默认动画配置，默认: enter x|10% opacity 0 over .5s wait 0s tf ease
      */
     function buildTransition(cf){
-        this.reset(cf);
+        this.init(cf);
     };
     buildTransition.prototype = {
         // 重设配置
-        reset: function(cf){
+        init: function(cf){
             cf = cf || {};
 
             this.dom = cf.dom || DOM_ELEM;
@@ -221,20 +219,20 @@
                 // 因为都是字符串，所以，不用担心
                 obj[i] = obj[i] || map[i];
             }
-            // 缺少 enter_opacity
+            // 修正所有透明度
             obj["pre_opacity"]   = obj["pre_opacity"] || "0";
             obj["enter_opacity"] = obj["enter_opacity"] || "1";
             obj["leave_opacity"] = obj["leave_opacity"] || obj["pre_opacity"] || "0";
         },
         // 某个孩子，执行动画
         enter: function(list){
-
             this._aEach(list, function(elem, id){
                 elem.setAttribute("style", elem.getAttribute(this.keyStylePre));
+                // 好想用 bind，但是 android 低端版本，就已经不支持了
                 var self = this;
                 setTimeout(function(){
                     elem.setAttribute("style", elem.getAttribute(self.keyStyleEnter));
-                }, 0);
+                }, 1);
             });
         },
         // 某个孩子，执行动画
@@ -242,6 +240,12 @@
             var keyTime = this.keyTime;
             this._aEach(list, function(elem, id){
                 elem.setAttribute("style", elem.getAttribute(this.keyStyleLeave));
+            });
+        },
+        // 立刻归为
+        reset: function(list){
+            this._aEach(list, function(elem, id){
+                elem.setAttribute("style", elem.getAttribute(this.keyStylePre));
             });
         },
         // 这个乱调用，会出错哦~

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>写个domo玩玩</title>
+    <style>
+        *{margin:0;padding:0;}
+        body{
+            background:#1A2434;
+            font-family: "proxima-nova", sans-serif;
+            -webkit-perspective: 1200px;
+                    perspective: 1200px;
+        }
+        .header{
+            margin-top:3rem;
+            color:#fff;
+            font-size:3.66rem;
+            text-align:center;
+        }
+        .part{
+            display:-webkit-box;
+            display:-webkit-flex;
+            display:-ms-flexbox;
+            display:flex;
+
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+                -ms-flex-pack: center;
+
+                    justify-content: center;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+                -ms-flex-align: center;
+                    align-items: center;
+
+            width:860px;
+            min-height: 400px;
+            margin:5rem auto 0 auto;
+        }
+        .part .text{
+            -webkit-box-flex:1;
+            -webkit-flex:1;
+                -ms-flex:1;
+                    flex:1;
+
+            padding:0 2rem;
+            color:#fff;
+        }
+        .part .image{
+            max-width: 40%;
+            border:none;
+            border-radius:2%;
+            box-shadow:5px 5px 10px #616c84;
+        }
+        .part .title{
+            font-size:2.5rem;
+        }
+        .part .desc{
+            font-size:1.4rem;
+            line-height: 2.2rem;
+            color:#77849E;
+            text-indent: 2rem;
+            word-wrap: break-word;
+            /*word-break: break-all;*/
+        }
+        .footer{
+            text-align: center;
+            color:#616c84;
+            font-weight:bold;
+            font-family: Tahoma;
+            font-size:2.8rem;
+        }
+        .footer .text{
+            vertical-align:top;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="header" data-sr="enter y|-100% tf ease-in">
+        Our’s <span data-sr="enter x|100px wait .6s">Story</span>
+    </h1>
+
+    <div id="part1" class="part">
+        <div class="text">
+            <p class="title" data-sr="enter x|-50px">First Meet</p>
+            <p class="desc" data-sr="enter x|50px wait .5s">
+                I remember, that is a date in april. We first met in front of the "keyunlu" subway station.
+                You ware lated, you said your so sorry.
+                But actually, all my attention was placed on your....
+                <span data-sr="enter x|50px over 3s wait 5s">OK, you are so cute, I must admit.</span>
+            </p>
+        </div>
+        <img src="image/1.jpg" class="image" data-sr="enter s|0 r|270deg over 1.5s tf linear wait 1s" />
+    </div>
+
+    <div id="part2" class="part">
+        <img src="image/2.jpg" class="image" data-sr="enter s|0 x|150px over .6s tf linear wait 2s" />
+        <div class="text">
+            <p class="title" data-sr="enter s|.9 r|10deg wait .5s over 1s">Closer To Eachother</p>
+            <p class="desc" data-sr="enter s|.8 r|-10deg wait 1.5s over 1s">
+                You live in my heart in soon. We stay togeher, play games, have dinner, event...
+                We made the final step.
+                It's too fast for me. But, you let me in the face of all the courage.
+                <span data-sr="enter y|50px x|-20px over 2s wait 4s">We will stay together util the end of our lives</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="part3" class="part">
+        <div class="text">
+            <p class="title" data-sr="enter x|200px y|30px wait .5s over .8s">Thanks fo indulge my temper</p>
+            <p class="desc" data-sr="enter y|-200px x|-50px wait 1s over .8s">
+                I am not good at convey my emotion. It must be a big big worry for you.
+                But you had never complained about it.
+                All your advantages are engraved on my heart.
+                Believe me, I will try to controll it.
+                <span data-sr="enter y|50px x|-20px over 2s wait 4s">For you.</span>
+            </p>
+        </div>
+        <img src="image/3.jpg" height="260px" class="image" data-sr="enter x|100px y|-100px tf|ease-in-out over 1s wait 1s" />
+    </div>
+
+    <div class="footer">
+        <span class="text" data-sr="enter x|-100px">I</span>
+        <svg class="heart" data-sr="enter y|-100px wait .5s" enable-background="new 0 0 92.515 73.161" height="36px" version="1.1" viewBox="0 0 92.515 73.161" width="41px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"; xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+            <g>
+                <path d="M82.32,7.888c-8.359-7.671-21.91-7.671-30.271,0l-5.676,5.21l-5.678-5.21c-8.357-7.671-21.91-7.671-30.27,0
+                c-9.404,8.631-9.404,22.624,0,31.255l35.947,32.991L82.32,39.144C91.724,30.512,91.724,16.52,82.32,7.888z" fill="#f00"></path>
+            </g>
+        </svg>
+        <span class="text" data-sr="enter x|100px wait .2s">U</span>
+    </div>
+</body>
+<script src="css3Transition.js"></script>
+<script src="scrollEnter.js"></script>
+<script src="scrollTransition.js"></script>
+<script>
+    var st = new ScrollTransition({
+        delay: 0,
+        percent: 1
+    });
+    console.log("嗯，好像还是添加class的模式，会更加棒的样子...，之后更改回去好了");
+</script>
+</html>
+'
