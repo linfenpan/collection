@@ -15,6 +15,11 @@
         cf.delay = cf.delay || 0; // 动画执行延迟
         cf.dom = cf.dom || document.documentElement;
 
+        // 只有支持动画的，才往下执行，不然，就没必要了
+        if(!("transition" in cf.dom.style) && !("webkitTransition" in cf.dom.style)){
+            return;
+        }
+
         var c3 = this.c3 = new Css3Transition({
             key: cf.ckey,
             dom: cf.dom
