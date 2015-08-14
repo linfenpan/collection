@@ -32,12 +32,11 @@
     var timer1;
     function replay(){
         clearTimeout(timer1);
-        c3.reset();
-
         c3.enter();
+
         timer1 = setTimeout(function(){
             c3.leave();
-        }, 510);
+        }, 1000);
     }
 </script>
 </html>
