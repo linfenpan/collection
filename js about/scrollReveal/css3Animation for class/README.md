@@ -155,3 +155,4 @@ c3t.enter([dom1, dom2, dom3...]); // 让这个列表内的元素，执行动画
 by: da宗熊
 date: 2015/08/13
 version: 0.0.2
+项目地址: https://github.com/linfenpan/Css3Transition
