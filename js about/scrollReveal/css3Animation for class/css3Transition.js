@@ -1,3 +1,4 @@
+// 担心报错的同学，请替换掉 document.querySelectorAll 为 jquery 的选择，则OK
 ;~function(window, NAME){
 
     var DOM_ELEM = document.documentElement, ID = 100;
@@ -17,6 +18,10 @@
             cf = cf || {};
 
             this.dom = cf.dom || DOM_ELEM;
+
+            if( !("querySelectorAll" in this.dom) ){
+                return;
+            }
 
             this.key = cf.key || "data-ctr";
             this.keyId = this.key + "-id";      // 动画class的名字

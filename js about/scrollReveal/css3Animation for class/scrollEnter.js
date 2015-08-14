@@ -1,3 +1,15 @@
+/**
+* 一个中间控件，是否在屏幕内的检测
+* 需要兼容 ie8，就重写 document.querySelectorAll 吧
+* 参数说明: new ScrollEnter({
+*       dom: 检测滚动的根元素，默认 document.documentElement
+*       list : 所有要检测的元素，有 list , 则会无视掉 key 的初始化选择哦~
+*       key  : 需要监听滚动的所有元素的属性，此属性决定，该元素，距离屏幕多长的位置开始，就开始滚动，仅支持小数，默认: data-sd
+*       delay: 不滚动时，执行的延迟，用于控制某些滚动太快的情况发生
+*       enter: 进入屏幕的回调
+*       leave: 离开屏幕的回调
+*  });
+*/
 ;!function(window, NAME, SCROLL_TIME){
 
     var callbackMap = {
@@ -43,6 +55,11 @@
             this.domList = cf.list;
             // 检测位置配置
             this.key = cf.key || "data-sd";
+
+            // 兼容验证
+            if( !("querySelectorAll" in this.dom) ){
+                return;
+            }
 
             if( !this.domList ){
                 this.domList = this.dom.querySelectorAll("[" + this.key + "]");

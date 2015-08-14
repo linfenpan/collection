@@ -1,3 +1,7 @@
+/**
+* 一个中间控件，没啥卵用..
+* 参数说明: new ScrollTransition({ckey: 记录动画配置的属性, skey: 记录滚动配置的属性, percent: 默认的滚动百分比, delay: 延迟多少，才检测滚动, dom: dom元素呗});
+*/
 ;!function(window, NAME){
     // __inline("css3Transition.js");
     // __inline("scrollEnter.js");
@@ -29,8 +33,8 @@
         });
 
         // 修正滚动百分比
-        if( cf.percent ){
-            var list = c3.getDomList();
+        var list = c3.getDomList();
+        if( cf.percent && list ){
             for( var i = 0, max = list.length; i < max; i++ ){
                 var elem = list[i];
                 if( !elem.getAttribute(cf.skey) ){
