@@ -33,8 +33,10 @@
             ctx: ctx
         };
     };
-    window.addEventListener("scroll", executeCallbackFn, false);
-    window.addEventListener("resize", executeCallbackFn, false);
+    if("addEventListener" in window){
+        window.addEventListener("scroll", executeCallbackFn, false);
+        window.addEventListener("resize", executeCallbackFn, false);
+    }
 
     /**
      * 屏幕进入检测
