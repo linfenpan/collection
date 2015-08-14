@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>css3 transition样式，简便语法</title>
+    <style>
+        *{padding:0;margin:0;}
+        #box{
+            width:200px;height:200px;
+            margin:100px auto 0;
+            border:1px solid #ddd;
+            background:#EFBB6E;
+        }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+</body>
+<script src="Css3TrGenerator.min.js"></script>
+<script type="text/javascript">
+
+var str = "rotate(45deg); position:relative;top:10px; over|2s, wait|.1s, tfn|ease";
+var item = Css3TrGenerator.compile(str);
+box.setAttribute("style", item);
+setTimeout(function(){
+    box.setAttribute("style", item.reset("rotate(0deg);"));
+}, 1000);
+
+
+
+//
+// // translte,rotate,skew,scale等，关于transform的属性，使用()传递参数
+// // 带有 | 的，是自定义参数
+// // 带有 : 的，是原生属性
+// var str = "translateX(20px), rotate(10deg), skew(10deg), top:10px, left:10%, over|5s, wait|1s, tfn|linear";
+// var words = str.split(/[;,]\s*/);
+// console.log(
+//     words
+// );
+//
+// // 编译字符串
+// var list = [/(.+)\((.+)\)/, /(.+):(.+)/, /(.+)\|(.+)/];
+// function getSwitchItem(str){
+//     var res = {type: "", key: "", val: ""}, item;
+//     for(var i = 0, max = list.length; i < max; i++){
+//         item = list[i], item = item.exec(str);
+//         if(item && item.length >= 3){
+//             res.type = (["transform", "normal", "defined"])[i];
+//             res.key = item[1];
+//             res.val = item[2];
+//             break;
+//         }
+//     }
+//     return res;
+// };
+// var ccItem = {
+//     transform: [],
+//     normal: {},
+//     defined: {
+//         wait: "0s", over: "0.5s", tfn: "ease"
+//     }
+// };
+// var item;
+// for(var i = 0, max = words.length; i < max; i++){
+//     item = getSwitchItem(words[i]);
+//     switch( item.type ){
+//         case "transform":
+//             ccItem.transform.push( item.key + "(" + item.val + ")" );
+//             break;
+//         case "normal":
+//         case "defined":
+//             ccItem[ item.type ][ item.key ] = item.val;
+//             break;
+//     }
+// }
+// console.log(ccItem);
+//
+// // 把编译对象，转为样式
+// var ssItem = {
+//     transitionDDTF: [ccItem.defined.wait, ccItem.defined.tfn, ccItem.defined.wait].join(" "),
+//     transitionP   : [],
+//     transform     : ccItem.transform.join(" "),
+//     normal        : []
+// };
+// // transition-property，需要遍历 normal 的属性，才知道
+// for(var i in ccItem.normal){
+//     ssItem.transitionP.push(i);
+//     ssItem.normal.push(i + ":" + ccItem.normal[i]);
+// };
+// console.log(ssItem);
+//
+// // 创建样式
+// // "-webkit-transition:-webkit-transform $0, opacity $0;transition:transform $0, opacity $0;".replace(/\$0/g, time + " " + timeFn + " " + delay);
+// // "-webkit-transform:$0;-ms-transform:$0;transform:$0;".replace(/\$0/g, transition);
+// var ssObject = {
+//     ddtf: ssItem.transitionDDTF,
+//     transition: ssItem.transitionP.length > 0 ? ssItem.transitionP.join(" " + ssItem.transitionDDTF + ",") + " " + ssItem.transitionDDTF : "",
+//     transform: ssItem.transform,
+//     normal: ssItem.normal.length > 0 ? ssItem.normal.join(";") + ";" : ""
+// };
+// console.log(ssObject);
+//
+// var style = [
+//     ssObject.transform ? "-webkit-transform:${transform};-ms-transform:${transform};transform:${transform};" : "",
+//     ssObject.transform || ssObject.transition ? (ssObject.transform ? "-webkit-transition:-webkit-transform $0;transition:transform $0;" : "-webkit-transition:$0;transition:$0;").replace(/\$0/g, [ ssObject.transform && "${ddtf}", ssObject.transition && "${transition}" ].join(",") ) : "",
+//     ssObject.normal ? "${normal}" : ""
+// ].join("\n").replace(/\${([^}]+)}/g, function(str, key){
+//     return ssObject[key] || "";
+// });
+//
+// console.log(style);
+
+
+</script>
+</html>
