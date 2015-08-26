@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>animation测试</title>
+    <style>
+        #box{
+            width:200px;
+            height:200px;
+            font-size:30px;
+            line-height:200px;
+            text-align:center;
+            color:#fff;
+            background:#f90;
+
+            position:relative;
+
+            -webkit-transition: -webkit-transform 1s ease;
+
+                    transition: transform 1s ease;
+        }
+        .move{
+            -webkit-transform: translateX(200px);
+                -ms-transform: translateX(200px);
+                    transform: translateX(200px);
+            -webkit-animation: test 1s ease 1s forwards;
+                    animation: test 1s ease 1s forwards;
+        }
+        @-webkit-keyframes test{
+            0%{
+                -webkit-transform: scale(0);
+                        transform: scale(0);
+            }
+            100%{
+                -webkit-transform: scale(1.5);
+                        transform: scale(1.5);
+            }
+        }
+        @keyframes test{
+            0%{
+                -webkit-transform: scale(0);
+                        transform: scale(0);
+            }
+            100%{
+                -webkit-transform: scale(1.5);
+                        transform: scale(1.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="box">BOX1</div>
+</body>
+<script type="text/javascript">
+    setTimeout(function(){
+        box.classList.add("move");
+    }, 10);
+
+/**
+/// animation 动画，就是很多很多个帧动画，转为 keyframes 的过程
+
+var list = [
+    {
+        time: 1,
+        style: {记录下所有属性}
+    },
+    {
+        time: 2,
+        style: {}
+    }
+]
+
+等 list 完成后，通过遍历，找到不变的属性，然后，进行删除...
+
+*/
+
+</script>
+</html>
