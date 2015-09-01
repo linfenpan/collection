@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no" />
+    <title>BY da宗熊</title>
+    <style>
+        body{
+            min-width: 320px;
+            font-size:16px;
+            font-family:"Helvetica Neue","Microsoft YaHei","微软雅黑",SimHei,"宋体",simsun,sans-serif;
+            background:#f4f4f4;
+        }
+        html,body,div,p,a,span,nav,header,footer,ul,li,img{padding:0;margin:0;}
+        img{border:none;}
+        a{text-decoration:none;}
+        a:hover{text-decoration:none;}
+        li{list-style:none;}
+        header,footer,nav{display:block;}
+
+        /** 生成的样式**/
+        #container{position:relative;overflow:hidden;width:${width};height:${height};margin:0 auto;border:1px solid #ccc;}
+${style}
+        /** END 生成的样式**/
+    </style>
+</head>
+<body>
+
+<div id="container" class="${initClass}">
+${html}
+</div>
+
+</body>
+<script>
+    var APP = {
+        pt: document.getElementById("container"),
+        max: ${max},
+        index: 0,
+        go: function(index){
+            if(index > this.max){
+                index = max;
+            }else if(index < 0){
+                index = 0;
+            }
+            this.index = index;
+
+            var pt = this.pt;
+            pt.className = "${initClass} ${classPrefix}" + index;
+        },
+        next: function(){
+            this.go(this.index + 1);
+        },
+        prev: function(){
+            this.go(this.index - 1);
+        }
+    };
+</script>
+</html>
