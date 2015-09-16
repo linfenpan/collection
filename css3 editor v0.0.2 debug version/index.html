@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="uft-8" />
+	<title>动画创建 0.0.2</title>
+	<link rel="stylesheet" href="./css/index.css" charset="utf-8">
+</head>
+<body>
+<!-- 工具栏 -->
+<div id="tools">
+	<a href="javascript:;" class="item" data-cmd="save">保存</a>
+	<a href="javascript:;" class="item" data-cmd="uploadImage">图片</a>
+	<a href="javascript:;" class="item" data-cmd="insertText">文字</a>
+	<a href="javascript:;" class="item" data-cmd="returnToStart">返回开始界面</a>
+</div>
+<!-- END 工具栏 -->
+<div id="main">
+	<!-- 画廊 -->
+	<div id="gallery">
+		<ul></ul>
+	</div>
+	<!-- END 画廊 -->
+	<!-- 舞台的背景色 -->
+	<div id="mainStage">
+		<div id="content">
+			<div id="rangeMark"><!-- 舞台范围标志 --></div>
+			<div id="stage"><!-- 操作的舞台 --></div>
+		</div>
+	</div>
+	<!-- END 舞台的背景色 -->
+	<!-- 侧边栏 -->
+	<div id="side">
+		<fieldset class="set">
+			<legend class="title">舞台信息</legend>
+			宽度：
+			<input class="item" type="text" id="stageWidth" readonly />
+			高度：
+			<input class="item" type="text" id="stageHeight" readonly />
+		</fieldset>
+		<fieldset class="set subSet">
+			<legend class="title">基本信息</legend>
+			id：<input data-type="id" bind="id" class="item" type="text" />
+			宽度：
+			<div class="item">
+				<input data-type="width" bind="width" type="number" min="0" />
+				<select data-type="widthUnit" bind="width">
+					<option>px</option>
+					<option>%</option>
+					<option>rem</option>
+				</select>
+			</div>
+			高度：
+			<div class="item">
+				<input data-type="height" bind="height" type="number" min="0" />
+				<select data-type="heightUnit" bind="height">
+					<option>px</option>
+					<option>%</option>
+					<option>rem</option>
+				</select>
+			</div>
+		</fieldset>
+		<fieldset class="set subSet">
+			<legend class="title">动画信息</legend>
+			top：
+			<div class="item">
+				<input data-type="top" bind="top" type="number" />
+				<select data-type="topUnit" bind="top">
+					<option>px</option>
+					<option>%</option>
+					<option>rem</option>
+				</select>
+			</div>
+			left：
+			<div class="item">
+				<input data-type="left" bind="left" type="number" />
+				<select data-type="leftUnit" bind="left">
+					<option>px</option>
+					<option>%</option>
+					<option>rem</option>
+				</select>
+			</div>
+			缩放：<input data-type="scale" bind="scale" class="item" type="number" min="0" step="0.1" value="1" />
+			旋转：
+			<div class="item">
+				<input data-type="rotate" bind="rotate" type="number" value="0" />
+				<select data-type="rotateUnit" bind="rotate">
+					<option>deg</option>
+				</select>
+			</div>
+			透明：<input data-type="opacity" bind="opacity" class="item" type="range" min="0" max="1" step="0.01" value="1" />
+		</fieldset>
+	</div>
+	<!-- END 侧边栏 -->
+</div>
+
+<!-- 最底层的frame列表 -->
+<div id="frames">
+	<div class="container">
+		<ul class="list">
+			<!-- <div class="item active">1</div> -->
+		</ul><div class="add">+</div>
+	</div>
+</div>
+<!-- END 最底层的frame列表 -->
+
+
+</body>
+<script src="./lib/jquery.js"></script>
+<script src="./lib/zdraggable-jquery.js"></script>
+<script src="./lib/Css3TrGenerator.js"></script>
+<script src="./js/event.js"></script>
+<script src="./js/keydown.js"></script>
+<script src="./js/common.js"></script>
+
+<script src="./js/menu.js"></script>
+<script src="./js/gallery.js"></script>
+<script src="./js/message.js"></script>
+<script src="./js/stage.js"></script>
+<script src="./js/frames.js"></script>
+
+<script src="./js/save.js"></script>
+
+<script type="text/javascript">
+// 可以在这里，做垃圾回收..
+// window.onbeforeunload = function(){
+// 	alert(1);
+// }
+
+// 新建项目
+$(function(){
+	var filePath = G.search.path;
+	if(filePath){
+		try{
+			var data = G.fs.readJsonSync(filePath);
+			G.setData(data);
+			G.newProject(data.stageWidth || 200, data.stageHeight || 300);
+		}catch(e){
+			alert("项目配置文件失效");
+			window.location.href = "./start.html";
+		}
+	}else if(G.search.width && G.search.height){
+		G.resetData();
+		G.newProject(+G.search.width, +G.search.height);
+	}else{
+		window.location.href = "./start.html";
+	}
+});
+
+</script>
+
+</html>

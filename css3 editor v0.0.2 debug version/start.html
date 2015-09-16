@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新建项目</title>
+    <style>
+        *{padding:0;margin:0;}
+        html, body{width:100%;height:100%;background:#fff;}
+        input{height:22px;line-height:22px;padding:2px 5px;border:1px solid #dfdfdf;border-radius:2px;}
+        input:focus{outline:none;border-color:#36B0EF;box-shadow:0 0 1px #36B0EF;}
+        a, a:hover{text-decoration:none;}
+        a:focus, select:focus, textarea:focus{outline:none;}
+    </style>
+    <script src="./lib/jquery.js" charset="utf-8"></script>
+</head>
+<body>
+    <style>
+        .opertaionWp{
+            display:table;
+            width:100%;
+            height:100%;
+        }
+        .opertaion{
+            display:table-cell;
+            vertical-align:middle;
+            text-align:center;
+        }
+        .opertaion a{
+            display:inline-block;
+            width:200px;height:200px;
+            padding:15px;
+            margin:0 25px;
+            border:1px solid #ddd;
+            border-radius:5px;
+            background-size:200px 200px;
+            background-repeat:no-repeat;
+            background-position:50% 50%;
+            background-color:#fff;
+            transition:all .5s ease;
+        }
+        .opertaion a:hover{
+            background-color:#f9f9f9;
+        }
+        .newPro{background-image:url(./images/newProject.png);}
+        .openPro{background-image:url(./images/openProject.png);}
+    </style>
+    <div class="opertaionWp">
+        <div class="opertaion">
+            <a href="javascript:;" class="newPro" id="openNewPreject" title="新建项目"></a>
+            <a href="javascript:;" class="openPro" id="openExistsProject" title="打开项目"></a>
+        </div>
+    </div>
+
+    <style>
+        #newProjectBox{visibility:hidden;opacity:0;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0, 0, 0, .4);transition:opacity .5s ease, visibility 0s ease .5s;}
+        #newProjectBox.active{visibility:visible;opacity:1;transition:opacity .5s ease;}
+        #newProjectBox .content{
+            overflow:hidden;
+            position:absolute;
+            top:50%;left:50%;
+            width:300px;
+            transform:translate(-50%, -50%);
+            background:#fff;
+            border-radius:5px;
+        }
+        #newProjectBox input{width:50px;}
+        #newProjectBox .info{padding:30px 10px 15px 10px;text-align:center;}
+        #newProjectBox .opera{text-align:right;padding:10px 15px;background:#f7f7f7;}
+        #newProjectBox .btn{display:inline-block;padding:5px 15px;border:1px solid #f7f7f7;text-align:center;border-radius:2px;}
+        #newProjectBox .grayBtn{border-color:#ddd;color:#666;background:#fff;}
+        #newProjectBox .blueBtn{border-color:#1e9ff8;color:#fff;background:#1e9ff8;}
+    </style>
+    <div id="newProjectBox">
+        <div class="content">
+            <p class="info">
+                宽度: <input type="number" class="pwidth" /> px
+                &nbsp;&nbsp;
+                高度: <input type="number" class="pheight" /> px
+            </p>
+            <div class="opera">
+                <a href="javascript:;" hidefocus="true" class="close grayBtn btn">取消</a>
+                &nbsp;
+                <a href="javascript:;" hidefocus="true" class="sure blueBtn btn">确定</a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function(){
+        var $root = $("#newProjectBox");
+
+        $("#openNewPreject").click(function(){
+            $root.addClass("active");
+        });
+
+        $root.on("click", ".close", function(){
+            $root.removeClass("active");
+        });
+
+        $root.on("click", ".sure", function(){
+            var width = $root.find(".pwidth").val(),
+                height = $root.find(".pheight").val();
+            var r = /\D/;
+            if(!width || !height){
+                alert("请正确输入宽度和高度");
+            }else if(r.test(width) || r.test(height)){
+                alert("请输入整数");
+            }else{
+                // 新建项目
+                window.location = "./index.html?width=" + width + "&height=" + height;
+            };
+        });
+    });
+    </script>
+</body>
+
+<script type="text/javascript">
+// 打开现有项目
+$(function(){
+    var remote = require("remote"),
+        dialog = remote.require("dialog"),
+        fs = require("fs-extra"),
+        path = require("path");
+
+    $("#openExistsProject").click(function(){
+        dialog.showOpenDialog({
+            title: "打开项目",
+            filters: [
+                {name: "c3an", extensions: ["c3an"]}
+            ]
+        }, function(file){
+            if(file && file[0]){
+                // 清理现在 的 assert 目录
+                var assertPath = path.join(__dirname, "./assert"),
+                    proAssertPath = path.join( path.dirname(file[0]), "./assert" );
+                fs.removeSync(assertPath);
+                // 把现有项目的 assert 目录，拷贝到 项目下
+                if(fs.existsSync(proAssertPath)){
+                    fs.copySync(proAssertPath, assertPath);
+                }
+
+                // 打开现有项目
+                window.location.href = "./index.html?path=" + encodeURIComponent(file[0]);
+            }
+        });
+    });
+});
+</script>
+
+</html>

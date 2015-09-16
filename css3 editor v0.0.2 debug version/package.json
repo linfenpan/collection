@@ -1,0 +1,9 @@
+{
+  "name": "firstApp",
+  "version": "1.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "ejs": "^2.3.3",
+    "fs-extra": "^0.23.1"
+  }
+}
