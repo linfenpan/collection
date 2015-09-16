@@ -1,0 +1,13 @@
+// 返回一个矩形对象，包含 top/left/right/bottom/width/height 6个属性
+// 这6个属性，是元素此刻在页面占据的  真正  宽高、位置，不受css3属性影响的说~
+var rect = dom.getBoundingClientRect();
+
+
+
+top 是上边距离页面的顶部的距离
+bottom 是下边距离页面底部的距离
+left 是左边距离页面左边的距离
+right 是右边距离页面右边的距离
+
+
+注意：IE、Firefox3+、Opera9.5、Chrome、Safari支持，在IE中，默认坐标从(2,2)开始计算，导致最终距离比其他浏览器多出两个像素，我们需要做个兼容。

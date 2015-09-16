@@ -1,0 +1,12 @@
+var doc = document;
+// event 就是被发布出来的事件对象
+doc.addEventListener("WebViewJavascriptBridgeReady", function(event){
+	var bridge = event.bridge; // {a:1, b:2}
+}); 
+ 
+ 
+var readyEvent = doc.createEvent("Events");
+readyEvent.initEvent("WebViewJavascriptBridgeReady", false, false);
+readyEvent.bridge = {a:1, b:2};
+doc.dispatchEvent(readyEvent);
+
