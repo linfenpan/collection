@@ -1,0 +1,5 @@
+reg.test 或 reg.exec 之后，
+
+reg.lastIndex 会指向当前正则匹配的字符串的最后一位哦~
+
+多次运行 reg.test，最终 lastIndex 会跑回 0，而结果会变为 false
