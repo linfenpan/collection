@@ -1,0 +1,5 @@
+{
+    "author": "da宗熊",
+    "description": "PC和移动端的坐标劫持，防止a标签被点击哦",
+    "main": "touch.js"
+}

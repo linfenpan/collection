@@ -1,0 +1,6 @@
+{
+    "author": "da宗熊",
+    "description": "简单的拖动滑行组件",
+    "main": "slide.js",
+    "rely": ["touch.js"]
+}
