@@ -4,14 +4,15 @@ define(function(require, exports, module){
     var event = {
         start: isTouch ? "touchstart" : "mousedown",
         move: isTouch ? "touchmove" : "mousemove",
-        end: isTouch ? "touchend touchcancel" : "mouseup mouseleave"
+        end: isTouch ? "touchend touchcancel" : "mouseup mouseleave",
+        needCatch: "click"
     };
 
     // 绑定事件
-    function on(el, ev, fn){
+    function on(el, ev, fn, isBu){
         var arr = ev.split(" ");
         arr.forEach(function(val, index){
-            el.addEventListener(val, fn, false);
+            el.addEventListener(val, fn, isBu || false);
         });
     };
 
@@ -27,6 +28,7 @@ define(function(require, exports, module){
         var ac = {
             onStart: function(e){
                 var cr = ac.start = point(e);
+                ac.end = null;
                 ac.onstart && ac.onstart(cr, e);
             },
             onMove: function(e){
@@ -38,10 +40,17 @@ define(function(require, exports, module){
             },
             onEnd: function(e){
                 if(ac.start){
-                    var cr = ac.cr(e);
+                    var cr = ac.end = ac.cr(e);
                     ac.start = null;
                     ac.onend && ac.onend(cr, e);
                 }
+            },
+            onPrevent: function(e){
+                var cr = ac.end || {};
+                if(Math.abs(cr.x) > 1){
+                    e.preventDefault();
+                    e.stopPropagation();
+                };
             },
             cr: function(e){
                 var cr = point(e);
@@ -53,6 +62,7 @@ define(function(require, exports, module){
         on(el, event.start, ac.onStart);
         on(el, event.move, ac.onMove);
         on(el, event.end, ac.onEnd);
+        !isTouch && on(el, event.needCatch, ac.onPrevent, true);
         return ac;
     };
 

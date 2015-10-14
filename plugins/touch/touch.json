@@ -1,5 +1,6 @@
 {
     "author": "da宗熊",
-    "description": "PC和移动端的坐标劫持，防止a标签被点击哦",
+    "title": "PC和移动端的坐标劫持",
+    "description": "可以有效防止a标签被点击；\n如果子元素有 touch 和 mouse 事件，产生冲突，暂时无解",
     "main": "touch.js"
 }
