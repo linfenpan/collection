@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>带进度的图片上传</title>
+</head>
+<body>
+    <a href="javascript:;" id="upload">上传文件</a>
+</body>
+<script src="../project.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+    require("./upload.js", function(Upload){
+        var upload = new Upload("#upload");
+        upload.input.addEventListener("change", function(){
+            upload.upload();
+        }, false)
+        upload.onload = function(text){
+            console.log(text);
+        };
+        upload.onerror = function(data){
+            console.log("加载失败了..");
+        };
+        upload.onprogress = function(ev){
+            console.log(ev.loaded, ev.total);
+        };
+    });
+</script>
+</html>

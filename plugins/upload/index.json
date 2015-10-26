@@ -1,0 +1,7 @@
+{
+    "author": "da宗熊",
+    "title": "基于h5的文件上传",
+    "description": "基于fileApi，FormData等，制作带进度的上传",
+    "main": "upload.js",
+    "rely": ["upload.php"]
+}
