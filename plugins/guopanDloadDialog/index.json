@@ -1,0 +1,7 @@
+{
+    "author": "da宗熊",
+    "title": "PC下载弹窗",
+    "description": "PC端，果盘下载弹窗，完全不依赖jquery的写法",
+    "main": "download.js",
+    "rely": []
+}

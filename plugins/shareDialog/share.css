@@ -1,0 +1,31 @@
+.wap-share-pop{position:fixed;top:0;left:0;width:100%;height:100%;}
+.wap-share-background{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;opacity:.5;filter:alpha(opacity=50);}
+.wap-share-hide{display:none;}
+.wap-share-active{}
+.wap-share-main{position:absolute;bottom:0;left:0;width:100%;padding-bottom:1.5em;background:#fff;text-align:center;}
+.wap-share-cnt{padding:1.5em 0;}
+.wap-share-item{
+    display:inline-block;color:#898888;
+}
+.wap-share-cancel{
+    display:block;
+    margin:0 1.5em;
+    border:1px solid #afafaf;border-radius:.5em;
+    text-align:center;
+    line-height:1;
+    padding:1em 0;
+    font-size:1.3em;color:#898888;
+}
+/** 一些背景 */
+.wap-share-item{
+    width:6em;
+    margin:.5em .2em;
+    padding-top:6em;
+    background-repeat:no-repeat;
+    background-position:50% 0;
+    background-size:5.5em 5.5em;
+}
+.wap-share-item-sinawb{background-image:url(./sinawb.png);}
+.wap-share-item-friendgp{background-image:url(./friendgp.png);}
+.wap-share-item-qqfriend{background-image:url(./qqfriend.png);}
+.wap-share-item-qqarea{background-image:url(./qqarea.png);}

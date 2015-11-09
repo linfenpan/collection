@@ -1,0 +1,50 @@
+.web-download-dialog{position:fixed;top:0;left:0;width:100%;height:100%;}
+.web-download-dialog-active{display:block;}
+.web-download-dialog-hide{display:none;}
+.web-download-dialog .dialog-background{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;opacity:.5;filter:alpha(opacity=50);}
+.web-download-dialog .dialog-container{position:absolute;top:50%;left:50%;width:410px;margin-left:-205px;background:#fff;border-radius:4px;}
+.web-download-dialog .dialog-header{
+    position:relative;
+    height:60px;
+    line-height:60px;
+    padding:0 40px;
+    border-bottom:1px solid #e6e6e6;
+    font-size:22px;
+    letter-spacing:4px;
+    color:#00aeff;
+    background: #fbfaf9;
+    text-align:center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 4px;
+}
+.web-download-dialog .dialog-close, .web-download-dialog .dialog-return{position:absolute;background-repeat:no-repeat;}
+.web-download-dialog .dialog-close{top:22px;right:15px;width: 18px;height: 18px;background-image:url(close.png);}
+.web-download-dialog .dialog-return{display:none;top:21.5px;left:15px;width:9px;height:17px;background-image:url(return.png);cursor:pointer;}
+.web-download-dialog .dialog-item{position:relative;display:block;height:44px;padding:20px 0;border-bottom:1px solid #e6e6e6;background-position:50% 20px;background-repeat:no-repeat;}
+.web-download-dialog .dialog-item-last{border-bottom:none;}
+.web-download-dialog .dialog-code{display:none;}
+.web-download-dialog .dialog-item:hover .dialog-code{display:block;}
+.web-download-dialog .dialog-code{position:absolute;z-index:1;right:-153px;padding:1px 1px 8px 1px;border:1px solid #ccc;color:#333;line-height:1;font-size:14px;text-align:center;background:#fff;}
+.web-download-dialog .dialog-triangle{position:absolute;top:10px;left:-19px;width:19px;height:20px;background:url(arrow.png) no-repeat;}
+.web-download-dialog .dialog-img{display:block;width:200px;height:200px;padding-bottom:2px;}
+
+/** 两份破解 */
+.web-dialog-pj-detail{display:none;}
+
+.web-dialog-pj-detail .cp-content{font-size:14px;padding:0 20px;text-align:center}
+.web-dialog-pj-detail .cp-info{margin:0;color:#774b1b;background-color:#f8f6c6;padding:15px 20px;font-size:14px}
+.web-dialog-pj-detail .cp-qrcode{width:140px;height:140px;margin-top:10px;vertical-align:bottom;}
+.web-dialog-pj-detail .cp-xx{padding:15px 0;border-bottom:1px solid #e6e6e6;}
+.web-dialog-pj-detail .cp-tt a{text-decoration:underline;color:#00aeff;}
+.web-dialog-pj-detail .cp-xx-last{border-bottom:0}
+.web-dialog-pj-detail .cp-warn{color:#e42121;}
+.web-dialog-pj-detail .cp-tt{margin:0;font-weight:normal;font-size:18px}
+.web-dialog-pj-detail .cp-image{vertical-align:bottom;}
+
+
+.web-download-dialog .item-android{background-image:url(android.jpg);}
+.web-download-dialog .item-android-pj{background-image:url(android-pj.jpg);}
+.web-download-dialog .item-ios{background-image:url(ios.jpg);}
+.web-download-dialog .item-ios-pj{background-image:url(ios-pj.jpg);}

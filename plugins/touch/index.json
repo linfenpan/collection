@@ -1,5 +1,6 @@
 {
     "author": "da宗熊",
+    "title": "移动端滑动广告",
     "description": "简单的拖动滑行组件",
     "main": "slide.js",
     "rely": ["touch.js"]
