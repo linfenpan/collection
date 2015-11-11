@@ -1,4 +1,6 @@
 define(function(require, exports, module){
+    // 自定义函数的ID
+    var FnId = 10000;
 
     var ui = {
         init: function(dom, options){
@@ -7,14 +9,15 @@ define(function(require, exports, module){
             this.options = {
                 css: !!options.css,
                 template: options.template || '<a href="#{href}" target="_blank" class="wap-share-item wap-share-item-#{$key}">#{title}</a>',
-                list: ["sinawb", "friendgp", "qqfriend", "qqarea"],
+                list: options.list || ["sinawb", "friendgp", "qqfriend", "qqarea"],
                 data: {
+                    // 某些链接，不设置 pic 字段，就能自动读取 图片哦~
                     sinawb: {
                         title: "新浪微博",
-                        href: 'http://service.weibo.com/share/share.php?url=#{url}&title=#{content}&pic=#{image}&searchPic=false'
+                        href: 'http://service.weibo.com/share/share.php?url=#{url}&title=#{content}&pic=#{image}&searchPic=true'
                     },
                     friendgp: {
-                        title: "朋友圈",
+                        title: "朋友网",
                         href: 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?to=pengyou&url=#{url}&title=#{title}&desc=&summary=#{content}&pics=#{image}'
                     },
                     qqfriend: {
@@ -24,6 +27,18 @@ define(function(require, exports, module){
                     qqarea: {
                         title: "QQ空间",
                         href: 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=#{url}&title=#{title}&desc=&summary=#{content}&pics=#{image}'
+                    },
+                    qqweibo: {
+                        title: "腾讯微博",
+                        href: 'http://share.v.t.qq.com/index.php?c=share&a=index&title=#{content}&url=#{url}&site=&pic=#{image}'
+                    },
+                    weixin: {
+                        title: "朋友圈",
+                        href: function(elem){
+                            alert("这个功能没有完善，请自己搞定");
+                            console.log("可使用: http://s.jiathis.com/qrcode.php?url=http://star.guopan.cn/zhubo/，生成二维码");
+                            console.log(elem);
+                        }
                     }
                 }
             };
@@ -51,14 +66,15 @@ define(function(require, exports, module){
             this.bindUI();
         },
         setShare: function(data){
-            this.shareData = this.extend(this.shareData, data || {});
-            data = this.shareData;
-            !data.content && (data.content = data.title);
+            data = data || {};
             for(var i in data){
                 if(data.hasOwnProperty(i)){
                     data[i] = window.encodeURIComponent(data[i]);
                 }
             }
+            this.shareData = this.extend(this.shareData, data);
+            data = this.shareData;
+            !data.content && (data.content = data.title);
 
             // 重置分享内容
             if(this.wrap){
@@ -72,9 +88,17 @@ define(function(require, exports, module){
                     item = data[key];
                     if(item){
                         item = this.extend({}, item);
-                        item.href = this.buildHref(item.href);
                         item["$key"] = key;
-                        html += format(options.template, item);
+                        if(typeof item.href === "string"){
+                            item.href = this.buildHref(item.href);
+                            html += format(options.template, item);
+                        }else{
+                            var fnName = "SHARE_FN_CALLBACK_" + FnId++;
+                            window[fnName] = item.href;
+                            item.href = "javascript:;";
+                            var link = format(options.template, item);
+                            html += link.replace(/>/, "onclick=\""+ fnName +"(this)\">").replace(/target=("|').*?\1/, "");
+                        }
                     }
                 }
                 this.wrap.innerHTML = html;
@@ -90,8 +114,8 @@ define(function(require, exports, module){
             this.wrap = children[0];
             this.btn = children[1];
         },
-        buildHref: function(template){
-            return format(template, this.shareData);
+        buildHref: function(href){
+            return format(href, this.shareData);
         },
         extend: function(a, b){
             for(var i in b){
