@@ -1,0 +1,6 @@
+{
+    "title": "下拉刷新",
+    "description": "基于jquery的下拉刷新功能",
+    "main": "pulldown.js",
+    "rely": ["../jquery.js", "../touch/touch.js"]
+}

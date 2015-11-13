@@ -129,9 +129,8 @@ define(function(require, exports, module){
             var dom = this.dom;
             addClass(dom, "wap-share-pop");
             addClass(dom, "wap-share-hide");
-            this.btn.onclick = function(e){
+            this.btn.onclick = function(){
                 addClass(dom, "wap-share-hide");
-                e.preventDefault();
             };
             if(dom.addEventListener){
                 dom.addEventListener("touchmove", function(e){

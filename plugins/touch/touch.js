@@ -34,8 +34,9 @@ define(function(require, exports, module){
             onMove: function(e){
                 if(ac.start){
                     var cr = ac.cr(e);
-                    e.preventDefault();
-                    ac.onmove && ac.onmove(cr, e);
+                    if(!(ac.onmove && ac.onmove(cr, e))){
+						e.preventDefault();
+					}
                 }
             },
             onEnd: function(e){

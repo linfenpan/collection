@@ -165,7 +165,7 @@ define(function(require, exports, module){
             }
 
             // 删除原本元素
-            var children = [].slice.call(this.$wrap.children, 0);
+            var children = this.$wrap.children;
             for(var i = 0, max = children.length; i < max; i++){
                 children[i].onclick = null;
                 this.$wrap.removeChild(children[i]);

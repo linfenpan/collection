@@ -1,0 +1,6 @@
+{
+    "author": "da宗熊",
+    "description": "基于iScroll的下拉刷新，更改了iScroll的源码",
+    "main": "pullUpAndDown.js",
+    "rely": ["./build/iscroll-probe.js", "../jquery.js"]
+}
