@@ -56,7 +56,7 @@ define(function(require, exports, module){
             var startTop, startHeight;
             cupture.onstart = checkLock(function(p, e){
                 startTop = $dom.scrollTop;
-                startHeight = $wrap.clientHeight;
+                startHeight = Math.max($wrap.offsetHeight, $wrap.clientHeight);
                 $down.classList.remove(PULL_DOWN_ANM);
             });
             cupture.onmove = checkLock(function(c, e){
@@ -72,7 +72,7 @@ define(function(require, exports, module){
                 $down.classList.add(PULL_DOWN_ANM);
 
                 var height = $down.clientHeight,
-                    targetHeight = $wrap.clientHeight;
+                    targetHeight = startHeight;
                 if(realHeight(targetHeight, options.downRate) <= height){
                     $down.classList.add(PULL_DOWN_ACTIVE);
                     $down.style.height = targetHeight + "px";
