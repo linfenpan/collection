@@ -5,39 +5,21 @@
     <title>emmet语法的html生成</title>
 </head>
 <body>
-    <div id="test">
-
-    </div>
+    <div id="test"></div>
+<script src="str2Html.js" charset="utf-8"></script>
 <script type="text/javascript">
-    var str = ".mmm > .list > .item*5";
-    var root = new Node();
-	
-	var curNode = root;
-	str.replace(/(.*?)([>+])/g, function(all, key, sysm){
-		switch(sysm){
-			case ">":
-				break;
-			case "+":
-				break;
-			default:
-				
-		}
-	});
+var root = str2Html.compile(
+        "span#parent > (div.div$$ > a.link.link$[href=http://www.baidu.com/ target=_blank]{友情链接$}) * 5" +
+        "^#container > .main.tC{文字哦}"
+    );
+console.time("test");
+console.log(
+    root.toHtml()
+);
+console.timeEnd("test");
+test.innerHTML = root.toHtml();
 
-    function Node(str, ptNode){
-		this.pt = ptNode;
-		this.str = str;
-		this.compile();
-    };
-	Node.prototype = {
-		compile: function(){
-			
-		},
-		add: function(){
-			
-		},
-		
-	}
+
 </script>
 </body>
 </html>
