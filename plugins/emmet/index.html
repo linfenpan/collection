@@ -5,7 +5,7 @@
     <title>emmet语法的html生成</title>
 </head>
 <body>
-    <div id="test"></div>
+    <div id="testHtml"></div>
 <script src="str2Html.js" charset="utf-8"></script>
 <script type="text/javascript">
 str2Html.setDefault({tagName: "div", repeat: {attr: true, cls: true, id: true, text: true, tag: /\$+/g}});
@@ -18,7 +18,7 @@ console.log(
     root.toHtml()
 );
 console.timeEnd("test");
-test.innerHTML = root.toHtml();
+testHtml.innerHTML = root.toHtml();
 
 
 var testIndex = 1;
