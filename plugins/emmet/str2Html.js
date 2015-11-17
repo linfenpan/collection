@@ -1,10 +1,32 @@
+/**
+仿emmet语法的小脚本 by da宗熊
+例子:
+	str2Html.compile("#parent > .child").toHtml() ==> <div id="parent"> <div class="child"></div> </div>
+*/
+
+// string --> 属性对象，有BUG
+// 需要可配置默认的 tagName
+
 ;(function(window){
 	// es5语法:
 	// [].indexOf
 
+	// 全局默认标签
+	var DEFAULT_TAGNAME = "div";
+	// repeat 的参数，默认 $ 为占位符
+	// 修正属性、className、和 文本
+	// 通过 三元表达式判定，是否可用，极度浪费时间的样子..
+	var DEFAULT_FIX_REPEAT = {
+		tag: /\$+/g,
+		attr: true,
+		cls: true,
+		text: true,
+		id: true
+	};
+
 	// 节点定义
 	function Node(ptNode, tagName){
-		this.tagName = typeof tagName === "undefined" ? "div" : "";
+		this.tagName = typeof tagName === "undefined" ? DEFAULT_TAGNAME : "";
 	    this.text = "";
 	    this.id = "";
 	    this.classList = [];
@@ -120,27 +142,27 @@
 			return html;
 	    },
 		_toHtml: function(index){
-			var html = "";
-			var change$ = this._change$2Number;
+			var html = "", cMap = util.changeMap;
 			// 有 tagName 才有属性、样式
 	        if(this.tagName){
 	            html += "<" + this.tagName;
 
-	            this.id && (html += " id=\"" +  change$(this.id, index) + "\"");
+	            this.id && (html += " id=\"" + cMap.id(this.id, index) + "\"");
 
 	            if(this.classList.length > 0){
-	                html += " class=\"" + change$(this.classList.join(" "), index) + "\""
+					var className = this.classList.join(" ");
+	                html += " class=\"" + cMap.cls(className, index) + "\""
 	            }
 
 	            for(var i in this.attr){
 	                if(this.attr.hasOwnProperty(i)){
-	                    html += " " + i + "=\"" + change$(this.attr[i], index) + "\"";
+	                    html += " " + i + "=\"" + cMap.attr(this.attr[i], index) + "\"";
 	                }
 	            }
 
 	            html += ">";
 
-	            this.text && (html +=  change$(this.text, index));
+	            this.text && (html += cMap.text(this.text, index));
 	        }
 
 	        for(var i = 0, max = this.children.length, list = this.children; i < max; i++){
@@ -150,19 +172,11 @@
 	        this.tagName && (html += "</" + this.tagName + ">");
 
 	    	return html;
-		},
-		// 把 $ 替换为 数字
-		_change$2Number: function(str, i){
-			return str.replace(/\$+/g, function(str){
-				var len = str.length, numLen = (i + "").length;
-				if(numLen >= len){
-					return i;
-				}else{
-					return new Array(len - numLen + 1).join(0) + i;
-				}
-			});
 		}
 	};
+
+
+
 
 	// 编译工具
 	var util = {
@@ -186,19 +200,27 @@
 	            }else{
 	                break;
 	            }
+				if(!chr){
+					break;
+				}
 	        };
 	        return res.join("");
 	    },
-		// data-name=da宗熊 data-age=23 ---> {"data-name": "da宗熊", "data-age": 23}
+		// data-name="da 宗熊" data-age=23 ---> {"data-name": "da宗熊", "data-age": 23}
 		str2Obj: function(str, split, eqSplit){
-			var list = str.split(eqSplit), obj = {};
-	        str.replace(new RegExp("(.*?)" + eqSplit + "(.*?)($|[^\\\\]" + split + ")", "gm"), function(str, key, value, last){
-	            if(last.length > 0){
-	                value += last.slice(0, 1);
-	            }
-	            obj[key.replace(/^\s*|\s*$/g, "")] = value;
-	            return "";
-	        });
+			var list = str.split(""), obj = {};
+
+	        while(list.length > 0){
+				var key = this.findUntil(eqSplit, list);
+				var first = list[0], value;
+				if(/"|'/.test(first)){
+					list.shift();
+					value = this.findUntil(first, list);
+				}else{
+					value = this.findUntil(split, list);
+				}
+				obj[key] = value;
+			};
 	        return obj;
 		},
 		// 找到对称的 结束括号 ")"
@@ -225,7 +247,21 @@
 	            }
 	        };
 	        return res.join("");
-	    }
+	    },
+		// 把 $ 替换为 数字
+		change$2Number: function(str, i){
+			return str.replace(DEFAULT_FIX_REPEAT.tag, function(str){
+				var len = str.length, numLen = (i + "").length;
+				if(numLen >= len){
+					return i;
+				}else{
+					return new Array(len - numLen + 1).join(0) + i;
+				}
+			});
+		},
+		// 供 Node 使用
+		// 在 str2Html.setDefault 中初始化
+		changeMap: {id: null, attr: null, cls: null, text: null}
 	};
 
 	// 遵循 emmet 语法
@@ -318,7 +354,41 @@
         return root;
     };
 
-	window.str2Html = {
-		compile: compile
-	}
+	window.str2Html = ({
+		compile: compile,
+		// 参数: {tagName: "div", repeat: {tag: /\$+/g, attr: !0, cls: !0, text: !0}}
+		setDefault: function(options){
+			options = options || {};
+			// 默认标签
+			DEFAULT_TAGNAME = typeof options.tagName !== "undefined" ? options.tagName : DEFAULT_TAGNAME;
+
+			// 循环生成元素的参数
+			if(options.repeat){
+				var repeat = options.repeat;
+				var obj = DEFAULT_FIX_REPEAT;
+				for(var i in repeat){
+					if(repeat.hasOwnProperty(i)){
+						obj[i] = repeat[i];
+					}
+				};
+				var rFn = function(str){
+					return str;
+				};
+				var cFn = util.change$2Number;
+				var map = util.changeMap;
+				for(var i in map){
+					if(map.hasOwnProperty(i)){
+						map[i] = obj[i] ? cFn : rFn;
+					}
+				}
+			}
+		},
+		init: function(){
+			this.setDefault({
+				// 触发重新生成 util.changeMap
+				repeat: {}
+			});
+			return this;
+		}
+	}).init();
 })(window);

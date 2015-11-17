@@ -8,6 +8,7 @@
     <div id="test"></div>
 <script src="str2Html.js" charset="utf-8"></script>
 <script type="text/javascript">
+str2Html.setDefault({tagName: "div", repeat: {attr: true, cls: true, id: true, text: true, tag: /\$+/g}});
 var root = str2Html.compile(
         "span#parent > (div.div$$ > a.link.link$[href=http://www.baidu.com/ target=_blank]{友情链接$}) * 5" +
         "^#container > .main.tC{文字哦}"
@@ -20,6 +21,22 @@ console.timeEnd("test");
 test.innerHTML = root.toHtml();
 
 
+var testIndex = 1;
+function test(str){
+    testIndex++;
+    console.log("测试代码" + testIndex + ": " + str);
+}
+
+// 测试代码:
+test(str2Html.compile("#parent").toHtml());
+test(str2Html.compile("span#parent").toHtml());
+test(str2Html.compile(".item.item1").toHtml());
+test(str2Html.compile(".item[name=da宗熊 age=26]").toHtml());
+test(str2Html.compile(".item{一段文字}").toHtml());
+test(str2Html.compile("(.item1 + .item2) * 3").toHtml());
+test(str2Html.compile(".item$*2").toHtml());
+test(str2Html.compile(".item$$*2").toHtml());
+test(str2Html.compile("#parent1 > .item1 ^ #parent2").toHtml());
 </script>
 </body>
 </html>
