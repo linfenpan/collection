@@ -1,5 +1,5 @@
 define(function(require, exports, module){
-    require.css("./gallery.css");
+    require("./gallery.css");
     var ui = {
         hideClass: "pic-watcher-hide",
         activeClass: "pic-watcher-active",
