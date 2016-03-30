@@ -58,7 +58,7 @@ var cssPrefix = (function(style){
     for (var i = 0, max = list.length; i < max; i++) {
         var item = list[i];
         if (style.hasOwnProperty(item + "ransform")) {
-            cssPrefix = item.slice(0, -1);
+            prefix = item.slice(0, -1);
             break;
         }
     }
