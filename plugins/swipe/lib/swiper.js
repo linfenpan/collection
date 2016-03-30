@@ -35,8 +35,8 @@ Swiper.prototype = {
     interval: 3000,     // 3秒，自动切换到下一个
     repeat: true,       // 循环模式
 
-    wrapSelector: ".swipe-wrap",
-    childSelector: ".swipe-item",
+    wrapSelector: ".swiper-wrap",
+    childSelector: ".swiper-item",
 
     init: function(root, options){
         this.$root = $(root);
@@ -178,33 +178,34 @@ Swiper.prototype = {
         this.setIndex(this.index - 1, withAnimate);
     },
     setIndex: function(index, withAnimate){
-        if (index == this.index) {
-            this.isNext = false;
-            this.isPrev = false;
+        var self = this;
+        if (index == self.index) {
+            self.isNext = false;
+            self.isPrev = false;
         } else {
-            this.isNext =  index > this.index;
-            this.isPrev = !this.isNext;
+            self.isNext =  index > self.index;
+            self.isPrev = !self.isNext;
         }
-        var index = this.index = this.fixIndex(index);
+        var index = self.index = self.fixIndex(index);
 
         // 找出 (visibleCount - 1) + childs[index] + (visibleCount - 1) 之间的所有元素，记录在 $moves 中
-        this.$oldMoves = this.$moves;
-        this.$moves = [];
+        self.$oldMoves = self.$moves;
+        self.$moves = [];
 
-        var edgeCount = this.visibleCount - 1;
+        var edgeCount = self.visibleCount - 1;
         edgeCount <= 0 && (edgeCount = 1);
 
         var start = index - edgeCount;
         var end = index + edgeCount;
 
         while (start <= end) {
-            this.$moves.push(this.$childs[this.fixIndex(start)]);
+            self.$moves.push(self.$childs[self.fixIndex(start)]);
             start++;
         }
         // TODO 重置 $oldMoves，排列$moves
-        this.placeVisibleChilds(withAnimate);
+        self.placeVisibleChilds(withAnimate);
 
-        this.slideCallback(index);
+        self.slideCallback.call(self, index);
     },
     fixIndex: function(index){
         var isRepeatMode = this.repeat;
@@ -261,7 +262,7 @@ Swiper.prototype = {
     resize: function(){
         this.reset();
         this.$childs.forEach(function(child, index){
-            setTranslateX(child, -this.getChildOrignX(index) + this.rootWidth * 1.2); 
+            setTranslateX(child, -this.getChildOrignX(index) + this.rootWidth * 1.2);
         }.bind(this));
         this.setIndex(this.index);
     },

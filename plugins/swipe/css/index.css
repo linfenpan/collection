@@ -135,36 +135,20 @@ a:hover {
 .pictures .dot.active {
     background: #fff;
 }
-.swipe {
-    overflow: hidden;
-    visibility: hidden;
-    position: relative;
+
+.swiper {
     margin: 2% 0;
 }
-.swipe-wrap {
-    overflow: hidden;
-    position: relative;
+.swiper-item {
+    width:100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
 }
-.swipe-wrap img {
+
+.swiper-wrap img {
     width: 100%;
     vertical-align: bottom;
     border-radius: .5rem;
-}
-.swipe-item {
-  float:left;
-  width:100%;
-  padding: 0 1rem;
-  position: relative;
-  -webkit-transition-property: -webkit-transform;
-  transition-property: -webkit-transform;
-  transition-property: transform;
-  transition-property: transform, -webkit-transform;
-  -webkit-transition-timing-function: ease;
-          transition-timing-function: ease;
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-
-  box-sizing: border-box;
 }
 
 .footer {
