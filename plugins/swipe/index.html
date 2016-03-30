@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <title>皇室战争</title>
+    <link rel="stylesheet" href="./css/index.css" />
+</head>
+<body>
+
+    <div class="pictures">
+        <div class="title">游戏图片</div>
+        <div class="content swipe">
+            <div class='swipe-wrap'>
+                <div class="swipe-item"><img src="./images/1.jpg" /></div>
+                <div class="swipe-item"><img src="./images/2.jpg" /></div>
+                <div class="swipe-item"><img src="./images/3.jpg" /></div>
+                <div class="swipe-item"><img src="./images/4.jpg" /></div>
+                <div class="swipe-item"><img src="./images/5.jpg" /></div>
+                <div class="swipe-item"><img src="./images/6.jpg" /></div>
+                <div class="swipe-item"><img src="./images/7.jpg" /></div>
+                <div class="swipe-item"><img src="./images/8.jpg" /></div>
+            </div>
+        </div>
+        <div class="indicator">
+            <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+    </div>
+
+
+<script src="./swiper.min.js"></script>
+<script>
+var eSwipe = document.querySelector(".swipe");
+window.swiper = new Swiper(eSwipe, {
+    repeat: true,
+    ratio: .6,
+    slideCallback: function(index){
+        console.timeEnd("a");
+        console.time("a");
+    }
+});
+window.onresize = function(){
+    swiper.resize();
+}
+
+</script>
+</body>
+</html>
