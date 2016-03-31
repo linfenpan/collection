@@ -9,6 +9,10 @@
   "keywords": [
     "slider"
   ],
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/linfenpan/collection/tree/master/plugins/swipe"
+  },
   "author": "da宗熊",
   "license": "ISC",
   "devDependencies": {

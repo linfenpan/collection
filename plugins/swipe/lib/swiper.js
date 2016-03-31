@@ -140,6 +140,9 @@ Swiper.prototype = {
         }
         self.isFirstMove = false;
 
+        // @notice 性能不好的浏览器，moving 时，会有些许卡顿，所以，缩减了移动点的间距，使之没那么卡
+        spaceX *= 0.85;
+        
         // 添加阻力效果
         if (!self.repeat) {
             var elastic = self.elastic;

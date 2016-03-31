@@ -14,6 +14,7 @@ var banner = `/*!
     @version <%= version %>
     @license <%= license %>
     @lastModify ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}
+    @repository <%= repository.url %>
     @example
         var swiper = new Swiper(element, options)
     @options
