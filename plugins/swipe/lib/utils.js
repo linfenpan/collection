@@ -54,7 +54,7 @@ var cssPrefix = (function(style){
 })(htmlStyle);
 
 function queryPrefix(key) {
-    if (htmlStyle.hasOwnProperty(key)) {
+    if (key in htmlStyle || htmlStyle.hasOwnProperty(key)) {
         return key;
     }
     return cssPrefix + key.slice(0, 1).toUpperCase() + key.slice(1);

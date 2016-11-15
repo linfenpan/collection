@@ -2,7 +2,7 @@
     @author da宗熊
     @version 1.0.0
     @license ISC
-    @lastModify 2016-3-31
+    @lastModify 2016-11-15
     @repository https://github.com/linfenpan/collection/tree/master/plugins/swipe
     @example
         var swiper = new Swiper(element, options)
@@ -68,7 +68,7 @@ var cssPrefix = (function(style){
 })(htmlStyle);
 
 function queryPrefix(key) {
-    if (htmlStyle.hasOwnProperty(key)) {
+    if (key in htmlStyle || htmlStyle.hasOwnProperty(key)) {
         return key;
     }
     return cssPrefix + key.slice(0, 1).toUpperCase() + key.slice(1);
@@ -313,7 +313,7 @@ Swiper.prototype = {
 
         // @notice 性能不好的浏览器，moving 时，会有些许卡顿，所以，缩减了移动点的间距，使之没那么卡
         spaceX *= 0.85;
-        
+
         // 添加阻力效果
         if (!self.repeat) {
             var elastic = self.elastic;

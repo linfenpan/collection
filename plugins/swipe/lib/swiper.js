@@ -78,7 +78,7 @@ Swiper.prototype = {
             if (this.visibleCount % 2 == 0) { this.visibleCount++; }
         }
 
-        console.log(this.visibleCount);
+        // console.log(this.visibleCount);
 
         if (this.oldNextDistance != this.nextDistance) {
             this.nextDistance = this.nextDistance < 1 ? this.nextDistance * this.rootWidth : this.nextDistance;
@@ -142,7 +142,7 @@ Swiper.prototype = {
 
         // @notice 性能不好的浏览器，moving 时，会有些许卡顿，所以，缩减了移动点的间距，使之没那么卡
         spaceX *= 0.85;
-        
+
         // 添加阻力效果
         if (!self.repeat) {
             var elastic = self.elastic;
