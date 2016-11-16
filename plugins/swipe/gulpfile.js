@@ -18,7 +18,12 @@ var banner = `/*!
     @example
         var swiper = new Swiper(element, options)
     @options
-        [index, ratio, elastic, slideTime, resetTime, nextDistance, interval, repeat, wrapSelector, childSelector, slideCallback]
+        [
+          index[开始索引], ratio[每个子元素，占总宽度百分比 < 1], elastic[阻力大小 < 1],
+          slideTime[滑动时间], resetTime[重置事件], nextDistance[到下一帧距离px或<1],
+          interval[自动切换到下一帧的时间], repeat[是否循环], wrapSelector[wrap选择器],
+          childSelector[子元素选择器], slideCallback[切换到下一帧的回调]
+        ]
     @bug
         no listener at "transitionEnd" event, the behavior of the timer may be strange when we are away from the page
 */`;

@@ -2,12 +2,17 @@
     @author da宗熊
     @version 1.0.0
     @license ISC
-    @lastModify 2016-11-15
+    @lastModify 2016-11-16
     @repository https://github.com/linfenpan/collection/tree/master/plugins/swipe
     @example
         var swiper = new Swiper(element, options)
     @options
-        [index, ratio, elastic, slideTime, resetTime, nextDistance, interval, repeat, wrapSelector, childSelector, slideCallback]
+        [
+          index[开始索引], ratio[每个子元素，占总宽度百分比 < 1], elastic[阻力大小 < 1],
+          slideTime[滑动时间], resetTime[重置事件], nextDistance[到下一帧距离px或<1],
+          interval[自动切换到下一帧的时间], repeat[是否循环], wrapSelector[wrap选择器],
+          childSelector[子元素选择器], slideCallback[切换到下一帧的回调]
+        ]
     @bug
         no listener at "transitionEnd" event, the behavior of the timer may be strange when we are away from the page
 */
@@ -329,16 +334,19 @@ Swiper.prototype = {
     },
     moveEnd: function(point){
         var self = this, spaceX = point.spaceX;
-        if (Math.abs(spaceX) > self.nextDistance) {
-            if (spaceX > 0) {
-                self.prev();
-            } else {
-                self.next();
-            }
-        } else {
-            self.$moves.forEach(function(child){
-                setTranslateX(child, +child.dataset.startx, self.resetTime);
-            });
+        // 如果移动，没有被阻止，则继续
+        if (!self.isPreventMoving) {
+          if (Math.abs(spaceX) > self.nextDistance) {
+              if (spaceX > 0) {
+                  self.prev();
+              } else {
+                  self.next();
+              }
+          } else {
+              self.$moves.forEach(function(child){
+                  setTranslateX(child, +child.dataset.startx, self.resetTime);
+              });
+          }
         }
         self.isPreventMoving = false;
         self.startTimer();

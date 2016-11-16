@@ -158,16 +158,19 @@ Swiper.prototype = {
     },
     moveEnd: function(point){
         var self = this, spaceX = point.spaceX;
-        if (Math.abs(spaceX) > self.nextDistance) {
-            if (spaceX > 0) {
-                self.prev();
-            } else {
-                self.next();
-            }
-        } else {
-            self.$moves.forEach(function(child){
-                setTranslateX(child, +child.dataset.startx, self.resetTime);
-            });
+        // 如果移动，没有被阻止，则继续
+        if (!self.isPreventMoving) {
+          if (Math.abs(spaceX) > self.nextDistance) {
+              if (spaceX > 0) {
+                  self.prev();
+              } else {
+                  self.next();
+              }
+          } else {
+              self.$moves.forEach(function(child){
+                  setTranslateX(child, +child.dataset.startx, self.resetTime);
+              });
+          }
         }
         self.isPreventMoving = false;
         self.startTimer();
