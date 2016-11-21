@@ -86,7 +86,7 @@ Swiper.prototype = {
         }
 
         // 如果数量不足，就强制进入非循环模式
-        if ((this.visibleCount - 1) * 2 + 1 > this.length) {
+        if (this.visibleCount + 2 > this.length) {
             this.repeat = false;
         }
 
@@ -198,7 +198,7 @@ Swiper.prototype = {
         self.$oldMoves = self.$moves;
         self.$moves = [];
 
-        var edgeCount = self.visibleCount - 1;
+        var edgeCount = Math.max(Math.ceil(self.visibleCount / 2), 1);
         edgeCount <= 0 && (edgeCount = 1);
 
         var start = index - edgeCount;

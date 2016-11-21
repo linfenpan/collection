@@ -105,7 +105,7 @@
 
 <!-- <script src="./lib/utils.js"></script>
 <script src="./lib/touch.js"></script>
-<script src="./lib/swiper.js?v=6"></script> -->
+<script src="./lib/swiper.js"></script> -->
 
 <script src="./swiper.min.js"></script>
 <script>
@@ -113,7 +113,8 @@ var $dots1 = document.querySelectorAll(".indicator1 .dot")
 var $old1;
 var swiper1 = new Swiper(document.querySelector(".swiper1"), {
     repeat: true,
-    ratio: .6,
+    interval: 0,
+    ratio: 20,
     slideCallback: function(index){
         $old1 && $old1.classList.remove("active");
         $dots1[index].classList.add("active");
@@ -136,8 +137,9 @@ window.addEventListener("resize", function(){
 
 
 var swiper3 = new Swiper(document.querySelector(".swiper3"), {
-    repeat: false,
-    ratio: .6
+    repeat: true,
+    nextDistance: 20,
+    ratio: .5
 });
 window.addEventListener("resize", function(){
     swiper3.resize();
