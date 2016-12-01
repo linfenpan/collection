@@ -207,6 +207,8 @@
     ctx.fingerprint = options.fingerprint;
     ctx.defaultValue = options.defaultValue;
     ctx.isDebug = false;
+
+    Tracker.setAdapter(adapter);
   }
 
   Tracker.prototype = {

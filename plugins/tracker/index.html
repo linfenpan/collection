@@ -3,13 +3,38 @@
 <head>
   <meta charset="utf-8">
   <title>统计测试</title>
+  <link href="./index.css" rel="stylesheet" />
   <script src="./jquery.js"></script>
   <script src="./tracker.js"></script>
 </head>
 <body>
-  引用了 jQuery 2.2 ，所以，别用 Ie8 看了
+  <ul id="navbar">
+    <li><h1>文档</h1></li>
+    <li>Demo1</li>
+  </ul>
+
+  <div id="main">
+    <div class="tips">引用了 jQuery 2.2 ，所以，别用 Ie8 看了</div>
+
+    <div class="demo demo1">
+      <h2 class="title">初始化</h2>
+      <div class="code">
+        <pre class="prettyprint">
+var tracker1 = new Tracker();
+        </pre>
+      </div>
+    </div>
+  </div>
+
+
   <script>
     Tracker.setAdapter();
+  </script>
+  <script src="prettify.js"></script>
+  <script>
+    $(function() {
+      PR.prettyPrint();
+    });
   </script>
 </body>
 </html>
