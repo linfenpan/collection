@@ -3,7 +3,7 @@
   * 目标，提供一个日志打点的框架
   *
  */
-(function (ctx, name, defination) {
+;(function (ctx, name, defination) {
   ctx[name] = defination(ctx);
 })(window, 'Tracker', function(win) {
   var doc = win.document;
@@ -180,7 +180,6 @@
 
   function Tracker(options, adapter) {
     var ctx = this;
-
     options = extend({
       url: '',
       // 统计属性
@@ -207,8 +206,6 @@
     ctx.fingerprint = options.fingerprint;
     ctx.defaultValue = options.defaultValue;
     ctx.isDebug = false;
-
-    Tracker.setAdapter(adapter);
   }
 
   Tracker.prototype = {
@@ -217,10 +214,10 @@
       this.isDebug && window.console && console.log.apply(console, args);
     },
 
-    getFingerprint() {
+    getFingerprint: function() {
       var ctx = this;
       if (!ctx.fingerprintValue) {
-        ctx.fingerprintValue = new Fingerprint().get();
+        ctx.fingerprintValue = (new Fingerprint()).get();
       }
       return ctx.fingerprintValue;
     },
@@ -242,16 +239,7 @@
       var statParam = options.statParam;
 
       elRoot = elRoot || doc;
-
-      // 根元素，应该停止冒泡了
-      elRoot.setAttribute && elRoot.setAttribute(options.stopAttr, 1);
-
-      // 默认发送参数
-      var dataDefault = extend(
-        ctx.compileStat(elRoot, ctx.dataSend) || {},
-        ctx.compileStat(elRoot, options.data) || {}
-      );
-
+      elRoot.setAttribute && elRoot.setAttribute(stopAttr, '');
 
       function clickHandler(e) {
         var target = e.target || e.srcElement;
@@ -262,10 +250,17 @@
           return;
         }
 
+        // 从当前元素，网上寻找的所有属性
         var allAttr = ctx.getAllStat(target, statParam, stopAttr);
+        // 当前元素的属性
         var currentStatAttr = ctx.compileStat(target, target.getAttribute(statAttr)) || {};
 
-        // 是否需要指纹 + 默认属性 + 函数默认属性 + 当前 stat属性 + statparam属性
+        // 默认数据 = Tracker 默认数据 + bindClick 的默认数据
+        var dataDefault = extend(
+          ctx.compileStat(elRoot, ctx.dataSend) || {},
+          ctx.compileStat(elRoot, options.data) || {}
+        );
+        // 是否需要指纹 + 默认数据 + 当前 stat属性 + statparam属性
         var data = extend(options.fingerprint ? { fingerprint: ctx.getFingerprint() } : {}, dataDefault, currentStatAttr, allAttr);
 
         ctx._log(data);
@@ -275,7 +270,7 @@
       if (elRoot.addEventListener) {
         addEvent(elRoot, options.event, clickHandler, true);
       } else {
-        elRoot.attachEvent(options.event || 'onmouseup', clickHandler);
+        elRoot.attachEvent('onmouseup', clickHandler);
       }
     },
 
@@ -339,6 +334,8 @@
 
       switch (type) {
         case 'string':
+          // ip: ET_#client_ip; type: web;
+          // 以分号间隔表达式，冒号为key/value间隔
           var attrs = stat.split(';');
           each(attrs, function(str) {
             var idx = str.indexOf(':');
@@ -351,7 +348,9 @@
               return;
             }
 
+            // TAG = '_'
             idx = val.indexOf(TAG);
+            // 从 ip: ET_#client_ip 中，找到 ET 和 #client_ip
             var type = '';
             if (idx > 0) {
               // 非 TAG 开头，并且 TAG 存在，则获取相关的 type 和 val
@@ -438,27 +437,15 @@
     }
   };
 
-  Tracker.StatAttributeMap = StatAttributeMap;
-  Tracker.addConverter = function(key, fn) {
-    StatAttributeMap[key] = typeOf(fn) === 'string' ? StatAttributeMap[fn] : fn;
-    return this;
-  };
-
-  Tracker.setAdapter = function(adapter) {
-    extend(Adapter, adapter || {});
-  };
-  // Tracker.setAdapter.toString = function() {
-  //   return ['为了兼容各个版本的浏览器，所以提供了 适配器 相关的功能',
-  //     ' 请传入一个对象，更改 Tracker 内置的一些操作: ',
-  //     '   {',
-  //     '     querySelector: Function(css3Selector) { return domElement; },',
-  //     '     queryChild: Function(elemRoot, css3Selector) { return childDomElement; },',
-  //     '     getAttribute: Function(elem, attributeName) { return attributeValue; }, // 一般可不修正',
-  //     '     getHtml: Function(elem) { return elemInnerHTML; }, // 一般可不修正',
-  //     '     getText: Function(elem) { return elemInnerText; } // 一般可不修正',
-  //     '   }'
-  //   ].join('\n');
-  // }
+  // Tracker.StatAttributeMap = StatAttributeMap;
+  // Tracker.addConverter = function(key, fn) {
+  //   StatAttributeMap[key] = typeOf(fn) === 'string' ? StatAttributeMap[fn] : fn;
+  //   return this;
+  // };
+  //
+  // Tracker.setAdapter = function(adapter) {
+  //   extend(Adapter, adapter || {});
+  // };
 
   return Tracker;
 });
