@@ -306,6 +306,8 @@
           shouldStop = true;
         }
       }
+      // 将数据倒转，越外层，应该优先级更低
+      list.reverse();
 
       // 以分号间隔，是每个独立的表达式
       var res = {};
