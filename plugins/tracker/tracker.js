@@ -135,18 +135,6 @@
       }
       return elem && adapter.getText(elem) || '';
     },
-    'QT': function(adapter, options) {
-      // params = ['#xxxx']
-      var params = options.params;
-      var selector = params[0];
-      var elem;
-      if (selector) {
-        elem = adapter.querySelector(selector);
-      }
-      if (elem) {
-        return adapter.getText(elem);
-      }
-    },
     'G': function(adapter, options) {
       var val = '';
       try {
@@ -278,7 +266,6 @@
       // <div stat="ip: ET_#client_ip; version: 100" />
       // equip_serverid: EA_a img, data_serverid;  从当前元素开始选择， Element Attribute
       // ip: ET_#client_ip 子元素的文本，Element Text
-      // ip2: QT_#client2_ip 查询元素的 文本，Query Text
       // serverid: G_ServerInfo.serverid 全局变量，如果是 function，则传入当前元素与tracker，并且运行, Global
       // ver: 100 静态字段
 
