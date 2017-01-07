@@ -10,8 +10,9 @@
     .m-input-select { position: relative; display: inline-block; *display: inline; *zoom: 1; -webkit-user-select: none; }
     .m-input-select ul, .m-input-select li, .m-input-select input { padding: 0; margin: 0; }
     .m-input-select .m-placeholder { overflow: hidden; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin-right: 22px; color: #bbb; }
-    .m-input-select .m-input { position: relative; padding-right: 22px; border: 1px solid #666; background: transparent; }
-    .m-input-select .m-placeholder, .m-input-select .m-input { font-size: 14px; line-height: 22px; }
+    .m-input-select .m-input { position: relative; padding-right: 22px; background: transparent; }
+    .m-input-select .m-placeholder, .m-input-select .m-input { font-size: 14px; line-height: 22px; border: 1px solid #666; }
+    .m-input-select .m-placeholder { border-right: 0 none; }
     .m-input-select .m-input-ico {position:absolute;right:0;top:0;width:22px;height:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAATElEQVQoU2NkIBEwkqiegTwNcXFx/4m1CW4DMZoWLVrEiOIkfJpAikGuwPADNk0wxVg1gASRNSErxqkBpgldMV4NuEKNvHggNg5A6gBo4xYmyyXcLAAAAABJRU5ErkJggg==) no-repeat 50% 50%;}
     .m-input-select .m-list { display: none; position: absolute; z-index: 1; top: 100%; left: 0; right: 0; max-width: 100%; max-height: 250px; overflow: auto; border-bottom: 1px solid #ddd; }
     .m-input-select .m-list-item { cursor: default; padding: 5px; margin-top: -1px; list-style: none; background: #fff; border:1px solid #ddd; border-bottom: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -53,14 +54,14 @@
       <span class="m-input-ico"></span>
       <ul class="m-list">
         <li class="m-list-item m-list-item-active" data-value="1">选项1</li>
-        <li class="m-list-item" data-value="2">选项2</li>
-        <li class="m-list-item" data-value="3">选项3</li>
-        <li class="m-list-item" data-value="4">选项4</li>
-        <li class="m-list-item" data-value="5">选项5</li>
-        <li class="m-list-item" data-value="6">选项6</li>
-        <li class="m-list-item" data-value="7">选项7</li>
-        <li class="m-list-item" data-value="8">选项8</li>
-        <li class="m-list-item" data-value="9">选项9</li>
+        <li class="m-list-item" data-value="2">选项21</li>
+        <li class="m-list-item" data-value="3">选项32</li>
+        <li class="m-list-item" data-value="4">选项43</li>
+        <li class="m-list-item" data-value="5">选项52</li>
+        <li class="m-list-item" data-value="6">选项63</li>
+        <li class="m-list-item" data-value="7">选项72</li>
+        <li class="m-list-item" data-value="8">选项83</li>
+        <li class="m-list-item" data-value="9">选项93</li>
         <li class="m-list-item" data-value="10">选项10</li>
       </ul>
     </div>
@@ -98,8 +99,11 @@
       function removeClass($r, cls) {
         $r.className = $r.className.replace(new RegExp('\\s*\\b' + cls + '\\b', 'g'), '');
       }
+      function hasClass($r, cls) {
+        return new RegExp('\\b' + cls + '\\b').test($r.className);
+      }
       function addClass($r, cls) {
-        if (!new RegExp('\\b' + cls + '\\b').test($r.className)) {
+        if (!hasClass($r, cls)) {
           $r.className += ' ' + cls;
         }
       }
@@ -120,7 +124,7 @@
         var args = [].slice.call(arguments, 0);
         var obj = args[0];
         for (var i = 1, max = args.length; i < max; i++) {
-          var item = args[0];
+          var item = args[i];
           for (var key in item) {
             if (item.hasOwnProperty(key)) {
               obj[key] = item[key];
@@ -152,10 +156,12 @@
       function Select($select, options) {
         this.$select = $select;
 
-        this.options = merge({
-          callback: function(id, val, index) {
-            console.log('选中', id, val, index);
+        options = this.options = merge({
+          callback: function(id, val) {
+            // console.log('选中', id, val);
           },
+          clearAtFocus: true,
+          freeInput: false,
           placeholder: '请选择'
         }, options || {});
 
@@ -177,11 +183,26 @@
           this.index = 0;
           this.isShow = false;
 
+          this.$value.value = this.options.freeInput ? this.$lis[0].innerHTML : attr(this.$lis[0], 'data-value');
+
+          this.setPlaceholder(this.options.placeholder);
           this.bindUI();
         },
 
+        setPlaceholder: function(text) {
+          this.$tip.innerHTML = text;
+        },
+
+        hidePlaceholder: function() {
+          css(this.$tip, { display: 'none' });
+        },
+
+        showPlaceholder: function() {
+          css(this.$tip, { display: 'block' });
+        },
+
         bindUI: function() {
-          var ctx = this;
+          var ctx = this, options = ctx.options;
 
           addEvent(ctx.$ul, 'click', function(e) {
             var target = e.srcElement || e.target,
@@ -203,7 +224,12 @@
           });
 
           // 绑定input的选中
-          addEvent(ctx.$input, 'focus', function() {
+          addEvent(ctx.$input, 'focus', function(e) {
+            if (options.clearAtFocus) {
+              ctx.$input.value = '';
+              ctx.showPlaceholder();
+            }
+            changeInput.call(this, e);
             ctx.show();
           });
 
@@ -217,7 +243,7 @@
                 ctx.next();
                 break;
               case 13:
-                ctx.setIndex(ctx.index, true);
+                ctx.setIndex(ctx._getActiveIndex(), true);
                 ctx.hide();
                 break;
             }
@@ -228,23 +254,30 @@
           addEvent(ctx.$input, 'propertychange', changeInput);
           function changeInput(e) {
             var $list = ctx.$lis, value = trim(this.value).toLowerCase();
+            if (value) {
+              ctx.hidePlaceholder();
+            } else {
+              ctx.showPlaceholder();
+            }
 
             forEach($list, function($li) {
               var text = trim($li.innerHTML).toLowerCase();
               css($li, { display: text.indexOf(value) >= 0 ? 'block' : 'none' });
             });
+
+            ctx.show();
           }
         },
 
-        scrollTo: function(index) {
+        fixScroll: function() {
           var ctx = this, $ul = ctx.$ul, $lis = ctx.$lis;
-          $ul.scrollTop = $lis[0].clientHeight * index;
+          $ul.scrollTop = $lis[0].clientHeight * ctx._getScrollIndex();
         },
 
-        setIndex: function(index, needCallback) {
+        setIndex: function(index, needUpdate) {
           var ctx = this,
             $lis = ctx.$lis,
-            length = ctx.length;
+            length = ctx._getVisibleItemCount();
 
           if (index < 0) {
             index = 0;
@@ -252,24 +285,99 @@
             index = length - 1;
           }
 
-          removeClass($lis[ctx.index], CLASS_ACTIVE);
-          ctx.index = index;
-          addClass($lis[ctx.index], CLASS_ACTIVE);
-          ctx.scrollTo(index);
-
-          var $li = $lis[index];
-          var text = $li.innerHTML,
-            value = attr($li, 'data-value');
-
-          ctx.$input.value = text;
-          ctx.$value.value = value;
-          ctx.$tip.innerHTML = text;
-          css(ctx.$tip, { display: 'none' });
-
-          // 触发回调
-          if (needCallback) {
-            ctx.options.callback(value, text, index);
+          // 找出当前active的元素，删掉 active
+          var indexCurrent = ctx._getActiveIndex();
+          if (indexCurrent >= 0) {
+            removeClass($lis[indexCurrent], CLASS_ACTIVE);
           }
+
+          // 然后找出下一个需要添加 active 的元素
+          var $li, indexScroll = 0;
+          for (var i = 0; i < ctx.length; i++) {
+            var _$li = $lis[i];
+            if (css(_$li, 'display') != 'none') {
+              if (indexScroll == index) {
+                addClass(_$li, CLASS_ACTIVE);
+                $li = _$li;
+                break;
+              }
+              indexScroll++;
+            }
+          }
+
+          if (!$li) {
+            return;
+          }
+
+          ctx.fixScroll();
+          ctx.index = index;
+
+          if (needUpdate) {
+            var text = $li.innerHTML,
+              value = attr($li, 'data-value'),
+              options = ctx.options;
+
+            ctx.$input.value = text;
+            ctx.$value.value = options.freeInput ? text : value;
+            ctx.$tip.innerHTML = text;
+            ctx.hidePlaceholder();
+          }
+        },
+
+        _getVisibleItemCount: function() {
+          var length = 0;
+          forEach(this.$lis, function($li) {
+            var display = css($li, 'display');
+            display != 'none' && length++;
+          });
+          return length;
+        },
+
+        _getActiveIndex: function() {
+          var ctx = this, index = -1;
+          for (var i = 0; i < ctx.length; i++) {
+            var $li = ctx.$lis[i];
+            if (hasClass($li, CLASS_ACTIVE) && css($li, 'display') != 'none') {
+              return i;
+            }
+          }
+          return index;
+        },
+
+        _getSelectIndex: function() {
+          var ctx = this, index = -1, value = ctx.getValue();
+          for (var i = 0; i < ctx.length; i++) {
+            var $li = ctx.$lis[i];
+            if (value == attr($li, 'data-value') && css($li, 'display') != 'none') {
+              return i;
+            }
+          }
+          return index;
+        },
+
+        _getScrollIndex: function() {
+          var ctx = this, indexScroll = 0;
+          for (var i = 0; i < ctx.length; i++) {
+            var $li = ctx.$lis[i];
+            if (css($li, 'display') != 'none') {
+              if (hasClass($li, CLASS_ACTIVE)) {
+                return indexScroll;
+              }
+              indexScroll++;
+            }
+          }
+          return indexScroll;
+        },
+
+        _getFirstVisibleIndex: function() {
+          var ctx = this, index = 0;
+          for (var i = 0; i < ctx.length; i++) {
+            var $li = ctx.$lis[i];
+            if (css($li, 'display') != 'none') {
+              return i;
+            }
+          }
+          return -1;
         },
 
         next: function() {
@@ -281,22 +389,50 @@
         },
 
         timerHide: null,
-        hide: function() {
+        hide: function(noCallback) {
           var ctx = this;
           clearTimeout(ctx.timerHide);
           ctx.timerHide = setTimeout(function() {
             css(ctx.$ul, { display: 'none' });
             ctx.isShow = false;
+            ctx.doCallback();
           }, 10);
+
+          // 如果是自由输入模式，就保留输入值，否则就还原为上一次的值
+          var text = trim(ctx.$input.value);
+          if (ctx.options.freeInput) {
+            ctx.$value.value = text;
+            ctx.setPlaceholder(text);
+          } else {
+            ctx.hidePlaceholder();
+            text = ctx.$input.value = ctx.$tip.innerHTML;
+          }
         },
 
         show: function() {
-          var ctx = this;
+          var ctx = this, $lis = ctx.$lis;
           clearTimeout(ctx.timerHide);
-          ctx.scrollTo(ctx.index);
           css(ctx.$ul, { display: 'block' });
           ctx.isShow = true;
-          // TODO 绑定 body 元素的点击，隐藏掉$ul
+
+          forEach($lis, function($li) {
+            removeClass($li, CLASS_ACTIVE);
+          });
+
+          // 如果什么都没有选中，则默认选中第一个
+          var index = ctx._getSelectIndex();
+          if (index >= 0) {
+            addClass($lis[index], CLASS_ACTIVE);
+          } else {
+            var indexVisible = ctx._getFirstVisibleIndex();
+            if (indexVisible >= 0) {
+              addClass(ctx.$lis[indexVisible], CLASS_ACTIVE);
+            }
+          }
+          // 索引修正为滚动索引
+          ctx.index = ctx._getScrollIndex();
+          ctx.fixScroll();
+          // 绑定 body 元素的点击，隐藏掉$ul
           ctx.listenBody();
         },
 
@@ -320,13 +456,26 @@
           }
           ctx.listenBody = listen;
           listen();
+        },
+
+        getValue: function() {
+          return this.$value.value;
+        },
+
+        doCallback: function() {
+          var ctx = this;
+          ctx.options.callback(ctx.getValue(), trim(ctx.$input.value));
         }
       };
 
       return Select;
     });
 
-    var s = new FilterSelect();
+    var s = new FilterSelect(null, {
+      callback: function(key, text) {
+        console.log(key, text);
+      }
+    });
     s.isOpen = true;
   </script>
 </body>
