@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>可输入下拉框v2.0</title>
+  <style>
+    * { padding: 0; margin: 0;  }
+  </style>
+  <style>
+    .m-input-select { position: relative; display: inline-block; *display: inline; *zoom: 1; -webkit-user-select: none; }
+    .m-input-select ul, .m-input-select li, .m-input-select input { padding: 0; margin: 0; }
+    .m-input-select .m-placeholder { overflow: hidden; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin-right: 22px; color: #bbb; }
+    .m-input-select .m-input { position: relative; padding-right: 22px; border: 1px solid #666; background: transparent; }
+    .m-input-select .m-placeholder, .m-input-select .m-input { font-size: 14px; line-height: 22px; }
+    .m-input-select .m-input-ico {position:absolute;right:0;top:0;width:22px;height:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAATElEQVQoU2NkIBEwkqiegTwNcXFx/4m1CW4DMZoWLVrEiOIkfJpAikGuwPADNk0wxVg1gASRNSErxqkBpgldMV4NuEKNvHggNg5A6gBo4xYmyyXcLAAAAABJRU5ErkJggg==) no-repeat 50% 50%;}
+    .m-input-select .m-list { display: none; position: absolute; z-index: 1; top: 100%; left: 0; right: 0; max-width: 100%; max-height: 250px; overflow: auto; border-bottom: 1px solid #ddd; }
+    .m-input-select .m-list-item { cursor: default; padding: 5px; margin-top: -1px; list-style: none; background: #fff; border:1px solid #ddd; border-bottom: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .m-input-select .m-list-item:hover { background: #2D95FF; }
+    .m-input-select .m-list-item-active { background: #2D95FF; }
+  </style>
+</head>
+<body>
+  <div style="height:500px;margin:20px;">
+    <!-- option必须带有 value 的值 -->
+    <select id="magicsuggest" data-edit-select="1">
+      <option>物种生存1</option>
+      <option selected>天天暴走</option>
+      <option>叉神2</option>
+      <option>abc3</option>
+      <option>bbc1</option>
+      <option>dds2</option>
+      <option>奇怪3</option>
+      <option>背包1</option>
+      <option>浏览器2</option>
+      <option>SKD3</option>
+      <option>你好a</option>
+      <option>学生big</option>
+      <option>老师c</option>
+      <option>宠物d</option>
+      <option>老人</option>
+      <option>物理数据</option>
+      <option>天才</option>
+      <option>生物老师</option>
+      <option>宝宝</option>
+      <option>齐心怪状</option>
+    </select>
+
+    &nbsp;
+    <div class="m-input-select" id="test">
+      <div class="m-placeholder">xx</div>
+      <input type="text" class="m-input" />
+      <input type="hidden" class="m-input-hidden" />
+      <span class="m-input-ico"></span>
+      <ul class="m-list">
+        <li class="m-list-item m-list-item-active" data-value="1">选项1</li>
+        <li class="m-list-item" data-value="2">选项2</li>
+        <li class="m-list-item" data-value="3">选项3</li>
+        <li class="m-list-item" data-value="4">选项4</li>
+        <li class="m-list-item" data-value="5">选项5</li>
+        <li class="m-list-item" data-value="6">选项6</li>
+        <li class="m-list-item" data-value="7">选项7</li>
+        <li class="m-list-item" data-value="8">选项8</li>
+        <li class="m-list-item" data-value="9">选项9</li>
+        <li class="m-list-item" data-value="10">选项10</li>
+      </ul>
+    </div>
+  </div>
+  <div style="height:1000px;"></div>
+  <script>
+    ;(function(ctx, name, defination) {
+      ctx[name] = defination(ctx);
+    })(window, 'FilterSelect', function(win) {
+      var NOT_DEFINED = void 0;
+
+      function getElementsByTagName($r, tag, i) {
+        var $elems = $r.getElementsByTagName(tag);
+        return i === NOT_DEFINED ? $elems : $elems[i];
+      }
+      function attr($r, name, val) {
+        if (val === NOT_DEFINED) {
+          return $r.getAttribute(name);
+        } else {
+          $r.setAttribute(name, val);
+        }
+      }
+      function css($r, name) {
+        if (typeof name === 'string') {
+          return $r.style[name];
+        } else {
+          var obj = name;
+          for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+              $r.style[key] = obj[key];
+            }
+          }
+        }
+      }
+      function removeClass($r, cls) {
+        $r.className = $r.className.replace(new RegExp('\\s*\\b' + cls + '\\b', 'g'), '');
+      }
+      function addClass($r, cls) {
+        if (!new RegExp('\\b' + cls + '\\b').test($r.className)) {
+          $r.className += ' ' + cls;
+        }
+      }
+      function forEach(list, fn) {
+        for (var i = 0, max = list.length; i < max; i++) {
+          fn.call(list, list[i], i);
+        }
+      }
+      function indexOf(list, value) {
+        for (var i = 0, max = list.length; i < max; i++) {
+          if (list[i] === value) {
+            return i;
+          }
+        }
+        return -1;
+      }
+      function merge() {
+        var args = [].slice.call(arguments, 0);
+        var obj = args[0];
+        for (var i = 1, max = args.length; i < max; i++) {
+          var item = args[0];
+          for (var key in item) {
+            if (item.hasOwnProperty(key)) {
+              obj[key] = item[key];
+            }
+          }
+        }
+        return obj;
+      }
+      function trim(str) {
+        return str.replace(/^\s*|\s*$/g, '');
+      }
+      function addEvent($r, evt, fn) {
+        if (window.addEventListener) {
+          $r.addEventListener(evt, fn, false);
+        } else {
+          $r.attachEvent('on' + evt, fn);
+        }
+      }
+      function removeEvent($r, evt, fn) {
+        if (window.removeEventListener) {
+          $r.removeEventListener(evt, fn, false);
+        } else {
+          $r.detachEvent('on' + evt, fn);
+        }
+      }
+
+      var CLASS_ACTIVE = 'm-list-item-active';
+
+      function Select($select, options) {
+        this.$select = $select;
+
+        this.options = merge({
+          callback: function(id, val, index) {
+            console.log('选中', id, val, index);
+          },
+          placeholder: '请选择'
+        }, options || {});
+
+        var $root = this.$root = document.getElementById('test');
+
+        this.$input = getElementsByTagName($root, 'input', 0);
+        this.$value = getElementsByTagName($root, 'input', 1);
+        this.$ico = getElementsByTagName($root, 'span', 0);
+        this.$tip = getElementsByTagName($root, 'div', 0);
+        this.$ul = getElementsByTagName($root, 'ul', 0);
+        this.$lis = getElementsByTagName($root, 'li');
+        this.length = this.$lis.length;
+
+        this.init();
+      }
+
+      Select.prototype = {
+        init: function() {
+          this.index = 0;
+          this.isShow = false;
+
+          this.bindUI();
+        },
+
+        bindUI: function() {
+          var ctx = this;
+
+          addEvent(ctx.$ul, 'click', function(e) {
+            var target = e.srcElement || e.target,
+              name = target.tagName.toLowerCase();
+            if (name == 'li') {
+              ctx.setIndex(indexOf(ctx.$lis, target), true);
+              ctx.hide();
+            }
+          });
+
+          // 绑定小三角的点击
+          addEvent(ctx.$ico, 'click', function() {
+            if (ctx.isShow) {
+              ctx.hide();
+            } else {
+              ctx.$input.focus();
+              ctx.show();
+            }
+          });
+
+          // 绑定input的选中
+          addEvent(ctx.$input, 'focus', function() {
+            ctx.show();
+          });
+
+          // 绑定input的键盘事件
+          addEvent(ctx.$input, 'keydown', function(e) {
+            switch(e.keyCode){
+              case 38:
+                ctx.prev();
+                break;
+              case 40:
+                ctx.next();
+                break;
+              case 13:
+                ctx.setIndex(ctx.index, true);
+                ctx.hide();
+                break;
+            }
+          });
+
+          // input 过滤内容
+          addEvent(ctx.$input, 'input', changeInput);
+          addEvent(ctx.$input, 'propertychange', changeInput);
+          function changeInput(e) {
+            var $list = ctx.$lis, value = trim(this.value).toLowerCase();
+
+            forEach($list, function($li) {
+              var text = trim($li.innerHTML).toLowerCase();
+              css($li, { display: text.indexOf(value) >= 0 ? 'block' : 'none' });
+            });
+          }
+        },
+
+        scrollTo: function(index) {
+          var ctx = this, $ul = ctx.$ul, $lis = ctx.$lis;
+          $ul.scrollTop = $lis[0].clientHeight * index;
+        },
+
+        setIndex: function(index, needCallback) {
+          var ctx = this,
+            $lis = ctx.$lis,
+            length = ctx.length;
+
+          if (index < 0) {
+            index = 0;
+          } else if (index >= length) {
+            index = length - 1;
+          }
+
+          removeClass($lis[ctx.index], CLASS_ACTIVE);
+          ctx.index = index;
+          addClass($lis[ctx.index], CLASS_ACTIVE);
+          ctx.scrollTo(index);
+
+          var $li = $lis[index];
+          var text = $li.innerHTML,
+            value = attr($li, 'data-value');
+
+          ctx.$input.value = text;
+          ctx.$value.value = value;
+          ctx.$tip.innerHTML = text;
+          css(ctx.$tip, { display: 'none' });
+
+          // 触发回调
+          if (needCallback) {
+            ctx.options.callback(value, text, index);
+          }
+        },
+
+        next: function() {
+          return this.setIndex(this.index + 1);
+        },
+
+        prev: function() {
+          return this.setIndex(this.index - 1);
+        },
+
+        timerHide: null,
+        hide: function() {
+          var ctx = this;
+          clearTimeout(ctx.timerHide);
+          ctx.timerHide = setTimeout(function() {
+            css(ctx.$ul, { display: 'none' });
+            ctx.isShow = false;
+          }, 10);
+        },
+
+        show: function() {
+          var ctx = this;
+          clearTimeout(ctx.timerHide);
+          ctx.scrollTo(ctx.index);
+          css(ctx.$ul, { display: 'block' });
+          ctx.isShow = true;
+          // TODO 绑定 body 元素的点击，隐藏掉$ul
+          ctx.listenBody();
+        },
+
+        listenBody: function() {
+          var ctx = this;
+          var $body = document.getElementsByTagName('body')[0];
+          function hide(e) {
+            if (!ctx.$ul) {
+              removeEvent($body, 'click', hide);
+              return;
+            }
+            var target = e.srcElement || e.target;
+            if (target != ctx.$input && target != ctx.$ico) {
+              ctx.hide();
+              removeEvent($body, 'click', hide);
+            }
+          }
+          function listen() {
+            removeEvent($body, 'click', hide);
+            addEvent($body, 'click', hide);
+          }
+          ctx.listenBody = listen;
+          listen();
+        }
+      };
+
+      return Select;
+    });
+
+    var s = new FilterSelect();
+    s.isOpen = true;
+  </script>
+</body>
+</html>
