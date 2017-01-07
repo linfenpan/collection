@@ -23,7 +23,7 @@
 <body>
   <div style="height:500px;margin:20px;">
     <!-- option必须带有 value 的值 -->
-    <select id="magicsuggest" data-edit-select="1">
+    <select id="magicsuggest">
       <option>物种生存1</option>
       <option selected>天天暴走</option>
       <option>叉神2</option>
@@ -45,26 +45,7 @@
       <option>宝宝</option>
       <option>齐心怪状</option>
     </select>
-
-    &nbsp;
-    <div class="m-input-select" id="test">
-      <div class="m-placeholder">xx</div>
-      <input type="text" class="m-input" />
-      <input type="hidden" class="m-input-hidden" />
-      <span class="m-input-ico"></span>
-      <ul class="m-list">
-        <li class="m-list-item m-list-item-active" data-value="1">选项1</li>
-        <li class="m-list-item" data-value="2">选项21</li>
-        <li class="m-list-item" data-value="3">选项32</li>
-        <li class="m-list-item" data-value="4">选项43</li>
-        <li class="m-list-item" data-value="5">选项52</li>
-        <li class="m-list-item" data-value="6">选项63</li>
-        <li class="m-list-item" data-value="7">选项72</li>
-        <li class="m-list-item" data-value="8">选项83</li>
-        <li class="m-list-item" data-value="9">选项93</li>
-        <li class="m-list-item" data-value="10">选项10</li>
-      </ul>
-    </div>
+    <input type="button" value="点击" onclick="console.log(111, s.getValue())" />
   </div>
   <div style="height:1000px;"></div>
   <script>
@@ -154,9 +135,10 @@
       var CLASS_ACTIVE = 'm-list-item-active';
 
       function Select($select, options) {
-        this.$select = $select;
+        var ctx = this;
+        ctx.$select = $select;
 
-        options = this.options = merge({
+        options = ctx.options = merge({
           callback: function(id, val) {
             // console.log('选中', id, val);
           },
@@ -165,28 +147,63 @@
           placeholder: '请选择'
         }, options || {});
 
-        var $root = this.$root = document.getElementById('test');
+        var $root = ctx.$root = document.createElement('div');
+        $root.innerHTML = [
+          '<div class="m-placeholder"></div>',
+          '<input type="text" class="m-input" />',
+          '<input type="hidden" class="m-input-hidden" />',
+          '<span class="m-input-ico"></span>',
+          '<ul class="m-list"></ul>'
+        ].join('');
+        addClass($root, 'm-input-select');
+        $select.parentNode.insertBefore($root, $select);
 
-        this.$input = getElementsByTagName($root, 'input', 0);
-        this.$value = getElementsByTagName($root, 'input', 1);
-        this.$ico = getElementsByTagName($root, 'span', 0);
-        this.$tip = getElementsByTagName($root, 'div', 0);
-        this.$ul = getElementsByTagName($root, 'ul', 0);
-        this.$lis = getElementsByTagName($root, 'li');
-        this.length = this.$lis.length;
+        ctx.$input = getElementsByTagName($root, 'input', 0);
+        ctx.$value = getElementsByTagName($root, 'input', 1);
+        ctx.$ico = getElementsByTagName($root, 'span', 0);
+        ctx.$tip = getElementsByTagName($root, 'div', 0);
+        ctx.$ul = getElementsByTagName($root, 'ul', 0);
 
-        this.init();
+        ctx.init();
       }
 
       Select.prototype = {
         init: function() {
-          this.index = 0;
-          this.isShow = false;
-
-          this.$value.value = this.options.freeInput ? this.$lis[0].innerHTML : attr(this.$lis[0], 'data-value');
-
           this.setPlaceholder(this.options.placeholder);
+          this.reset();
           this.bindUI();
+        },
+
+        reset: function() {
+          var ctx = this;
+          ctx.index = 0;
+          ctx.isShow = false;
+
+          var lis = [], valueSelected, textSelected;
+          forEach(getElementsByTagName(ctx.$select, 'option'), function($option) {
+            var text = trim($option.innerHTML), value = $option.value;
+            value = typeof value === NOT_DEFINED ? text : value;
+            lis.push(
+              '<li class="m-list-item" data-value="'+ value +'">'+ text +'</li>'
+            );
+            if ($option.selected) {
+              valueSelected = value;
+              textSelected = text;
+            }
+          });
+          ctx.$ul.innerHTML = lis.join('');
+          css(ctx.$ul, { display: 'none' });
+          css(ctx.$select, { display: 'none' });
+
+          ctx.$lis = getElementsByTagName(ctx.$ul, 'li');
+          ctx.length = ctx.$lis.length;
+
+          ctx.$input.value = textSelected;
+          ctx.$value.value = ctx.options.freeInput ? textSelected : valueSelected;
+          ctx.$tip.value = textSelected;
+          if (valueSelected) {
+            ctx.setPlaceholder(textSelected);
+          }
         },
 
         setPlaceholder: function(text) {
@@ -225,12 +242,15 @@
 
           // 绑定input的选中
           addEvent(ctx.$input, 'focus', function(e) {
-            if (options.clearAtFocus) {
+            if (
+              options.clearAtFocus
+              ||
+              (options.freeInput && this.value == options.placeholder)
+            ) {
               ctx.$input.value = '';
               ctx.showPlaceholder();
             }
             changeInput.call(this, e);
-            ctx.show();
           });
 
           // 绑定input的键盘事件
@@ -253,19 +273,39 @@
           addEvent(ctx.$input, 'input', changeInput);
           addEvent(ctx.$input, 'propertychange', changeInput);
           function changeInput(e) {
-            var $list = ctx.$lis, value = trim(this.value).toLowerCase();
-            if (value) {
+            if (this.value) {
               ctx.hidePlaceholder();
             } else {
               ctx.showPlaceholder();
             }
-
-            forEach($list, function($li) {
-              var text = trim($li.innerHTML).toLowerCase();
-              css($li, { display: text.indexOf(value) >= 0 ? 'block' : 'none' });
-            });
-
+            ctx.filterByValue(this.value);
             ctx.show();
+          }
+        },
+
+        // 过滤列表
+        filterByValue: function(value) {
+          var ctx = this,
+            $list = ctx.$lis;
+          value = trim(value || '').toLowerCase();
+
+          // 过滤内容，并移除所有选中状态
+          forEach($list, function($li) {
+            var text = trim($li.innerHTML).toLowerCase();
+            removeClass($li, CLASS_ACTIVE);
+            css($li, { display: text.indexOf(value) >= 0 ? 'block' : 'none' });
+          });
+
+          // 如果有选中，则移动到选中的元素
+          // 否则，选中可见元素的第一个
+          var index = ctx._getSelectIndex();
+          if (index >= 0) {
+            addClass($list[index], CLASS_ACTIVE);
+          } else {
+            var indexVisible = ctx._getFirstVisibleIndex();
+            if (indexVisible >= 0) {
+              addClass($list[indexVisible], CLASS_ACTIVE);
+            }
           }
         },
 
@@ -388,47 +428,28 @@
           return this.setIndex(this.index - 1);
         },
 
-        timerHide: null,
-        hide: function(noCallback) {
-          var ctx = this;
-          clearTimeout(ctx.timerHide);
-          ctx.timerHide = setTimeout(function() {
-            css(ctx.$ul, { display: 'none' });
-            ctx.isShow = false;
-            ctx.doCallback();
-          }, 10);
-
+        hide: function() {
+          var ctx = this,
+            text = trim(ctx.$input.value);;
           // 如果是自由输入模式，就保留输入值，否则就还原为上一次的值
-          var text = trim(ctx.$input.value);
           if (ctx.options.freeInput) {
             ctx.$value.value = text;
             ctx.setPlaceholder(text);
           } else {
+            ctx.$input.value = ctx.$tip.innerHTML;
             ctx.hidePlaceholder();
-            text = ctx.$input.value = ctx.$tip.innerHTML;
           }
+
+          css(ctx.$ul, { display: 'none' });
+          ctx.isShow = false;
+          ctx.doCallback();
         },
 
         show: function() {
-          var ctx = this, $lis = ctx.$lis;
-          clearTimeout(ctx.timerHide);
+          var ctx = this;
           css(ctx.$ul, { display: 'block' });
           ctx.isShow = true;
 
-          forEach($lis, function($li) {
-            removeClass($li, CLASS_ACTIVE);
-          });
-
-          // 如果什么都没有选中，则默认选中第一个
-          var index = ctx._getSelectIndex();
-          if (index >= 0) {
-            addClass($lis[index], CLASS_ACTIVE);
-          } else {
-            var indexVisible = ctx._getFirstVisibleIndex();
-            if (indexVisible >= 0) {
-              addClass(ctx.$lis[indexVisible], CLASS_ACTIVE);
-            }
-          }
           // 索引修正为滚动索引
           ctx.index = ctx._getScrollIndex();
           ctx.fixScroll();
@@ -459,24 +480,33 @@
         },
 
         getValue: function() {
-          return this.$value.value;
+          var ctx = this, options = ctx.options;
+          return trim(options.freeInput ? ctx.$input.value : ctx.$value.value);
         },
 
+        _oldValue: null,
         doCallback: function() {
-          var ctx = this;
-          ctx.options.callback(ctx.getValue(), trim(ctx.$input.value));
+          var ctx = this,
+            value = ctx.getValue();
+          if (ctx._oldValue !== value) {
+            ctx._oldValue = value;
+            ctx.options.callback(value, trim(ctx.$input.value));
+          }
         }
       };
 
       return Select;
     });
 
-    var s = new FilterSelect(null, {
+    var s = new FilterSelect(document.getElementById('magicsuggest'), {
       callback: function(key, text) {
         console.log(key, text);
-      }
+      },
+      freeInput: false,
+      clearAtFocus: true
     });
-    s.isOpen = true;
+
+    // 通过 s.getValue() 获取到正确的值
   </script>
 </body>
 </html>
