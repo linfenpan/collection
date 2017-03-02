@@ -234,8 +234,11 @@
         var attributes = target.attributes;
 
         // 元素没有统计属性，而且父元素也没有，则不统计
-        if ((!attributes || !(statAttr in attributes)) && !getParentByAttr(statAttr)) {
-          return;
+        if ((!attributes || !(statAttr in attributes))) {
+          target = getParentByAttr(target, statAttr);
+          if (!target) {
+            return;
+          }
         }
 
         // 从当前元素，网上寻找的所有属性
@@ -421,20 +424,20 @@
         img.onload = img.onerror = null;
       };
 
-      var qs = toQueryString(extend({v: Math.random()}, params || {}));
+      var qs = toQueryString(extend({v: Math.random()}, params || {}), isListMode);
       img.src = url + (url.indexOf('?') >= 0 ? '' : '?') + qs;
     }
   };
 
-  // Tracker.StatAttributeMap = StatAttributeMap;
-  // Tracker.addConverter = function(key, fn) {
-  //   StatAttributeMap[key] = typeOf(fn) === 'string' ? StatAttributeMap[fn] : fn;
-  //   return this;
-  // };
-  //
-  // Tracker.setAdapter = function(adapter) {
-  //   extend(Adapter, adapter || {});
-  // };
+  Tracker.StatAttributeMap = StatAttributeMap;
+  Tracker.addConverter = function(key, fn) {
+    StatAttributeMap[key] = typeOf(fn) === 'string' ? StatAttributeMap[fn] : fn;
+    return this;
+  };
+
+  Tracker.setAdapter = function(adapter) {
+    extend(Adapter, adapter || {});
+  };
 
   return Tracker;
 });
