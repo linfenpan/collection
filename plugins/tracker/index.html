@@ -31,6 +31,7 @@ var tracker1 = new Tracker({
 tracker1.bindClick(document);
 // 捕抓某个区域，必须重置 statAttr, stopAttr, statParam 3 个属性，以防与 document 的统计冲突
 tracker1.bindClick(document.getElementById('areaCapture'), {
+  event: 'click', // 默认是 click 事件，表示 click 的时候，发起统计
   statAttr: 'a-stat',
   stopAttr: 'a-statstop',
   statParam: 'a-statparam'
