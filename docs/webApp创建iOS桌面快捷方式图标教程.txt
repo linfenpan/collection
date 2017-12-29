@@ -1,0 +1,20 @@
+1. Apple-touch-icon设置方法
+  通过在页面HTML的头部添加<link>标签
+    <link rel="apple-touch-icon" href="icon.png" />
+    <link rel="apple-touch-icon-precomposed" href="touch-icon-precomposed.png" /> 
+  这两个标签都是用来指定桌面图标的，但两者有个细微的区别:
+    通过apple-touch-icon添加的图标是会带iOS图标统一的高光效果
+    通过apple-touch-icon-precomposed添加的图标则是设计原图，不带高光渐变效果的
+    
+2. 图片大小
+  iPhone 和 iTouch: 57 x 57
+  retina iPhone 和 retina iTouch: 114 x 114
+  iPad: 72 x 72
+  retina iPad: 144 x 144
+  
+  相应地，要指定不同分辨率的设备的图标，可以添加相应的<link>标签序列，官方建议的顺序是这样的
+    <link rel="apple-touch-icon" href="touch-icon-iphone.png" /> 
+    <link rel="apple-touch-icon" sizes="72x72" href="touch-icon-ipad.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="touch-icon-iphone-retina.png" /> 
+    <link rel="apple-touch-icon" sizes="144x144" href="touch-icon-ipad-retina.png" /> 
+  

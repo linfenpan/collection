@@ -1,0 +1,17 @@
+var GB2312UnicodeConverter={
+  // 转 unicode
+  ToUnicode:function(str){
+    return escape(str).toLocaleLowerCase().replace(/%u/gi,'\\u');
+  }
+  // 转中文
+  ,ToGB2312:function(str){
+    return unescape(str.replace(/\\u/gi,'%u'));
+  }
+};
+
+// 汉字转为Unicode字符码表示
+function toUnicode(s){ 
+  return s.replace(/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])/g,function(newStr){
+    return "\\u" + newStr.charCodeAt(0).toString(16);
+  });
+}
