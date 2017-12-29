@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>百度san学习</title>
+</head>
+<body>
+
+<div id="app"></div>
+
+<div id="list"></div>
+
+<div id="bind"></div>
+
+<script src="./san.js" charset="utf-8"></script>
+<script>
+var MyApp1 = san.defineComponent({
+  template: '<p>Hello {{name}}!</p>',
+  initData: function () {
+      return {
+          name: 'San'
+      };
+  }
+});
+var myApp1 = new MyApp1();
+myApp1.attach(document.querySelector('#app'));
+</script>
+
+<script>
+var MyApp2 = san.defineComponent({
+  template: '<ul><li s-for="item in list">{{item}}</li></ul>',
+  attached: function () {
+      this.data.set('list', ['san', 'er', 'esui', 'etpl', 'esl']);
+  }
+});
+
+var myApp2 = new MyApp2();
+myApp2.attach(document.querySelector('#list'));
+</script>
+
+<script>
+var MyApp3 = san.defineComponent({
+  template: ''
+      + '<div>'
+      +   '<input value="{= name =}" placeholder="please input">'
+      +   'Hello {{name}}!'
+      + '</div>'
+});
+var myApp3 = new MyApp3();
+myApp3.attach(document.querySelector('#bind'));
+</script>
+</body>
+</html>
