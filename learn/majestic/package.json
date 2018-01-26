@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^22.0.6"
+  },
+  "majestic": {
+    "jestConfig": "./jest-custom.config.js"
+  }
+}
