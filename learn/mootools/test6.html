@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>Request.HTML</h1>
+  <div id="jsContainer1">内容:</div>
+  <script>
+    var $container1 = $('jsContainer1');
+    var req = new Request.HTML({
+      url: './req-html/c1.html',
+      evalScripts: true,  // 执行脚本，但也只执行内部脚本，外部的链接，是被忽略
+      append: $container1 // update 参数呢，是会整个覆盖掉原本的内容的
+    }).get();
+  </script>
+
+  <div id="jsContainer2"></div>
+  <script>
+    var $container2 = $('jsContainer2');
+    $container2.load('./req-html/c2.html');
+  </script>
+
+  <h1>Request.JSON</h1>
+  <script>
+    function warn() { console.assert(false, '请求错误，搞错了吧？'); }
+    var req = new Request.JSON({
+      url: './req-json/data1.js',
+      onSuccess: function(data) {
+        console.assert(data.author == 'da宗熊', '获取的数据，有问题啦');
+      },
+      onError: warn,
+      onFailure: warn
+    });
+    req.addEvent('success', function() {
+      console.log(111);
+    });
+    req.get();
+  </script>
+
+  <h1>Request</h1>
+  <script>
+    var req = new Request({
+      link: 'cancel',
+      noCache: true,
+      withCredentials: true, // 跨域时，是否带上 cookie
+      url: './req-json/data2.json'
+    });
+    req.addEvent('success', function() {
+      console.log('for once');
+    });
+    req.get();
+    req.get();
+    req.get();
+    req.get({ test: 1 });
+  </script>
+
+  <form id="myForm" method="get" action="./req-json/data2.json">
+      <p>
+          <input name="email" value="bob@bob.com" />
+          <input name="zipCode" value="90210" />
+      </p>
+  </form>
+  <script>
+    $('myForm').set('send', {
+      onSuccess: function(data) {
+        console.log(data);
+      }
+    }).send();
+  </script>
+</body>
+</html>

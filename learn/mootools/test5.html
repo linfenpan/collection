@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+  <style>
+    .anm { opacity: 0.5; left: 100px; }
+  </style>
+</head>
+<body>
+  <h1>Fx</h1>
+  <div id="jsContainer1"></div>
+  <script>
+    var $container1 = $('jsContainer1');
+    var el1 = new Element('div', {
+      styles: {
+        position: 'relative',
+        width: 10, height: 10,
+        background: 'red'
+      }
+    });
+    $container1.adopt(el1);
+    var fx1 = new Fx.Morph(el1, {
+      duration: 'long'
+    });
+    fx1.start({
+      left: [0, 100],
+      width: [10, 50],
+      opacity: 0.1
+    });
+
+    // 不用动画，立刻设置某个样式
+    var el2 = el1.clone();
+    $container1.adopt(el2);
+    el2.setStyles({left: 0, opacity: 0, 'background': 'blue' });
+    var fx2 = new Fx.Morph(el2, {
+      duration: 'long',
+      transition: Fx.Transitions.Sine.easeInOut
+    });
+    fx2.set({
+      left: 150,
+      opacity: 0.5
+    });
+
+    // addClass 来加动画啦
+    var el3 = el1.clone();
+    el3.setStyles({ background: '#2dd' });
+    $container1.adopt(el3);
+    el3.set('morph', { duration: 'long', transition: 'bounce:out' });
+    el3.morph('.anm');
+  </script>
+
+  <br>
+  <br>
+  <div id="jsContainer2"></div>
+  <script>
+    var $container2 = $('jsContainer2');
+    var el1 = new Element('div', {
+      styles: {
+        width: 10, height: 10,
+        background: 'red'
+      }
+    });
+    $container2.adopt(el1);
+    var fx1 = new Fx.Tween(el1, {
+      duration: 'long',
+      transition:　'bounce:out',
+      property: 'width'
+    });
+    fx1.start(100);
+
+    var el2 = el1.clone();
+    $container2.adopt(el2);
+    el2.setStyles({ background: 'blue' });
+    el2.set('tween', { property: 'width' });
+    el2.tween(10, 50);
+  </script>
+</body>
+</html>

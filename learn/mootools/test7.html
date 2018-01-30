@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>Array</h1>
+  <script>
+    console.assert(typeOf(Array.convert('hello')) == 'array', '非数组元素，应该被转为数组啦'); // 把非数组，转为数组，数组保持不变
+
+    var a1 = [1, 2, 3, 4, 5];
+    var a2 = a1.invoke('limit', 10, 30);  // 每一项，都执行自己的 limit 方法，如 Number.limit(10, 30);
+    console.assert(a2[0] == 10, 'invoke方法，没有每一项都执行呢');
+
+    var a3 = [1, 2, 3, 4];
+    var allPassed = a3.every(function(v) {
+      return v < 2;
+    });  // 只要其中一项是 false，则打断循环，并且返回 false
+    console.assert(allPassed == false, 'every 不是 false 的时候，就断掉循环吗？');
+
+    var a4 = [1, 2, 3, 4];
+    console.assert(a4.some(function(v) { return v > 1; }) == true, 'some 方法不是满足一点点，就可以了吗？');
+    console.assert(a4.contains(4) == true, 'contains判断问题');
+    a4.append([5]);
+    console.assert(a4.length == 5, 'append是会更改原数组的');
+    a4.include(5);  // 已存在，就不插入
+    a4.include(6);  // 不存在，就插入
+    console.assert(a4.length == 6, 'include会插入新元素');
+
+    a4.combine([6, 7, 8]); // 与 append 差不多，但是类似多个 include 的曹祖
+    console.assert(a4.length == 8, 'combine会排重');
+  </script>
+</body>
+</html>

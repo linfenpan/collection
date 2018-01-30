@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+  <style>
+    * { padding: 0; margin: 0; }
+    .el { border: 1px solid #ddd; display: inline-block; padding: 5px 20px; margin: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="jsContainer"></div>
+  <script>
+    var $jsContainer = $('jsContainer');
+    var el1 = new Element('div.el1.el', {
+      html: '元素1',
+      styles: {
+        border: '1px solid #00c7ff'
+      },
+      data_test: '1',
+      events: {
+        click: function() { console.log('元素1: 哈哈'); }
+      }
+    });
+    $jsContainer.grab(el1);  // grab(el, 'bottom') 差不多就是 append 了
+
+    console.assert(el1.get('data_test') == 1, 'data_test属性不正确');
+    el1.erase('data_test');
+    console.assert(el1.get('data_test') == null, 'data_test属性没有删除');
+    console.assert(el1.match('div.el1'), 'match方法，应该匹配选择器');
+    console.assert($jsContainer.contains(el1), 'contains方法，是检测父元素是否含有某个子元素');
+
+    var el2 = new Element('div.el2.el', {
+      html: '元素二',
+      events: {
+        click: function() { console.log('元素2: 哈哈'); }
+      }
+    });
+    el2.inject($jsContainer); // inject(el, 'bottom') 差不多就是 appendTo 了
+
+    var el3 = new Element('div.el3.el', {
+      html: '元素三'
+    });
+    var el4 = el3.clone(true).set('class', 'el4 el').set('text', '元素四');
+    $jsContainer.adopt(el3, el4); // 就是 grab(el, 'bottom') 的数组版本，等于 pt.adopt([el1, el2, ...])
+  </script>
+  <script>
+    var elWrap = new Element('div', {
+      styles: {
+        margin: '10px',
+        padding: '10px',
+        border: '1px solid #dde'
+      }
+    });
+    var elChild = new Element('div', {
+      html: '孩子'
+    });
+    $jsContainer.adopt(elChild);
+    elWrap.wraps(elChild, 'top');  // 默认是 bottom 啦，将 elChild 替换为 elWrap，并且把 elChild 插入到 elWrap 中
+
+    elChild.appendHTML('-你不乖');
+    elChild.appendText('-又如何');
+
+    var elChildWild = new Element('div.wild', { html: '野生的孩子，准备删掉的' });
+    elWrap.adopt(elChildWild);
+    console.assert(elWrap.contains(elChildWild), '必须含有野生的孩子');
+
+    var elChildNatural = new Element('div.natural', { html: '亲生儿子' });
+    elChildNatural.replaces(elChildWild); // 是新的，更换掉旧的
+  </script>
+  <script>
+    var elParent = new Element('div#jsParent', {
+      styles: {
+        margin: 10,
+        padding: 10,
+        border: '1px solid #ded'
+      }
+    });
+    for (var i = 1; i < 6; i++) {
+      var el = new Element('span#jsSpan' + i, { html: '&nbsp;文案' + i + '&nbsp;' });
+      elParent.adopt(el);
+    }
+    jsContainer.adopt(elParent);
+    var $jsSpan3 = $('jsSpan3');
+    console.assert($jsSpan3.getNext().match('span'), 'getNext()有问题?');
+    console.assert($jsSpan3.getPrevious().match('span'), 'getPrevious有问题?');
+    console.assert($jsSpan3.getAllNext().length == 2, 'getAllNext有问题?');
+    console.assert($jsSpan3.getAllPrevious().length == 2, 'getAllPrevious有问题?');
+    console.assert($jsSpan3.getSiblings().length == 4, 'getSiblings有问题?');
+  </script>
+  <script>
+    // 临时存储
+    $jsContainer.store('test', 123);
+    console.assert($jsContainer.retrieve('test') == 123, 'retrieve没有获取到store的值');
+    $jsContainer.eliminate('test');
+    console.assert($jsContainer.retrieve('test', 0) === 0, 'eliminate没有删除成功');
+  </script>
+</body>
+</html>

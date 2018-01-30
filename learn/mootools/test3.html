@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1 id="jsElement" style="width: 600px; height: 200px; padding: 20px;">Element</h1>
+  <textarea id="jsTextarea" style="width: 100px; height: 50px;">
+文
+文
+文
+文
+文
+文
+  </textarea>
+  <div id="jsRelative" style="width: 100px; height: 100px; position: relative; background: #ddd;">
+    <div id="jsAbsolute" style="width: 10px; height: 10px; position: absolute; top: 50px; left: 50px; background: #ff0707;"></div>
+  </div>
+
+  <script>
+    var $jsElement = $('jsElement');
+    var $jsTextarea = $('jsTextarea');
+    var $jsRelative = $('jsRelative');
+    var $jsAbsolute = $('jsAbsolute');
+
+    // $jsElement.scrollTo(x, y); // 有滚动轴时，可用；没滚动轴时，是来装可爱的
+    console.log('getSize:', $jsElement.getSize());  // getSize 会加上 padding 和 border 的值
+    console.log('getScrollSize:', $jsTextarea.getScrollSize());  // 可滚动区域的大小，getScroll() 获取当前滚动的位置
+
+    console.log('getPosition:', $jsAbsolute.getPosition()); // 相对于 document 的位置
+    console.log('getPosition(relative):', $jsAbsolute.getPosition($jsRelative)); // 相对某个元素的 offset
+    $jsAbsolute.setPosition({ x: 0, y: 0 });  // 设置 left/top 值
+
+    console.log('getCoordinates:', $jsAbsolute.getCoordinates()); // 获取元素的位置、大小信息，其中，right是相对左侧边距的距离；bottom 是相对于顶部的距离
+    console.log('getCoordinates(relative):', $jsAbsolute.getCoordinates($jsRelative)); // 获取元素，相对某个元素的位置、大小信息
+
+    console.assert($jsAbsolute.getOffsetParent() === $jsRelative, 'getOffsetParent方法有BUG');  // 如果已经没有顶层的 offsetParent 了，会返回 null
+  </script>
+</body>
+</html>
