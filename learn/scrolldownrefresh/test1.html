@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,minimal-ui,shrink-to-fit=no">
+  <title>下拉加载下一页实现</title>
+  <link rel="stylesheet" href="./css/test.css">
+  <style>
+    body, html { width: 100%; height: 100%; }
+    #wrapper { position: absolute; top: 0; left: 0; bottom: 0; right: 0; overflow: hidden; }
+    #loadmore { position: absolute; top: 100%; left: 0; width: 100%; height: 60px; line-height: 60px; background: #efefef; text-align: center; }
+    #loadprevious { position: absolute; bottom: 100%; left: 0; width: 100%; height: 60px; line-height: 60px; background: #efefef; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="loadprevious" data-text-ready="继续用力下拉" data-text-done="释放加载上一篇文章"></div>
+    <div id="loadmore" data-text-ready="继续用力上拉" data-text-done="释放加载下一篇文章"></div>
+    <div id="scroller">
+      <h1>基于 alloy touch</h1>
+      <p>优点:</p>
+      <ol>
+        <li>不会因android的滚动、ios的弹性效果，而阻止出现“下拉加载”的出现</li>
+        <li>做上拉、下拉都简单</li>
+      </ol>
+      <p>缺点:</p>
+      <ol>
+        <li>脚本模拟滚动，不够原生滚动轴的流畅</li>
+        <li>手机性能越低，滚动越不流畅</li>
+        <li>引用更多的脚本</li>
+      </ol>
+      <div style="padding: 15px;">
+        下面是占位的内容:<br>
+        首先是买狗时的注意事项，买狗最好是在专业的犬舍或者是个人繁殖者那里购买，因为这样可以保证狗狗的健康，最好不要从街边狗贩手里买狗，因为狗贩的小狗有可能曾经生长环境很复杂而无法保证狗狗的健康<br>
+        <img src="http://cms-bucket.nosdn.127.net/23bc5c2217d9470f991f8f0245cdd6f920180130001028.jpeg?imageView&thumbnail=600y250" alt=""><br>
+        刚刚到一个新环境，宠物狗也许会因为不安而不停的犬叫，尤其是在晚上熄灯睡觉时.这个时候做为主人，你应该准备好足够的粮食和水，给它准备温暖而舒适的窝或垫子，用你柔软的的旧衣服垫在上面，把窝放在它随时能看到你的地方(比如床边，卧室墙根)，这样可以减少它的恐惧感。如果它依旧号叫，不要一号叫你就开灯去安慰，安慰两次就可以了，几天之后它自然会安静的<br>
+        是喂食的问题.幼犬一般1日3至4次喂食.如果是1个半个月以内的小狗.建议您喂幼犬专用奶粉(价格偏高)或者婴儿脱脂奶粉.婴宠物狗儿米粉.燕麦粥.玉米面粥.这些东西都是便于消化而且营养成分比较适合小狗的.2个月以上的小狗，差不多就可以喂幼犬狗粮了.但是要泡软在喂.为了加强营养可以适当喂一些宠物专用营养品<br>
+        <img src="http://cc.fp.ps.netease.com/file/5a71366a8b7427f6bc177e26fYjsioHS?fop=imageView/3/w/320/h/180"><br><br>
+        <img src="http://cc.fp.ps.netease.com/file/5a713772143cfaafce9cad1dzAOAG6MH?fop=imageView/3/w/320/h/180"><br>
+        刚刚到家的幼犬是不能洗澡的.尤其是没打疫苗的幼犬.如果感觉比较脏可以拿毛巾沾温水擦拭幼犬的身体.也可以买宠物专用的干洗粉干洗狗狗的身体(比较适合长毛犬)<br>
+        刚刚到家小狗的排便问题.一般而言.小狗是不会非常自觉的定点大小便的.小婴儿还会随便拉尿呢.小狗也一样.这个时候主人要采取包容的态度.做好训练的准备.狗狗正常的便便颜色一般是： 黄 色或者黄褐色.也有狗交配偏黑些或者黄白色的.主要跟吃的食物有关.软硬适度.以用手拿起地面刚刚有些痕迹为最好。<br>
+        <img src="http://cc.fp.ps.netease.com/file/5a715fe26f04948bc8f2fb74ZMgdcTSb?fop=imageView/3/w/320/h/180"><br>
+        无论天气多么热，狗是不能长时间吹空调的.尤其是小狗.尽量不要吹空调，这样非常容易着凉诱发疾 bing.就算是吹风扇.也不应该把风口对着狗狗吹.天气冷的时候一定要注意保暖.详情可查阅:牧羊犬/牧羊犬俱乐部/牧羊犬价格。<br>
+        3个月以内没有接受疫苗接种的小狗不应该带出门的。<br>
+      </div>
+    </div>
+  </div>
+  <script src="./node_modules/alloytouch/transformjs/transform.js"></script>
+  <script src="./node_modules/alloytouch/alloy_touch.js"></script>
+  <script src="./js/test1.js"></script>
+</body>
+</html>
