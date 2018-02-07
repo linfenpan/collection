@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>Object</h1>
+  <script>
+    Object.each({ first: 1 }, function(value, key) {
+      console.assert(key == 'first' && value == 1, 'each 不是返回key和value吗?');
+    });
+
+    var o1 = { x: 1, y: 2 };
+    var o2 = { z: 3 };
+    var merged = Object.merge(o1, o2);  // 智能合并
+    console.assert(merged.z == 3, '合并效果不正确');
+    console.assert(merged === o1, '合并应该修改第一个元素');
+    console.assert(o2.x == null, '不应该修改第二个元素');
+
+    var nestedO1 = { size: { width: 100, height: 100 } };
+    var nestedO2 = { size: { width: 200 } };
+    var nested = Object.merge({}, nestedO1, nestedO2);  // => { size: { width: 200, height: 100} };
+    console.assert(nested.size.width === 200 && nested.size.height === 100, '应该遍历对象，内部再次合并才对');
+
+    var c1 = { a: 0, size: { w: 100, h: 100 } };
+    var c2 = Object.clone(c1);  // 深复制，like $.extend(true, {}, {});
+    c2.a = 10;
+    console.assert(c2.a != c1.a, '克隆后，不应该出现引用一致的场景');
+    c2.size.w = 200;
+    console.assert(c2.size.w != c1.size.w, '深复制，不应该有引用还是一致的');
+
+    var firstObj = { name: 'first', age: 20, size: { width: 20, height: 180 } };
+    var secondObj = { age: 28, size: { width: 100 } };
+    Object.append(firstObj, secondObj);  // 浅复制 + 对象简单合并，link $.extend({}, {});
+    console.assert(firstObj.age == 28, '浅复制之后，对象属性怎么是错的');
+    console.assert(Object.keys(firstObj.size).length == 1, '浅复制而已啦，为何会只能合并?');
+    secondObj.size.width = 200;
+    console.assert(firstObj.size.width === secondObj.size.width, '浅复制，对象不是会持有引用吗');
+
+    var object = {
+      a: 1,
+      b: 2,
+      o: { x: 3, y: 4 }
+    };
+    var subsetObject = Object.subset(object, ['a', 'o']);  // => 浅复制，{ a: 1, o: { x: 3, y: 4} }
+    console.assert(Object.keys(subsetObject).length == 2, 'subset后，应该只剩下两个字段啊');
+    subsetObject.o.x = 100;
+    console.assert(object.o.x === subsetObject.o.x, 'subset应该只是浅复制，为何不相等');
+
+    // 遍历键值对，并且更新每一个值
+    var myObject = { a: 1, b: 2 };
+    var timesTwo = Object.map(myObject, function(value, key) {
+        return value * 2;
+    });  // => { a: 2, b: 4 }
+    console.assert(timesTwo.b == 4, 'map 作用不对');
+    console.assert(myObject.a == 1, 'map不应该更改原对象的');
+
+    // 遍历所有键值对，过滤到不符合规则的
+    var myObject = { a: 10, b: 20, c: 30, d: 40 };
+    var biggerThenTwenty = Object.filter(myObject, function(value, key) {
+      return value > 20;
+    }); // => { c: 30, d: 40 }
+    console.assert(Object.keys(biggerThenTwenty).length == 2, '过滤后，应该值剩下2个key值');
+    console.assert('d' in biggerThenTwenty, '过滤逻辑不对吧？');
+
+    // 是否所有键值对，都满足条件
+    var allPass = Object.every({ x: 20, y: 30 }, function valueBiggerThen5(value, key) {
+      return value > 5;
+    });
+    console.assert(allPass === true, 'every只要全部值满足，every就是true');
+
+    // 只要任意键值对，满足要求
+    var areAnyBiggerThen5 = Object.some({ a: 1, b: 2, x: 10, y: 4 }, function(value) {
+      return value > 5;
+    });
+    console.assert(areAnyBiggerThen5, 'some应该任意一个满足条件，就为true的');
+
+    // 键值对数量
+    console.assert(Object.getLength({ x: 1, y: 2}) === 2, '键值对长度不对');
+
+    // 找到 value 对应的第一个 key 值
+    var kvObj = { x: 1, y: 'two', same: 'test', test: 'test' };
+    console.assert(Object.keyOf(kvObj, 1) === 'x', '根据value，能找到key值');
+    console.assert(Object.keyOf(kvObj, 'test') === 'same', '应该找到第一个满足条件的key才对');
+    console.assert(Object.keyOf(kvObj, 'not exist') === null, '找不到，应该返回 null');
+
+    // 是否含有某个值[value]
+    var testObj = { x: 1, y: 2, z: 'test' };
+    console.assert(Object.contains(testObj, 'test') === true, '含有某个值，应该返回true');
+    console.assert(Object.contains(testObj, 'mmm') === false, '不含某个值，应该返回false');
+
+    // 转为 浏览器 的 queryString
+    console.assert(Object.toQueryString({ x: 1, y: 2 }) === 'x=1&y=2', '难道我打错格式了');
+  </script>
+</body>
+</html>

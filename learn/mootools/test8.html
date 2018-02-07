@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>Function</h1>
+  <script>
+    var fn = Function.convert(1);
+    console.assert(fn() == 1, 'Function.convert会把内容转为函数返回');
+
+    // 尝试去执行一堆函数，直到其中一个，木有抛出异常为止
+    var result = Function.attempt(
+      function() { console.log(1); some.made.up; },
+      function() { console.log(2); return 2; },
+      function() { console.log(3); }
+    );
+    console.assert(result == 2, '捕获到的结果，有问题啦');
+
+    // attempt 就是 try/catch 的快捷方式
+    var result = (function() { something.not.exist; return 1; }).attempt();
+    console.assert(result == null, 'attempt不是捕抓异常吗？');
+
+    // pass 就是生成一个 指定参数 的自运行函数
+    var myFunction = function() {
+      var result = [];
+      for (var i = 0, max = arguments.length; i < max; i++) {
+        result.push(arguments[i]);
+      }
+      return result.join(',');
+    }
+    var myHello = myFunction.pass('hello');
+    var myItems = myFunction.pass(['1', '2', '3']);
+    console.assert(myHello('xxx') == 'hello', '不应该接受新的参数啦');
+    console.assert(myItems() == '1,2,3', '数组不行吗?');
+
+    // 延迟执行，会返回一个计时器
+    ;(function test(info) {
+      console.log(3);
+      console.assert(this.name == 'da宗熊', '不能设置上下文吗?');
+      console.assert(info.age == 10, '参数不对吗？');
+    }).delay(200, { name: 'da宗熊' }, [{ age: 10 }]);
+
+    // setInterval 的翻版
+    var intervalTimer = (function auto(info) {
+      console.assert(this.name == 'da宗熊', '不能设置上下文吗?');
+      console.assert(info.age == 10, '参数不对吗？');
+      console.log(4);
+      clearInterval(intervalTimer);
+    }).periodical(1000, { name: 'da宗熊' }, [{ age: 10 }]);
+  </script>
+</body>
+</html>
