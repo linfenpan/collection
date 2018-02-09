@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>JSON</h1>
+  <script>
+    var str = JSON.encode({ x: 1, y: 2 });
+    console.assert(str === '{"x":1,"y":2}', 'JSON.encode 是把对象转字符串');
+    console.assert(JSON.decode(str).y === 2, 'JSON.decode 是字符串转回对象');
+  </script>
+</body>
+</html>

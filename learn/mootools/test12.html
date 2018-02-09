@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>Cookie</h1>
+  <script>
+    var myCookie = Cookie.write('username', 'da宗熊', { duration: 1 });  // duration 是天数，还有 path，domain，encode[是否转义] 等参数
+    console.assert(Cookie.read('username') === 'da宗熊', 'Cookie 的读写，都正常啦');
+    Cookie.dispose('username');
+    console.assert(typeOf(Cookie.read('username')) === 'null', 'Cookie 删除后，不应该还读取到');
+  </script>
+</body>
+</html>

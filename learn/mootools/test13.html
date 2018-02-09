@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>DOMReady</h1>
+  <script>
+    // domready 是链式执行，如果其中一个报错了，会导致之后的执行，全部停止掉!!!!
+    
+    window.addEvent('domready', function() {
+      console.log('dom is ready');
+    });
+    window.addEvent('domready', function() {
+      console.log('dom is ready 2');
+      throw new Error('test');
+    });
+    window.addEvent('domready', function() {
+      console.log('dom is ready 3');
+    });
+  </script>
+</body>
+</html>

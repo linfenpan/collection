@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mootools学习</title>
+  <script src="./mootools-core-1.6.0.js"></script>
+</head>
+<body>
+  <h1>String</h1>
+  <script>
+    console.assert(String.convert(2) === '2', '内容强制转字符串1');
+    console.assert(String.convert(true) === 'true', '内容强转字符串2');
+    console.assert(String.convert(null) === 'null', '内容强转字符串3');
+    console.assert(String.convert(void 0) === 'undefined', '内容强转字符串4');
+    console.assert(String.convert(NaN) === 'NaN', '内容强转字符串5');
+
+    // 唯一id
+    console.assert(String.uniqueID() !== String.uniqueID(), '唯一id，不能重复');
+
+    console.assert('I am cookies'.test('cookie') === true, '应该类似正则的test的');
+    console.assert('I am cookies'.test('COOKIEs', 'i') === true, '应该类似new RegExp的');
+
+    // 开源码，第二个参数，应该是切割字符串的标志，默认是 ''，文档里的介绍，是错误的
+    console.assert('abcd'.contains('bc') === true, '应该包含字符串');
+    // console.assert('abcd'.contains('b', 1) === true, '从索引 1 开始找，应该能找到b');
+    // console.assert('abcd'.contains('a', 1) === false, '从索引 1 开始找，应该不能找到a');
+
+    console.assert(' a b c   '.trim() ==='a b c', 'trim 只切割头尾的空格');
+    console.assert(' I   like     cookies   \n\n'.clean() === 'I like cookies', 'clean 方法，切割头尾空格，同时把连续多个空格替换为1个空格');
+
+    console.assert('I-love-cookies'.camelCase() === 'ILoveCookies', 'camelCase会将-后的字段，替换为大写字母');
+    console.assert('ILoveCookies'.hyphenate() === '-i-love-cookies', 'hyphenate将会把大写字母，更改为 -小写字母 的形式');
+    console.assert('i like cookies'.capitalize() === 'I Like Cookies', '首字母，变为大写');
+
+    console.assert('list[1]'.escapeRegExp() === 'list\\[1\\]', '把正则的字符串，先转义');
+
+    console.assert('1'.toInt() === 1, '转整数');
+    console.assert('10px'.toInt() === 10, '转整数，忽略字母');
+    console.assert('100*100'.toInt() === 100, '转整数，忽略第一个非数字的值');
+    console.assert(isNaN('test10'.toInt()), '转整数，应该失败');
+
+    console.assert('1.1'.toFloat() === 1.1, '浮点数?');
+    console.assert('1.1.2'.toFloat() === 1.1, '浮点数忽略不识别的');
+    console.assert(isNaN('test1.2'.toFloat()), '转换浮点失败，应该是 NaN');
+
+    console.assert('#123'.hexToRgb() === 'rgb(17,34,51)', '十六进制颜色，转rgb格式');
+    console.assert('123'.hexToRgb() === 'rgb(17,34,51)', '十六进制颜色，转rgb格式');
+    console.assert('#112233'.hexToRgb() === 'rgb(17,34,51)', '十六进制颜色，转rgb格式');
+    console.assert('112233'.hexToRgb() === 'rgb(17,34,51)', '十六进制颜色，转rgb格式');
+    console.assert('112233'.hexToRgb(true)[0] == 17, '十六进制颜色，转rgb格式，第二个参数，代表返回数组'); // => [17,34,51]
+
+    console.assert('rgb(17, 34, 51)'.rgbToHex() === '#112233', 'rgb颜色，转hex');
+    console.assert('rgb(17, 34, 51)'.rgbToHex(true)[1] == 22, 'rgb颜色，转hex，第二个参数，代表返回数组'); // => ['11', '22', '33']
+    console.assert('rgba(17, 34, 51, 0)'.rgbToHex() === 'transparent', 'rgb颜色，转hex');    // rgba 第四个参数，有特殊处理，如果是 0，则返回 transparent，否则，就忽略
+
+    // substitute 只是一个普通的替换方法，不提供复杂的表达式
+    console.assert('Name:{name}'.substitute({ name: '1' }) === 'Name:1', 'substitute 是普通的替换');
+
+    console.assert(decodeURIComponent('%3Cscript%3Ealert(1)%3C/script%3E Hello').stripScripts() === ' Hello', '删除script标签');
+    var testCounter = 0;
+    console.assert(decodeURIComponent('%3Cscript%3EtestCounter++%3C/script%3E Hello').stripScripts(true) === ' Hello', '删除script标签，但里面的内容，是否要执行');
+    console.assert(testCounter === 1, 'stripScripts(true) 应该会执行脚本内的内容的啊');
+  </script>
+</body>
+</html>
