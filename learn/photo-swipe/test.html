@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,minimal-ui,shrink-to-fit=no">
+  <title>PhotoSwipe测试</title>
+  <link rel="stylesheet" href="./photoswipe.css">
+  <link rel="stylesheet" href="./default-skin/default-skin.css">
+  <script src="./photoswipe.min.js"></script>
+  <script src="./photoswipe-ui-default.min.js"></script>
+</head>
+<body>
+  <!-- Root element of PhotoSwipe. Must have class pswp. -->
+  <div id="test" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+      <!-- Background of PhotoSwipe.
+           It's a separate element as animating opacity is faster than rgba(). -->
+      <div class="pswp__bg"></div>
+      <!-- Slides wrapper with overflow:hidden. -->
+      <div class="pswp__scroll-wrap">
+          <!-- Container that holds slides.
+              PhotoSwipe keeps only 3 of them in the DOM to save memory.
+              Don't modify these 3 pswp__item elements, data is added later on. -->
+          <div class="pswp__container">
+              <div class="pswp__item"></div>
+              <div class="pswp__item"></div>
+              <div class="pswp__item"></div>
+          </div>
+
+          <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+          <div class="pswp__ui pswp__ui--hidden">
+              <div class="pswp__top-bar">
+                  <!--  Controls are self-explanatory. Order can be changed. -->
+                  <div class="pswp__counter"></div>
+                  <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                  <!-- <button class="pswp__button pswp__button--share" title="Share"></button> -->
+                  <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                  <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                  <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                  <!-- element will get class pswp__preloader--active when preloader is running -->
+                  <div class="pswp__preloader">
+                      <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                          <div class="pswp__preloader__donut"></div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                  <div class="pswp__share-tooltip"></div>
+              </div> -->
+              <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+              </button>
+              <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+              </button>
+              <div class="pswp__caption">
+                  <div class="pswp__caption__center"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script>
+    var pswpElement = document.getElementById('test');
+    // build items array
+    var items = [
+      {
+        src: 'http://cc.fp.ps.netease.com/file/5a7aaa1da7f252d4c3d3a0a5SURgiqSQ',
+        w: 595,
+        h: 446
+      },
+      {
+        src: 'http://cc.fp.ps.netease.com/file/5a8106f996dee470fc3cb33cvPeaDfLJ',
+        w: 292,
+        h: 218
+      }
+    ];
+
+    // define options (if needed)
+    var options = {
+        index: 0, // start at first slide
+        history: false,
+        tapToClose: true,
+        errorMsg: '<div class="pswp__error-msg">图片加载失败</div>'
+        // closeOnVerticalDrag: false,
+    };
+
+    // Initializes and opens PhotoSwipe
+    var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+
+    gallery.listen( 'pswpTap', function(e) {
+        console.log('tap', e, e.detail);
+        // e.detail.origEvent  // original event that finished tap (e.g. mouseup or touchend)
+        // e.detail.target // e.target of original event
+        // e.detail.releasePoint // object with x/y coordinates of tap
+        // e.detail.pointerType // mouse, touch, or pen
+    });
+
+    gallery.init();
+  </script>
+</body>
+</html>

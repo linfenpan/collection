@@ -22,7 +22,7 @@
     console.assert((125.45).round(-2) == 100, 'round保留百位数，十位数四舍五入');
 
     var counter = 0;
-    (5).times(function(i) { counter++; })
+    (5).times(function(i) { counter++; });
     console.assert(counter == 5, 'times需要自己运行n次才对');
 
     console.assert((11.8).toInt() == 11, 'toInt 会直接舍弃小数点');
