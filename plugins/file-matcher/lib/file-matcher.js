@@ -84,7 +84,7 @@ class FileMatcher {
     function tryToPushToResult(result, filepath) {
       filepath = formatFilepath(filepath);
       if (self._isMatch(filepath, regexpList) && !self._isMatch(filepath, ignoreList)) {
-        result.push(filepath);
+        result.push(Path.normalize(filepath));
       }
     }
 
