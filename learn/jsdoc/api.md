@@ -1,0 +1,388 @@
+## Classes
+
+<dl>
+<dt><a href="#Species">Species</a></dt>
+<dd><p>此类为抽象类，应该实现 canFly/canSwim 等方法</p>
+</dd>
+<dt><a href="#Animal">Animal</a> ⇐ <code><a href="#Species">Species</a></code></dt>
+<dd></dd>
+<dt><a href="#Persion">Persion</a> ⇐ <code><a href="#Animal">Animal</a></code></dt>
+<dd></dd>
+</dl>
+
+## Objects
+
+<dl>
+<dt><a href="#util">util</a> : <code>object</code></dt>
+<dd><p>工具集合</p>
+</dd>
+</dl>
+
+## Constants
+
+<dl>
+<dt><a href="#BLUE">BLUE</a></dt>
+<dd><p>蓝色</p>
+</dd>
+</dl>
+
+## Functions
+
+<dl>
+<dt><a href="#trstr">trstr(str)</a> ⇒ <code>string</code></dt>
+<dd><p>删除字符串的前后空格</p>
+</dd>
+</dl>
+
+<a name="Species"></a>
+
+## Species
+此类为抽象类，应该实现 canFly/canSwim 等方法
+
+**Kind**: global class  
+**Author**: da宗熊 <xxx@163.com>  
+
+* [Species](#Species)
+    * [new Species(type)](#new_Species_new)
+    * _instance_
+        * [.type](#Species+type)
+        * [.skills](#Species+skills)
+        * [.getType()](#Species+getType) ⇒ <code>\*</code>
+        * *[.canFly()](#Species+canFly) ⇒ <code>boolean</code>*
+        * *[.canSwim()](#Species+canSwim) ⇒ <code>boolean</code>*
+        * [.getSkills()](#Species+getSkills) ⇒ <code>array</code>
+        * [.eachSkills(fn)](#Species+eachSkills)
+    * _inner_
+        * [~eachcallback](#Species..eachcallback) : <code>function</code>
+
+<a name="new_Species_new"></a>
+
+### new Species(type)
+类，物种
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>\*</code> | 物种类型 |
+
+<a name="Species+type"></a>
+
+### species.type
+物种的类型
+
+**Kind**: instance property of [<code>Species</code>](#Species)  
+**Access**: protected  
+<a name="Species+skills"></a>
+
+### species.skills
+技能列表
+
+**Kind**: instance property of [<code>Species</code>](#Species)  
+**Access**: public  
+<a name="Species+getType"></a>
+
+### species.getType() ⇒ <code>\*</code>
+获取物种的类型
+
+**Kind**: instance method of [<code>Species</code>](#Species)  
+<a name="Species+canFly"></a>
+
+### *species.canFly() ⇒ <code>boolean</code>*
+当前物种，能否飞行
+
+**Kind**: instance abstract method of [<code>Species</code>](#Species)  
+<a name="Species+canSwim"></a>
+
+### *species.canSwim() ⇒ <code>boolean</code>*
+当前物种，能否游泳
+
+**Kind**: instance abstract method of [<code>Species</code>](#Species)  
+<a name="Species+getSkills"></a>
+
+### species.getSkills() ⇒ <code>array</code>
+获取技能列表
+
+**Kind**: instance method of [<code>Species</code>](#Species)  
+<a name="Species+eachSkills"></a>
+
+### species.eachSkills(fn)
+遍历技能列表
+
+**Kind**: instance method of [<code>Species</code>](#Species)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | [<code>eachcallback</code>](#Species..eachcallback) | 处理函数 |
+
+<a name="Species..eachcallback"></a>
+
+### Species~eachcallback : <code>function</code>
+遍历技能的回调
+
+**Kind**: inner typedef of [<code>Species</code>](#Species)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>number</code> | 技能的id值 |
+| index | <code>number</code> | 当前技能的索引 |
+
+<a name="Animal"></a>
+
+## Animal ⇐ [<code>Species</code>](#Species)
+**Kind**: global class  
+**Extends**: [<code>Species</code>](#Species)  
+
+* [Animal](#Animal) ⇐ [<code>Species</code>](#Species)
+    * [new Animal()](#new_Animal_new)
+    * [.type](#Species+type)
+    * [.skills](#Species+skills)
+    * [.speak()](#Animal+speak)
+    * [.getType()](#Species+getType) ⇒ <code>\*</code>
+    * *[.canFly()](#Species+canFly) ⇒ <code>boolean</code>*
+    * *[.canSwim()](#Species+canSwim) ⇒ <code>boolean</code>*
+    * [.getSkills()](#Species+getSkills) ⇒ <code>array</code>
+    * [.eachSkills(fn)](#Species+eachSkills)
+
+<a name="new_Animal_new"></a>
+
+### new Animal()
+动物
+
+<a name="Species+type"></a>
+
+### animal.type
+物种的类型
+
+**Kind**: instance property of [<code>Animal</code>](#Animal)  
+**Access**: protected  
+<a name="Species+skills"></a>
+
+### animal.skills
+技能列表
+
+**Kind**: instance property of [<code>Animal</code>](#Animal)  
+**Access**: public  
+<a name="Animal+speak"></a>
+
+### animal.speak()
+动物吼叫
+
+**Kind**: instance method of [<code>Animal</code>](#Animal)  
+<a name="Species+getType"></a>
+
+### animal.getType() ⇒ <code>\*</code>
+获取物种的类型
+
+**Kind**: instance method of [<code>Animal</code>](#Animal)  
+<a name="Species+canFly"></a>
+
+### *animal.canFly() ⇒ <code>boolean</code>*
+当前物种，能否飞行
+
+**Kind**: instance abstract method of [<code>Animal</code>](#Animal)  
+<a name="Species+canSwim"></a>
+
+### *animal.canSwim() ⇒ <code>boolean</code>*
+当前物种，能否游泳
+
+**Kind**: instance abstract method of [<code>Animal</code>](#Animal)  
+<a name="Species+getSkills"></a>
+
+### animal.getSkills() ⇒ <code>array</code>
+获取技能列表
+
+**Kind**: instance method of [<code>Animal</code>](#Animal)  
+<a name="Species+eachSkills"></a>
+
+### animal.eachSkills(fn)
+遍历技能列表
+
+**Kind**: instance method of [<code>Animal</code>](#Animal)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | [<code>eachcallback</code>](#Species..eachcallback) | 处理函数 |
+
+<a name="Persion"></a>
+
+## Persion ⇐ [<code>Animal</code>](#Animal)
+**Kind**: global class  
+**Extends**: [<code>Animal</code>](#Animal)  
+
+* [Persion](#Persion) ⇐ [<code>Animal</code>](#Animal)
+    * [new initialize()](#new_Persion_new)
+    * [.hp](#Persion+hp)
+    * [.mp](#Persion+mp)
+    * [.type](#Species+type)
+    * [.skills](#Species+skills)
+    * [.attack()](#Persion+attack)
+    * [.speak()](#Animal+speak)
+    * [.getType()](#Species+getType) ⇒ <code>\*</code>
+    * [.canFly()](#Species+canFly) ⇒ <code>boolean</code>
+    * [.canSwim()](#Species+canSwim) ⇒ <code>boolean</code>
+    * [.getSkills()](#Species+getSkills) ⇒ <code>array</code>
+    * [.eachSkills(fn)](#Species+eachSkills)
+    * ["attack"](#Persion+event_attack)
+
+<a name="new_Persion_new"></a>
+
+### new initialize()
+类，人类
+
+<a name="Persion+hp"></a>
+
+### persion.hp
+血量
+
+**Kind**: instance property of [<code>Persion</code>](#Persion)  
+**Default**: <code>100</code>  
+<a name="Persion+mp"></a>
+
+### persion.mp
+魔法值
+
+**Kind**: instance property of [<code>Persion</code>](#Persion)  
+**Default**: <code>100</code>  
+<a name="Species+type"></a>
+
+### persion.type
+物种的类型
+
+**Kind**: instance property of [<code>Persion</code>](#Persion)  
+**Access**: protected  
+<a name="Species+skills"></a>
+
+### persion.skills
+技能列表
+
+**Kind**: instance property of [<code>Persion</code>](#Persion)  
+**Access**: public  
+<a name="Persion+attack"></a>
+
+### persion.attack()
+攻击某人
+
+**Kind**: instance method of [<code>Persion</code>](#Persion)  
+**Emits**: [<code>attack</code>](#Persion+event_attack)  
+<a name="Animal+speak"></a>
+
+### persion.speak()
+动物吼叫
+
+**Kind**: instance method of [<code>Persion</code>](#Persion)  
+<a name="Species+getType"></a>
+
+### persion.getType() ⇒ <code>\*</code>
+获取物种的类型
+
+**Kind**: instance method of [<code>Persion</code>](#Persion)  
+<a name="Species+canFly"></a>
+
+### persion.canFly() ⇒ <code>boolean</code>
+当前物种，能否飞行
+
+**Kind**: instance method of [<code>Persion</code>](#Persion)  
+**Overrides**: [<code>canFly</code>](#Species+canFly)  
+<a name="Species+canSwim"></a>
+
+### persion.canSwim() ⇒ <code>boolean</code>
+当前物种，能否游泳
+
+**Kind**: instance method of [<code>Persion</code>](#Persion)  
+**Overrides**: [<code>canSwim</code>](#Species+canSwim)  
+<a name="Species+getSkills"></a>
+
+### persion.getSkills() ⇒ <code>array</code>
+获取技能列表
+
+**Kind**: instance method of [<code>Persion</code>](#Persion)  
+<a name="Species+eachSkills"></a>
+
+### persion.eachSkills(fn)
+遍历技能列表
+
+**Kind**: instance method of [<code>Persion</code>](#Persion)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | [<code>eachcallback</code>](#Species..eachcallback) | 处理函数 |
+
+<a name="Persion+event_attack"></a>
+
+### "attack"
+攻击事件
+
+**Kind**: event emitted by [<code>Persion</code>](#Persion)  
+<a name="util"></a>
+
+## util : <code>object</code>
+工具集合
+
+**Kind**: global namespace  
+
+* [util](#util) : <code>object</code>
+    * [.State](#util.State) : <code>enum</code>
+    * [.RED](#util.RED)
+    * ~~[.tryToDoSomething()](#util.tryToDoSomething)~~
+    * [.trim(str)](#util.trim) ⇒ <code>string</code>
+
+<a name="util.State"></a>
+
+### util.State : <code>enum</code>
+通用状态
+
+**Kind**: static enum of [<code>util</code>](#util)  
+**Read only**: true  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| TRUE | <code>number</code> | <code>1</code> | true 值 |
+| FALSE | <code>number</code> | <code>0</code> | false 值 |
+| MAYBE | <code>string</code> | <code>&quot;maybe&quot;</code> | 可能 |
+
+<a name="util.RED"></a>
+
+### util.RED
+红色
+
+**Kind**: static constant of [<code>util</code>](#util)  
+<a name="util.tryToDoSomething"></a>
+
+### ~~util.tryToDoSomething()~~
+***Deprecated***
+
+尝试去干什么
+
+**Kind**: static method of [<code>util</code>](#util)  
+<a name="util.trim"></a>
+
+### util.trim(str) ⇒ <code>string</code>
+删除字符串的前后空格
+
+**Kind**: static method of [<code>util</code>](#util)  
+**Returns**: <code>string</code> - - 加工后的字符  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| str | <code>string</code> | 加工的字符 |
+
+<a name="BLUE"></a>
+
+## BLUE
+蓝色
+
+**Kind**: global constant  
+**Default**: <code>red</code>  
+<a name="trstr"></a>
+
+## trstr(str) ⇒ <code>string</code>
+删除字符串的前后空格
+
+**Kind**: global function  
+**Returns**: <code>string</code> - - 加工后的字符  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| str | <code>string</code> | 加工的字符 |
+

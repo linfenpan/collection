@@ -1,0 +1,21 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "doc1": "node_modules/.bin/jsdoc -c .jsdoc-1.json",
+    "doc2": "node_modules/.bin/jsdoc -c .jsdoc-2.json",
+    "doc3": "node_modules/.bin/jsdoc2md -f js/*.js > docs3/index.md"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "minami": "^1.2.3"
+  },
+  "dependencies": {
+    "jsdoc": "^3.5.5",
+    "jsdoc-to-markdown": "^4.0.1",
+    "tui-jsdoc-template": "^1.2.2"
+  }
+}
