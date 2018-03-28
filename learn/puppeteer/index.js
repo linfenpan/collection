@@ -17,11 +17,25 @@ function wait(time) {
   const browser = await puppeteer.launch({
     headless: false,
     slowMo: true,
-    args: args.concat(['--window-size=1620,1000'])
+    args: args.concat([
+      '--window-size=1620,1000'
+    ])
   });
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1600, height: 900 });
+
+  // 尝试拦截请求
+  await page.setRequestInterception(true);
+  page.on('request', interceptedRequest => {
+    const url = interceptedRequest.url();
+    if (url.indexOf('inner-action') >= 0) {
+      console.log('拦截请求:' + url);
+    } else {
+      console.log('非拦截请求:' + url);
+    }
+    interceptedRequest.continue();
+  });
 
   await page.goto('https://www.baidu.com/');
   // 输入，delay 是输入间隔
@@ -32,7 +46,7 @@ function wait(time) {
 
   // 等待搜索完毕，会跳转到新地址
   await page.waitForSelector('.c-container .t');
-  await wait(500);
+  // await wait(500);
 
   // 遍历所有元素，找出 text/link 值
   // 或者可以使用 page.$eval
@@ -48,5 +62,12 @@ function wait(time) {
 
   console.log(list);
 
-  await browser.close();
+  await page.evaluate(async () => {
+    location.href = 'inner-action://test';
+    return 11;
+  });
+
+  await wait(2000);
+
+  // await browser.close();
 })();
