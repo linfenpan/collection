@@ -1,4 +1,54 @@
-'use strict';
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: all.js | 说明文档</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">说明文档</a></h1>
+        
+            <span class="version">v1.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Todo.html">Todo</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Todo_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Todo.html#list">list</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Todo.html#add">add</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#Animal">Animal</a></li><li><a href="global.html#attack">attack</a></li><li><a href="global.html#BLUE">BLUE</a></li><li><a href="global.html#Book">Book</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#canFly">canFly</a></li><li><a href="global.html#canSwim">canSwim</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#compare">compare</a></li><li><a href="global.html#eachSkills">eachSkills</a></li><li><a href="global.html#FALSE">FALSE</a></li><li><a href="global.html#fnAgain">fnAgain</a></li><li><a href="global.html#getSkills">getSkills</a></li><li><a href="global.html#getTitle">getTitle</a></li><li><a href="global.html#hp">hp</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#MAYBE">MAYBE</a></li><li><a href="global.html#mp">mp</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#Person">Person</a></li><li><a href="global.html#RED">RED</a></li><li><a href="global.html#sayHi">sayHi</a></li><li><a href="global.html#setPageNum">setPageNum</a></li><li><a href="global.html#skills">skills</a></li><li><a href="global.html#Species">Species</a></li><li><a href="global.html#State">State</a></li><li><a href="global.html#Test">Test</a></li><li><a href="global.html#trim">trim</a></li><li><a href="global.html#trstr">trstr</a></li><li><a href="global.html#TRUE">TRUE</a></li><li><a href="global.html#tryToDoSomething">tryToDoSomething</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#util">util</a></li><li><a href="global.html#wish">wish</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 /**
  * @file 一个测试jsdoc的文件
  * @copyright fenpan.lfp 2018
@@ -32,7 +82,7 @@ var fnAgain = function again(fn) { }
 
 /**
  * 类，物种
- * @author da宗熊 <xxx@163.com>
+ * @author da宗熊 &lt;xxx@163.com>
  * @constructor
  * @classdesc 此类为抽象类，应该实现 canFly/canSwim 等方法
  * @param {*} type - 物种类型
@@ -242,3 +292,33 @@ const util = {
  * @default red
 */
 const BLUE = 'blue';
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

@@ -10,11 +10,9 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "minami": "^1.2.3"
-  },
   "dependencies": {
     "jsdoc": "^3.5.5",
+    "minami": "^1.2.3",
     "jsdoc-to-markdown": "^4.0.1",
     "tui-jsdoc-template": "^1.2.2"
   }

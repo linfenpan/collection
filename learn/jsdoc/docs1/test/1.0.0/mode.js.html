@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>index.js - Documentation</title>
+    <title>mode.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">mode.js</h1>
     
 
     
@@ -39,62 +39,23 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+            <pre class="prettyprint source linenums"><code>'use strict'
+/** @module js/mode */
+
+// 必须添加 @modue 声明，不然就无法正常识别了
+
+/** 板块名字 */
+export const name = 'mode';
+
 
 /**
- * 添加任务
- *
- * @param {String} name - 名字
- * @param {Function} task - 任务
- * @return {void}
+ * 对比两个数值的大小
+ * @param {number} v1 - 数值1
+ * @param {number} v2 - 数值2
+ * @return {number}
 */
-function addTask(name, task) {
+export function compare(v1, v2) {
 
-}
-
-
-
-
-// @constructor 代表是构造函数
-/**
- * Book 类，代表一本书
- * @constructor
- * @param {string} title - 书本标题
- * @param {string} author[da宗熊] - 书本作者
-*/
-function Book(title, author) {
-  /**
-   * 给大家说 hello
-  */
-  this.sayHi = function() {
-
-  };
-}
-
-Book.prototype = {
-  /**
-   * 获取书本的标题
-   * @returns {string|undefined}
-  */
-  getTitle: function() {
-    return this.title;
-  },
-
-  /**
-   * 设置书本的总页数
-   * @param {number} num 页码
-  */
-  setPageNum: function(num) {
-
-  }
-}
-
-/**
- * 获取书籍的详情
- * @return {object}
-*/
-Book.info = function() {
-  return {}
 }
 </code></pre>
         </article>

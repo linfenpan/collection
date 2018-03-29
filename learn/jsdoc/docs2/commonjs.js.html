@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | 说明文档</title>
+    <title>Source: commonjs.js | 说明文档</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -44,23 +46,36 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1>readme 测试</h1></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * 测试 commonjs 的注释
+ * @module js/commonjs
+ * @see module:js/mode
+*/
+
+// @see 是链接到另一个 jsdoc 文档的
+
+/** 获取按钮 */
+exports.button = function() {
+
+};
+
+
+// 如果 exports 前面，有一个临时变量，会导致 jsdoc 导出失败
+// 这时候，应该通过 @alias，告诉 jsdoc 来正确解析
+
+/**
+ * 期望去干什么
+ * @alias module:js/commonjs.wish
+ * @param {*} todo - 想干的事情
+*/
+const wish = exports.wish = function(todo)　{
+
+}
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -77,7 +92,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:test_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

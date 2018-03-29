@@ -29,8 +29,22 @@
 ## Functions
 
 <dl>
+<dt><a href="#attack">attack(someone, options)</a> ⇒ <code>boolean</code></dt>
+<dd><p>攻击某人 （内容的简介）</p>
+</dd>
+<dt><a href="#fnAgain">fnAgain(fn)</a></dt>
+<dd><p>再次执行指定函数</p>
+</dd>
 <dt><a href="#trstr">trstr(str)</a> ⇒ <code>string</code></dt>
 <dd><p>删除字符串的前后空格</p>
+</dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#fnAgainCallback">fnAgainCallback</a> : <code>function</code></dt>
+<dd><p>fnAgain 的回调函数</p>
 </dd>
 </dl>
 
@@ -374,6 +388,36 @@
 
 **Kind**: global constant  
 **Default**: <code>red</code>  
+<a name="attack"></a>
+
+## attack(someone, options) ⇒ <code>boolean</code>
+攻击某人 （内容的简介）
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| someone | <code>Someone</code> \| <code>number</code> | Someone 类，或者是 Someone#id |
+| options | <code>Object</code> | 必填参数 |
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| options.extraAttack | <code>number</code> | 额外攻击 |
+| options.isGodMode | <code>boolean</code> | 是否上帝模式 |
+
+<a name="fnAgain"></a>
+
+## fnAgain(fn)
+再次执行指定函数
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | [<code>fnAgainCallback</code>](#fnAgainCallback) | 回调函数 |
+
 <a name="trstr"></a>
 
 ## trstr(str) ⇒ <code>string</code>
@@ -385,4 +429,16 @@
 | Param | Type | Description |
 | --- | --- | --- |
 | str | <code>string</code> | 加工的字符 |
+
+<a name="fnAgainCallback"></a>
+
+## fnAgainCallback : <code>function</code>
+fnAgain 的回调函数
+
+**Kind**: global typedef  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>number</code> | 回调id |
+| next | <code>function</code> | 继续执行的回调 |
 

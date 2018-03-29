@@ -36,7 +36,7 @@
         <ul></ul>
     </div>
     
-    <div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#addTask">addTask</a></li></ul></div>
+    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Todo.html">Todo</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Todo_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Todo.html#list">list</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Todo.html#add">add</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#addTask">addTask</a></li><li><a href="global.html#Animal">Animal</a></li><li><a href="global.html#attack">attack</a></li><li><a href="global.html#BLUE">BLUE</a></li><li><a href="global.html#Book">Book</a></li><li><a href="global.html#button">button</a></li><li><a href="global.html#canFly">canFly</a></li><li><a href="global.html#canSwim">canSwim</a></li><li><a href="global.html#color">color</a></li><li><a href="global.html#compare">compare</a></li><li><a href="global.html#eachSkills">eachSkills</a></li><li><a href="global.html#FALSE">FALSE</a></li><li><a href="global.html#fnAgain">fnAgain</a></li><li><a href="global.html#getSkills">getSkills</a></li><li><a href="global.html#getTitle">getTitle</a></li><li><a href="global.html#hp">hp</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#MAYBE">MAYBE</a></li><li><a href="global.html#mp">mp</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#Person">Person</a></li><li><a href="global.html#RED">RED</a></li><li><a href="global.html#sayHi">sayHi</a></li><li><a href="global.html#setPageNum">setPageNum</a></li><li><a href="global.html#skills">skills</a></li><li><a href="global.html#Species">Species</a></li><li><a href="global.html#State">State</a></li><li><a href="global.html#Test">Test</a></li><li><a href="global.html#trim">trim</a></li><li><a href="global.html#trstr">trstr</a></li><li><a href="global.html#TRUE">TRUE</a></li><li><a href="global.html#tryToDoSomething">tryToDoSomething</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#util">util</a></li><li><a href="global.html#wish">wish</a></li></ul></div>
 </nav>
 <div id="resizer"></div>
 
@@ -59,6 +59,51 @@
 */
 function addTask(name, task) {
 
+}
+
+
+
+
+// @constructor 代表是构造函数
+/**
+ * Book 类，代表一本书
+ * @constructor
+ * @param {string} title - 书本标题
+ * @param {string} author[da宗熊] - 书本作者
+*/
+function Book(title, author) {
+  /**
+   * 给大家说 hello
+  */
+  this.sayHi = function() {
+
+  };
+}
+
+Book.prototype = {
+  /**
+   * 获取书本的标题
+   * @returns {string|undefined}
+  */
+  getTitle: function() {
+    return this.title;
+  },
+
+  /**
+   * 设置书本的总页数
+   * @param {number} num 页码
+  */
+  setPageNum: function(num) {
+
+  }
+}
+
+/**
+ * 获取书籍的详情
+ * @return {object}
+*/
+Book.info = function() {
+  return {}
 }
 </code></pre>
         </article>

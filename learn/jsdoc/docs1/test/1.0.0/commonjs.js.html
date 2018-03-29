@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>index.js - Documentation</title>
+    <title>commonjs.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">commonjs.js</h1>
     
 
     
@@ -39,62 +39,30 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+            <pre class="prettyprint source linenums"><code>/**
+ * 测试 commonjs 的注释
+ * @module js/commonjs
+ * @see module:js/mode
+*/
+
+// @see 是链接到另一个 jsdoc 文档的
+
+/** 获取按钮 */
+exports.button = function() {
+
+};
+
+
+// 如果 exports 前面，有一个临时变量，会导致 jsdoc 导出失败
+// 这时候，应该通过 @alias，告诉 jsdoc 来正确解析
 
 /**
- * 添加任务
- *
- * @param {String} name - 名字
- * @param {Function} task - 任务
- * @return {void}
+ * 期望去干什么
+ * @alias module:js/commonjs.wish
+ * @param {*} todo - 想干的事情
 */
-function addTask(name, task) {
+const wish = exports.wish = function(todo)　{
 
-}
-
-
-
-
-// @constructor 代表是构造函数
-/**
- * Book 类，代表一本书
- * @constructor
- * @param {string} title - 书本标题
- * @param {string} author[da宗熊] - 书本作者
-*/
-function Book(title, author) {
-  /**
-   * 给大家说 hello
-  */
-  this.sayHi = function() {
-
-  };
-}
-
-Book.prototype = {
-  /**
-   * 获取书本的标题
-   * @returns {string|undefined}
-  */
-  getTitle: function() {
-    return this.title;
-  },
-
-  /**
-   * 设置书本的总页数
-   * @param {number} num 页码
-  */
-  setPageNum: function(num) {
-
-  }
-}
-
-/**
- * 获取书籍的详情
- * @return {object}
-*/
-Book.info = function() {
-  return {}
 }
 </code></pre>
         </article>

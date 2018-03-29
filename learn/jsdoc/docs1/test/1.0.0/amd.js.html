@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>index.js - Documentation</title>
+    <title>amd.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">index.js</h1>
+    <h1 class="page-title">amd.js</h1>
     
 
     
@@ -40,62 +40,31 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
-
 /**
- * 添加任务
- *
- * @param {String} name - 名字
- * @param {Function} task - 任务
- * @return {void}
+ * amd 测试
+ * @module js/amd
 */
-function addTask(name, task) {
 
-}
-
-
-
-
-// @constructor 代表是构造函数
-/**
- * Book 类，代表一本书
- * @constructor
- * @param {string} title - 书本标题
- * @param {string} author[da宗熊] - 书本作者
-*/
-function Book(title, author) {
+define(function() {
   /**
-   * 给大家说 hello
+   * 测试函数
+   * @class
   */
-  this.sayHi = function() {
-
-  };
-}
-
-Book.prototype = {
-  /**
-   * 获取书本的标题
-   * @returns {string|undefined}
-  */
-  getTitle: function() {
-    return this.title;
-  },
-
-  /**
-   * 设置书本的总页数
-   * @param {number} num 页码
-  */
-  setPageNum: function(num) {
+  function Test() {
 
   }
-}
 
-/**
- * 获取书籍的详情
- * @return {object}
-*/
-Book.info = function() {
-  return {}
-}
+  /** 执行测试 */
+  Test.prototype.run = function() {
+
+  }
+
+  return /** @alias module:js/amd */ {
+    /** 颜色 */
+    color: 'black',
+    Test: Test
+  };
+});
 </code></pre>
         </article>
     </section>
