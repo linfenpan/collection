@@ -17,7 +17,6 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 //   console.log('Node_ENV:', env.NODE_ENV); // local
 //   // --env.production
 //   console.log('Production:', env.production); // true
-
 module.exports = {
   entry: {
     main: './src/main.js'
