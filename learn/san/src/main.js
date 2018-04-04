@@ -3,6 +3,9 @@
 import san from 'san';
 import './main.less';
 import './global';
+import Test from './test.vue';
+
+console.log(Test);
 
 const $app = document.getElementById('app');
 $app.innerHTML = `

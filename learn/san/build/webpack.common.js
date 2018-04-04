@@ -89,6 +89,19 @@ module.exports = {
             name: '[name].[ext]'
           }
         }],
+      },
+      {
+        test: /\.vue$/,
+        exclude: /node_modules/,
+        use: [{
+          loader: 'vue-loader',
+          options: {
+            loaders: {
+              css: ['style-loader', 'css-loader', 'postcss-loader'],
+              less: ['style-loader', 'css-loader', 'postcss-loader', 'less-loader']
+            }
+          }
+        }]
       }
     ]
   },
