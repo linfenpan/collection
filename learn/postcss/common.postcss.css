@@ -1,0 +1,3 @@
+$commonColor: #fff;
+
+@custom-media --middle-viewport (max-width: 30em) and (max-height: 120em);

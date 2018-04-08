@@ -1,0 +1,77 @@
+@import "common.postcss.css";
+
+/* precss 的自定义变量 */
+$mainColor: #fff;
+$fzNormal: 1rem;
+
+@custom-media --small-viewport (max-width: 30em) and (max-height: 120em);
+
+%clearfix {
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+body {
+  /* 注释测试 */
+  background: $mainColor;
+  width: calc(2 * 2vw);
+  margin: 2.5rem 2px 3em 100%;
+  font-family: system-ui;
+}
+
+@media (--small-viewport) {
+  body {
+    font-size: 12px;
+  }
+}
+
+
+
+@custom-selector :--active :hover, :active;
+
+.btn-danger {
+  display: flex;
+  font-size: calc($fzNormal * 1.5);
+  &:--active {
+    opacity: .9;
+  }
+  @extend %clearfix;
+}
+
+.btn-test:--active {
+  opacity: .8;
+
+  span {
+    color: red;
+  }
+
+  a& {
+    color: blue;
+  }
+}
+
+.content {
+  .main {
+    width: width('horse.jpg');
+    height: height('horse.jpg');
+    background: resolve('horse.jpg') no-repeat;
+  }
+
+  .logo {
+    $s: 20px;
+    height: $s;
+    width: $s;
+    padding-top: 10px;
+    margin-top: 10px;
+    background: url(image2/logo.svg) no-repeat;
+  }
+}
+
+@media (--middle-viewport) {
+  .logo {
+    background: $commonColor;
+  }
+}

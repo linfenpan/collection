@@ -1,0 +1,20 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "index": "node_modules/.bin/postcss index.postcss.css -o index.css"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^8.2.0",
+    "cssnano": "^3.10.0",
+    "postcss-assets": "^5.0.0",
+    "postcss-cli": "^5.0.0",
+    "postcss-sorting": "^3.1.0",
+    "postcss-url": "^7.3.2",
+    "precss": "^3.1.2"
+  }
+}
