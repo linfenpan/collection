@@ -69,5 +69,5 @@ function wait(time) {
 
   await wait(2000);
 
-  // await browser.close();
+  await browser.close();
 })();

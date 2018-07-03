@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>test</title>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script src="./node_modules/san/dist/san.js"></script>
+  <script src="./node_modules/san-store/dist/san-store.js"></script>
+  <script src="./node_modules/san-update/index.min.js"></script>
+
+  <script id="san_template" type="text/html">
+    <div>
+      <ul>
+        <li s-for="text,index in todos">#{{ index + 1 }} - {{ text }}</li>
+      </ul>
+      <form on-submit="add">
+        <input value="{= value =}" on-keyup="edit($event)" placeholder="请出入" />
+        <button disabled="{{ !value }}">添加</button>
+      </form>
+    </div>
+  </script>
+
+  <script>
+    var builder = sanUpdate.builder;
+    var updateBuilder = sanUpdate.updateBuilder;
+    var store = sanStore.store;
+    var connect = sanStore.connect;
+
+    store.addAction('initTodos', function(list, e) {
+      return builder().set('todos', list || []);
+    });
+
+    store.addAction('addTodoItem', function(item, e/* { dispatch, getState } */) {
+      if (!e.getState('todos')) {
+        e.dispatch('initTodos');
+      }
+      return builder().push('todos', item);
+    });
+  </script>
+
+  <script>
+    var MyApp = san.defineComponent({
+      template: document.getElementById('san_template').innerHTML,
+
+      initData: function() {
+        return {  };
+      },
+
+      add: function(e) {
+        // console.log(e);
+        e.preventDefault();
+
+        this.actions.addTodo(this.data.get('value'));
+        this.data.set('value', '');
+      },
+
+      edit: function(e) {
+        // console.log(this.data.get('value'), e);
+      }
+    });
+
+    connect.san(
+      { todos: 'todos' },
+      { addTodo: 'addTodoItem' }
+    )(MyApp);
+
+    var myApp = new MyApp();
+    myApp.attach(document.getElementById('app'));
+  </script>
+</body>
+</html>
