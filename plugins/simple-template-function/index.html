@@ -11,7 +11,7 @@
   <script>
     var elResult = document.getElementById('result');
     setInterval(function() {
-      result.innerHTML = render('<p>当前时间: <%= this.time %></p>', { time: (new Date).toLocaleString() });
+      result.innerHTML = render('<% var time = new Date; %><p>当前时间: <%= this.time %></p>', { time: (new Date).toLocaleString() });
     }, 1000);
   </script>
 </body>
