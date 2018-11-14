@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+  <title>底部可变高输入框测试</title>
+  <script src="./san.js"></script>
+</head>
+<body>
+<div id="content"></div>
+
+<style>
+  .placeholder { height: 40px; }
+  .main {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 5px;
+
+    border-top: 1px solid #ddd; background: #fff;
+    display: flex; align-items: center;
+    flex-wrap: wrap;
+  }
+
+
+  .input-wrap {
+    flex: 1;
+    min-width: 1px;
+  }
+  .holder, .input {
+    line-height: 1.5;
+    min-height: 1em;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    -webkit-user-select:text;
+    box-sizing: content-box;
+  }
+  .holder {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .input {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0;
+    max-height: 4.5em;
+    overflow: auto;
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+    /* 实现 placeholder 的效果 */
+  .input:empty:before, .holder:empty:before { content: attr(placeholder); color: #bbb; }
+  .input:focus, .holder:focus { content: none; }
+
+    /* 聚焦状态 */
+  .active .input {
+    position: static; opacity: 1;
+  }
+  .active .holder {
+    display: none;
+  }
+
+
+  .btn { display: block; min-width: 3em; text-align: center; }
+
+  .back { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, .4); }
+
+  .operation {
+    width: 100%;
+    display: none;
+  }
+  .active .operation {
+    display: block;
+  }
+  .operation .item {
+    padding: 4px 10px;
+  }
+</style>
+<script id="jsTemplate" type="text/html">
+  <div class="bottom-input">
+    <div class="placeholder"></div>
+    <div class="back" s-if="isReady" on-click="tryToClose"></div>
+    <div class="main {{ isReady ? 'active' : '' }}">
+      <div class="input-wrap">
+        <div class="holder" placeholder="请输入...">{{ placeholder }}</div>
+        <div s-ref="input" class="input" placeholder="请输入..." contenteditable="true"
+          on-click="readyToInput"
+          on-focus="focusInput"
+          on-blur="blurInput"
+          on-input="updateValue"
+          on-paste="pasteValue"
+        ></div>
+      </div>
+      <a href="javascript:;" class="btn" on-click="submit">发布</a>
+      <div class="operation">
+        <a href="javascript:;" class="item" on-click="insertContent('before')">前面插入</a>
+        <a href="javascript:;" class="item" on-click="insertContent('center')">当前光标插入</a>
+        <a href="javascript:;" class="item" on-click="insertContent('after')">后面插入</a>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script>
+  // 插入一些占位文案
+  var elContent = document.getElementById('content');
+  var htmlList = [];
+  for (var i = 0; i < 200; i++) {
+    htmlList.push('<p>这里是: '+ i +'</p>');
+  }
+  elContent.innerHTML = htmlList.join('');
+</script>
+
+<script src="./body-locker.js"></script>
+
+<script>
+  var App = san.defineComponent({
+    template: document.getElementById('jsTemplate').innerHTML,
+
+    initData: function() {
+      return {
+        isReady: false,
+        submitValue: '',
+        placeholder: '',
+      };
+    },
+
+    attached: function() {
+      this.bodyLocker = new BodyLocker();
+    },
+
+    readyToInput: function() {
+      this.data.set('isReady', true);
+      this.bodyLocker.lock();
+    },
+
+    updateValue: function() {
+      // TODO 如果是 insertContent 触发的，将不会附带回调函数的，很危险的啊
+      var elInput = this.ref('input');
+      // TODO 把所有 p 标签，变更为 div 标签
+      this.data.set('submitValue', elInput.innerHTML);
+      console.log('xxxx..');
+    },
+
+    // 粘贴内容
+    pasteValue: function(e) {
+      console.log('粘贴内容', e);
+      var clipboardData = e.clipboardData;
+      e.preventDefault();
+
+      if (!clipboardData) {
+        return;
+      }
+
+      var items = clipboardData.items;
+      // var text = clipboardData.getData('text/plain');
+
+      var html = clipboardData.getData('text/html');
+      if (html) {
+        // 除了 p, div 标签，其它标签全部删除
+        html = html.replace(/<(?!p|\/p|div|\/div)[\s\S]*?>/ig, '');
+        // 删除掉标签内，所有属性
+        html = html.replace(/<(\/?)([^\s]+)([\s\S]*?)>/ig, '<$1$2>').trim();
+      }
+
+      // console.log(html);
+      // document.execCommand('insertText', false, text);
+      document.execCommand('inserthtml', false, html);
+    },
+
+    insertContent: function(pos) {
+      // 参考文章1: https://www.2cto.com/kf/201708/671461.html
+      // 参考文章2: https://developer.mozilla.org/zh-CN/docs/Web/API/Selection
+      // 参考文章3: https://developer.mozilla.org/zh-CN/docs/Web/API/Range
+      if (!window.getSelection) {
+        // TODO 可以提示，升级浏览器了
+        return;
+      }
+
+      var selection = window.getSelection();
+      var elInput = this.ref('input');
+
+      elInput.contentEditable = false;  // 以免光标唤起键盘啊
+
+      // 起始阶段 和 结束节点，均在 input 内，否则把选区强制指定到 input 的结尾处
+      if (elInput.contains(selection.anchorNode) && elInput.contains(selection.focusNode)) {
+        // console.log('均在input内'); // nothing~~
+      } else {
+        selection.removeAllRanges();
+      }
+
+      // 如果有多个选区（Range），仅取第一个，并且删除其它选区
+      if (selection.rangeCount > 1) {
+        for (var i = 1; i < selection.rangeCount; i++) {
+          selection.removeRange(selection.getRangeAt(i));
+        }
+      } else if (selection.rangeCount <= 0) {
+        // 给输入框的最末尾，增加一个选区
+        var r = document.createRange();
+        var len = elInput.childNodes.length;
+        r.setStart(elInput, len);
+        r.setEnd(elInput, len);
+        selection.addRange(r);
+      }
+
+      var range = selection.getRangeAt(0);
+
+      switch (pos) {
+        // before 和 after 应该替换掉原来的选区的
+        case 'before':
+          range = document.createRange();
+          range.setStart(elInput, 0);
+          range.setEnd(elInput, 0);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          break;
+        case 'after':
+          range = document.createRange();
+          var len = elInput.childNodes.length;
+          range.setStart(elInput, len);
+          range.setEnd(elInput, len);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          break;
+        case 'center':
+          // 如果选取的 起始位置 和 结束位置不一致，就把当前的内容，删掉
+          if (selection.anchorOffset != selection.focusOffset) {
+            range.deleteContents();
+          }
+          break;
+      }
+
+      // 在选区中，插入内容
+      range.insertNode(
+        document.createTextNode(
+          String.fromCharCode(
+            97 + Math.floor(Math.random() * 26)
+          )
+        )
+      );
+
+      // 对选区进行复位
+      selection.removeAllRanges();
+      range.collapse(false);
+      selection.addRange(range);
+
+      // 如果是 before 或 after，则应该滚动位置
+      switch (pos) {
+        case 'before':
+          elInput.scroll(0, 0);
+          break;
+        case 'after':
+          elInput.scroll(0, elInput.scrollHeight);
+          break;
+      }
+
+      elInput.contentEditable = true;
+
+      // 更新一下内容
+      this.updateValue();
+    },
+
+    focusInput: function() {
+      this.isInputFocus = true;
+    },
+
+    blurInput: function() {
+      var ctx = this;
+      setTimeout(function() {
+        ctx.isInputFocus = false;
+      }, 200);
+    },
+
+    tryToClose: function() {
+      if (this.isInputFocus) {
+        return;
+      }
+      this.data.set('isReady', false);
+      this.bodyLocker.clear();
+
+      // 写入预览文案
+      var placeholder = this.data.get('submitValue').replace(/<[\s\S]*?>/g, '').replace(/\s+/g, '');
+      this.data.set('placeholder', placeholder);
+    },
+
+    submit: function() {
+      var value = this.data.get('submitValue');
+
+      this.isInputFocus = false;
+      this.bodyLocker.clear();
+      this.data.set('isReady', false);
+      this.data.get('submitValue', '');
+      this.data.get('placeholder', '');
+
+      setTimeout(function() {
+        alert(value);
+      }, 600);
+    }
+  });
+
+  var app = new App({});
+  app.attach(document.body);
+</script>
+</body>
+</html>
