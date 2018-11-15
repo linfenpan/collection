@@ -5,19 +5,36 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
   <title>底部可变高输入框测试</title>
   <script src="./san.js"></script>
+  <style>
+    body, html { padding: 0; margin: 0; }
+    p { margin: 10px 0; }
+  </style>
 </head>
 <body>
+
+<!-- 这是个不完整的例子，ios 上，输入框如果走 position:fixed 扔在底部，会出现输入法偶尔遮挡的问题，所以不建议把输入框放到底部 -->
+<!-- 同时，输入框扔在底部，长按输入框会偶见安全区域，特别纳闷 -->
 <div id="content"></div>
 
 <style>
-  .placeholder { height: 40px; }
+  .bottom-input {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .placeholder {
+    height: 40px;
+  }
   .main {
     position: fixed; bottom: 0; left: 0; right: 0;
     padding: 5px;
 
+    /* padding-bottom: constant(safe-area-inset-bottom); */
+    /* padding-bottom: env(safe-area-inset-bottom); */
+
     border-top: 1px solid #ddd; background: #fff;
     display: flex; align-items: center;
     flex-wrap: wrap;
+    overflow: hidden;
   }
 
 
@@ -44,9 +61,11 @@
     top: 0; left: 0; right: 0; bottom: 0;
     opacity: 0;
     max-height: 4.5em;
-    overflow: auto;
     word-break: break-all;
     word-wrap: break-word;
+    overflow: auto;
+    /* overflow-scrolling:touch;
+    -webkit-overflow-scrolling:touch; */
   }
     /* 实现 placeholder 的效果 */
   .input:empty:before, .holder:empty:before { content: attr(placeholder); color: #bbb; }
@@ -63,7 +82,7 @@
 
   .btn { display: block; min-width: 3em; text-align: center; }
 
-  .back { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, .4); }
+  .back { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, .4); }
 
   .operation {
     width: 100%;
@@ -111,9 +130,14 @@
   elContent.innerHTML = htmlList.join('');
 </script>
 
-<script src="./body-locker.js"></script>
+<script src="./body-locker.js?v=2"></script>
+<!-- <script src="./test.js"></script> -->
 
 <script>
+  function selectionInEle(el, sel) {
+    return el.contains(sel.anchorNode) && el.contains(sel.focusNode);
+  }
+
   var App = san.defineComponent({
     template: document.getElementById('jsTemplate').innerHTML,
 
@@ -132,14 +156,7 @@
     readyToInput: function() {
       this.data.set('isReady', true);
       this.bodyLocker.lock();
-    },
-
-    updateValue: function() {
-      // TODO 如果是 insertContent 触发的，将不会附带回调函数的，很危险的啊
-      var elInput = this.ref('input');
-      // TODO 把所有 p 标签，变更为 div 标签
-      this.data.set('submitValue', elInput.innerHTML);
-      console.log('xxxx..');
+      // bodyScrollLock.disableBodyScroll(this.el);
     },
 
     // 粘贴内容
@@ -168,25 +185,94 @@
       document.execCommand('inserthtml', false, html);
     },
 
-    insertContent: function(pos) {
+    getSelection: function() {
+      return (window.getSelection || document.getSelection || function() {})();;
+    },
+
+    // 持续更新光标的位置
+    _autoUpdateInputSelection: function() {
+      var ctx = this;
+      var elInput = ctx.ref('input');
+      var selection = ctx.getSelection();
+
+      if (selection) {
+        clearInterval(ctx._inputSelTimer);
+        ctx._inputSelTimer = setInterval(function() {
+          if (selection && selectionInEle(elInput, selection)) {
+            var ranges = ctx.inputLastRanges = [];
+            for (var i = 0; i < selection.rangeCount; i++) {
+              ranges.push(selection.getRangeAt(i));
+            }
+          }
+        }, 120);
+      }
+    },
+
+    // 停止更新光标的位置
+    _stopUpdateInputSelection: function() {
+      var ctx = this;
+      clearInterval(ctx._inputSelTimer);
+    },
+
+    focusInput: function(e) {
+      var ctx = this;
+      ctx.isInputFocus = true;
+      // @bug 移动端光标位置更改后，位置无法得知，所以聚焦后，自动持续更新焦点
+      ctx._autoUpdateInputSelection();
+
+      setTimeout(function() {
+        // @fix 移动端偶尔键盘定位不准确的问题
+        var elInput = ctx.ref('input');
+        elInput.scrollIntoViewIfNeeded && elInput.scrollIntoViewIfNeeded(false);
+      }, 200);
+    },
+
+    blurInput: function() {
+      var ctx = this;
+      ctx._stopUpdateInputSelection();
+      setTimeout(function() {
+        ctx.isInputFocus = false;
+      }, 200);
+    },
+
+    updateValue: function(e) {
+      // 如果是 insertContent 触发的，将不会附带回调函数的，很危险的啊
+      var ctx = this;
+      var elInput = this.ref('input');
+      this.data.set('submitValue', elInput.innerHTML);
+    },
+
+    insertContent: function(position) {
       // 参考文章1: https://www.2cto.com/kf/201708/671461.html
       // 参考文章2: https://developer.mozilla.org/zh-CN/docs/Web/API/Selection
       // 参考文章3: https://developer.mozilla.org/zh-CN/docs/Web/API/Range
-      if (!window.getSelection) {
+      // IE 的参考资料: https://blog.csdn.net/baidu_33033415/article/details/62882703 (暂时用不上)
+      var ctx = this;
+      var selection = this.getSelection();
+
+      if (!selection) {
         // TODO 可以提示，升级浏览器了
         return;
       }
 
-      var selection = window.getSelection();
-      var elInput = this.ref('input');
+      var elInput = ctx.ref('input');
 
       elInput.contentEditable = false;  // 以免光标唤起键盘啊
 
       // 起始阶段 和 结束节点，均在 input 内，否则把选区强制指定到 input 的结尾处
-      if (elInput.contains(selection.anchorNode) && elInput.contains(selection.focusNode)) {
+      if (selectionInEle(elInput, selection)) {
         // console.log('均在input内'); // nothing~~
       } else {
+        // 选区不在这个元素上啊
+        // 1. 清空选区
+        // 2. 看看上一个Selection，是不是符合在当前元素中，如果是，则用上一个Selection代替当前的Selection
         selection.removeAllRanges();
+        var inputLastRanges = ctx.inputLastRanges;
+        if (inputLastRanges && inputLastRanges.length) {
+          for (var i = 0, max = inputLastRanges.length; i < max; i++) {
+            selection.addRange(inputLastRanges[i]);
+          }
+        }
       }
 
       // 如果有多个选区（Range），仅取第一个，并且删除其它选区
@@ -205,20 +291,56 @@
 
       var range = selection.getRangeAt(0);
 
-      switch (pos) {
+      switch (position) {
         // before 和 after 应该替换掉原来的选区的
         case 'before':
           range = document.createRange();
-          range.setStart(elInput, 0);
-          range.setEnd(elInput, 0);
+          var nodes = elInput.childNodes;
+
+          var el = elInput;
+          var pos = 0;
+
+          if (nodes.length > 0) {
+            var elFirst = nodes[0];
+            // 如果第一个元素，是元素，应该做特殊处理
+            var nodeType = elFirst.nodeType;
+            if (nodeType == 1) {
+              el = elFirst;
+            }
+          }
+
+          range.setStart(el, pos);
+          range.setEnd(el, pos);
+
           selection.removeAllRanges();
           selection.addRange(range);
           break;
         case 'after':
           range = document.createRange();
+          var nodes = elInput.childNodes;
           var len = elInput.childNodes.length;
-          range.setStart(elInput, len);
-          range.setEnd(elInput, len);
+
+          var el = elInput;
+          var pos = 0;
+
+          if (len > 0) {
+            var elLast = nodes[len - 1];
+            // 如果最后一个元素，是个神奇的玩意？ 1 => 元素， 3 => 文本，8 => 注释
+            var nodeType = elLast.nodeType;
+            if (nodeType == 1) {
+              pos = elLast.childNodes.length;
+            } else {
+              pos = elLast.length;
+            }
+
+            el = elLast;
+          } else {
+            // nothing~
+          }
+
+          range.setStart(el, pos);
+          range.setEnd(el, pos);
+
           selection.removeAllRanges();
           selection.addRange(range);
           break;
@@ -233,9 +355,9 @@
       // 在选区中，插入内容
       range.insertNode(
         document.createTextNode(
-          String.fromCharCode(
+          ' #' + String.fromCharCode(
             97 + Math.floor(Math.random() * 26)
-          )
+          ) + ' '
         )
       );
 
@@ -245,7 +367,7 @@
       selection.addRange(range);
 
       // 如果是 before 或 after，则应该滚动位置
-      switch (pos) {
+      switch (position) {
         case 'before':
           elInput.scroll(0, 0);
           break;
@@ -260,46 +382,62 @@
       this.updateValue();
     },
 
-    focusInput: function() {
-      this.isInputFocus = true;
-    },
-
-    blurInput: function() {
-      var ctx = this;
-      setTimeout(function() {
-        ctx.isInputFocus = false;
-      }, 200);
-    },
-
     tryToClose: function() {
       if (this.isInputFocus) {
         return;
       }
       this.data.set('isReady', false);
       this.bodyLocker.clear();
+      // bodyScrollLock.enableBodyScroll(this.el);
 
       // 写入预览文案
-      var placeholder = this.data.get('submitValue').replace(/<[\s\S]*?>/g, '').replace(/\s+/g, '');
+      var placeholder = this.data.get('submitValue').replace(/<[\s\S]*?>/g, '').replace(/^\s*|\s*$/g, '');
       this.data.set('placeholder', placeholder);
     },
 
     submit: function() {
       var value = this.data.get('submitValue');
 
-      this.isInputFocus = false;
-      this.bodyLocker.clear();
-      this.data.set('isReady', false);
-      this.data.get('submitValue', '');
-      this.data.get('placeholder', '');
+      // 把所有标签删除，看看是否还有文本
+      var text = value.replace(/<[\s\S]*?>/g, '').trim();
+      if (text) {
+        this.ref('input').blur();
+        this.ref('input').innerHTML = '';
+        this.isInputFocus = false;
+        this.bodyLocker.clear();
+        this.data.set('isReady', false);
+        this.data.set('submitValue', '');
+        this.data.set('placeholder', '');
 
-      setTimeout(function() {
-        alert(value);
-      }, 600);
+        setTimeout(function() {
+          alert(value);
+        }, 600);
+      } else {
+        this.ref('input').blur();
+        setTimeout(function() {
+          alert('请输入内容');
+        }, 600);
+      }
     }
   });
 
   var app = new App({});
   app.attach(document.body);
+
+  window.addEventListener('scroll', function() {
+    console.log('scroll');
+    // app.el.clientWidth;
+    // document.body.style.transform = 'translateZ(0)';
+    // setTimeout(function() {
+    //   document.body.style.transform = '';
+    // });
+  }, false);
+</script>
+
+<script src="./vconsole.min.js?v=3.2.0"></script>
+<script>
+  // init vConsole
+  var vConsole = new VConsole();
 </script>
 </body>
 </html>
