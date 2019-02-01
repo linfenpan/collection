@@ -1,0 +1,134 @@
+<!--
+  参考文章:
+    基本方法: https://www.cnblogs.com/charmingyj/p/5527223.html
+    渐变设置:
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>canvas 画圆</title>
+  <style>
+    .circle-percent {
+      position: relative;
+    }
+    .circle-percent .percent-background, .circle-percent .percent-progress {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="circle-percent">
+    <canvas class="percent-background"></canvas>
+    <canvas class="percent-progress"></canvas>
+  </div>
+
+  <script type="text/javascript">
+    var $root = document.querySelector('.circle-percent');
+    var $progress = $root.querySelector('.percent-progress');
+    var $background = $root.querySelector('.percent-background');
+
+    var size = 300;
+    $root.style.width = size + 'px';
+    $root.style.height = size + 'px';
+    $progress.width = $background.width = size;
+    $progress.height = $background.height = size;
+
+    var startAngle = Math.PI * -0.5;
+    var endAngle = Math.PI * 1.5;
+    var distanceAngle = endAngle - startAngle;
+
+    var lineWidth = 8;
+    var backgroundColor = '#f5f5f5';
+
+    function drawBackground() {
+      var context = $background.getContext('2d');
+      context.clearRect(0, 0, size, size);
+      context.beginPath();
+      context.strokeStyle = backgroundColor;
+      context.lineWidth = lineWidth;
+      context.arc(size/2, size/2, size/2 - lineWidth/2, startAngle, endAngle, false);
+      context.stroke();
+    }
+
+    var progressContext = $progress.getContext('2d');
+    var progressGnt = progressContext.createLinearGradient(0, 0, 0, size);
+    progressGnt.addColorStop(0, '#FFA7A7');
+    progressGnt.addColorStop(1, '#FF7070');
+
+    // 绘制进度， progress 的值，是 0 ~ 1
+    function drawProgress(progress) {
+      var context = progressContext;
+      context.clearRect(0, 0, size, size);
+      if (progress <= 0) { return; }
+
+      var angle = startAngle + distanceAngle * progress;
+      context.beginPath();
+
+      context.strokeStyle = progressGnt;
+      context.lineWidth = lineWidth;
+      context.lineCap = 'round';
+
+      context.arc(size/2, size/2, size/2 - lineWidth/2, startAngle, angle, false);
+
+      context.stroke();
+    }
+
+    drawBackground();
+
+    (function() {
+      var lastTime = 0;
+      var vendors = ['webkit', 'moz'];
+      for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+          window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+          window.cancelAnimationFrame =
+            window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+      }
+
+      if (!window.requestAnimationFrame) {
+          window.requestAnimationFrame = function(callback, element) {
+              var currTime = new Date().getTime();
+              var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+              var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+                timeToCall);
+              lastTime = currTime + timeToCall;
+              return id;
+          };
+      }
+
+      if (!window.cancelAnimationFrame) {
+          window.cancelAnimationFrame = function(id) {
+              clearTimeout(id);
+          };
+      }
+  }());
+
+  function animate(progress, time) {
+    var firstTimespace = 0;
+    function run() {
+      requestAnimationFrame(function(timespace) {
+        if (firstTimespace == 0) {
+          firstTimespace = timespace;
+        }
+
+        var prs = Math.min(progress, (timespace - firstTimespace) / time * progress);
+        var easePrs = progress * Math.sin(Math.PI/2 * prs / progress);
+
+        drawProgress(easePrs);
+
+        if (prs >= progress) {
+          return;
+        }
+        run();
+      });
+    }
+    run();
+  }
+  animate(0.91, 1200);
+
+  </script>
+</body>
+</html>

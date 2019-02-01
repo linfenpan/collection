@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>react.js 非编译的例子</title>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script src="./react.development.js" charset="utf-8"></script>
+  <script src="./react-dom.development.js" charset="utf-8"></script>
+  <script>
+    const e = React.createElement;
+
+    class LikeButton extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { liked: false };
+      }
+
+      render() {
+        var liked = !this.state.liked;
+        return e(
+          'button',
+          { onClick: () => this.setState({ liked: liked }) },
+          liked ? 'Liked' : 'Not Like'
+        )
+      }
+    }
+
+    ReactDOM.render(e(LikeButton), document.getElementById('app'));
+  </script>
+</body>
+</html>
