@@ -1,0 +1,34 @@
+// 老觉得 Number.toFixed() 兼容不好
+export function toFixed(num, count) {
+  if (typeof num === 'number') {
+    const arr = (num + '').split('.');
+    if (count === 0) {
+      return arr[0];
+    }
+
+    let suffix = (arr[1] || '').split('');
+    if (suffix.length < count) {
+      for (let i = suffix.length; i < count; i++) {
+        suffix.push(0);
+      }
+    } else {
+      suffix = suffix.slice(0, count);
+    }
+
+    return arr[0] + '.' + suffix.join('');
+  }
+  return num;
+};
+
+export function fenToYuan(value) {
+  if (value == 0) {
+    return value;
+  }
+  // Math.round 不能使用 parseInt 来代替，否则会有 js 数字精度问题。比如 value = 500044/100*100 时，parseInt 后会变成 500043
+  // return toFixed((parseInt(value || 0) / 100), 2);
+  return toFixed((Math.round(value || 0) / 100), 2);
+};
+
+export function yuanToFen(yuan){
+	return Math.round(parseFloat(yuan)*100);
+};
