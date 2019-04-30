@@ -1,0 +1,73 @@
+@import "./common.less";
+
+/*! module: 弹层样式 */
+.zt-modal {
+  .zt-content {
+    min-width: 220px;/*no*/
+    max-width: 95%;
+  }
+  a {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+}
+.zt-modal-container {
+  line-height: 1.5;
+  font-size: @fz-normal;/*no*/
+  background: @bg-content;
+  border-radius: @space-small;/*no*/
+}
+.zt-modal-main {
+  position: relative;
+}
+.zt-modal-title {
+  padding: @space-large;/*no*/
+  padding-bottom: 0;/*no*/
+  margin-bottom: -@space-small;/*no*/
+  text-align: center;
+}
+.zt-modal-content {
+  padding: @space-large;/*no*/
+  word-break: break-all;
+  word-wrap: break-word;
+}
+.zt-modal-operation {
+  position: relative;
+  text-align: center;
+  border-top: 1px solid @color-divider;/*no*/
+}
+.zt-modal-button {
+  display: inline-block;
+  position: relative;
+  padding: @space-normal + @space-tiny 0;/*no*/
+  line-height: 1.5;
+  font-size: @fz-normal;/*no*/
+  vertical-align: top;
+  color: @color-primary;
+  text-decoration: none;
+  transition: opacity .3s ease;
+
+  &:active {
+    .opacity(0.9);
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    width: 1px;/*no*/
+    top: @space-normal;/*no*/
+    bottom: @space-normal;/*no*/
+    right: 0;
+    background: @color-divider;
+  }
+}
+.zt-modal-button-confirm {
+  color: #e76464;
+}
+.zt-modal-button-last {
+  &:after {
+    display: none;
+  }
+}
+.zt-modal-button-disabled {
+  color: @color-gray;
+}

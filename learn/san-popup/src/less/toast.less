@@ -1,0 +1,35 @@
+@import "./common.less";
+
+/*! module: 自动提示 */
+.zt-toast {
+  z-index: 10000;
+  pointer-events:none;
+    .zt-content {
+      position: relative;
+      max-width: 90%;
+      top: 0;
+      transition: top .3s ease;
+    }
+}
+.zt-toast-content {
+  position: relative;
+  margin: 0 auto;
+  font-size: @fz-large;/*no*/
+  line-height: 1.6;
+  padding: @space-small @space-large;/*no*/
+  background: #333;
+  background: rgba(0,0,0,.8);
+  border-radius: 20px;/*no*/
+  white-space: pre-line;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #fff;
+  transition: transform .3s ease, top .3s ease;
+}
+// 自动提示：动画
+.zt-popup-e-fade-ready .zt-toast-content {
+  transform: scale(0.85);
+}
+.zt-popup-e-fade .zt-toast-content {
+  transform: scale(1);
+}

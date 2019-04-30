@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>san js 弹窗例子</title>
+  <link rel="stylesheet" href="./dist/popup.css">
+  <script src="./dist/popup.js"></script>
+</head>
+<body>
+  <a href="javascript:;" onclick="doAlert()">alert</a><br>
+  <a href="javascript:;" onclick="doToast()">toast</a><br>
+  <a href="javascript:;" onclick="doConfirm()">confirm</a>
+  <script>
+    function doAlert() {
+      Popup.default.alert('你好啊');
+    }
+    function doToast() {
+      Popup.default.toast('哈哈哈');
+    }
+    function doConfirm() {
+      Popup.default.confirm({ title: '系统提示', content: '呵呵' });
+    }
+  </script>
+</body>
+</html>

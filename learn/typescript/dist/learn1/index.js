@@ -13,6 +13,7 @@ var user2 = { firstName: 'Jane', lastName: 'User', age: 30 };
 document.body.innerHTML += '<br/>' + greeter2(user2);
 // 类测试
 var Student = /** @class */ (function () {
+    // 无论是 public 还是 protected 和 private，其实都会存在当前对象中，只是影响到继承而已
     function Student(firstName, middleInitial, lastName) {
         this.firstName = firstName;
         this.middleInitial = middleInitial;
@@ -27,6 +28,7 @@ var Student = /** @class */ (function () {
     return Student;
 }());
 var user3 = new Student('Jane', 'M.', 'User');
+console.log(user3);
 user3.sayHi();
 document.body.innerHTML += '<br/>' + greeter2(user3);
 // 类型: 枚举 -> 索引从 0 开始，Color.Red = 0  -- Color[0] = 'Red'

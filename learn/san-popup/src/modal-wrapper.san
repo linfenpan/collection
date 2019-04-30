@@ -1,0 +1,26 @@
+<template>
+  <div class="zt-modal-container">
+    <div class="zt-modal-main">
+      <div class="zt-modal-content">
+        <slot></slot>
+      </div>
+      <div class="zt-modal-operation" s-if="operation">
+        <slot name="operation"></slot>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+// 一个弹窗内容的 wrapper，避免到处重写
+import { DataTypes } from 'san';
+
+export default {
+  dataTypes: {
+    operation: DataTypes.bool
+  },
+  initData() {
+    return { operation: false };
+  }
+};
+</script>

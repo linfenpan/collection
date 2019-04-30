@@ -25,6 +25,7 @@ document.body.innerHTML += '<br/>' + greeter2(user2);
 class Student {
   fullName: string;
   
+  // 无论是 public 还是 protected 和 private，其实都会存在当前对象中，只是影响到继承而已
   constructor(public firstName:string, public middleInitial:string, public lastName:string) {
     this.fullName = firstName + ' ' + middleInitial + ' ' + lastName;
     // 在构造函数中的变量，会变扔到 this 里面
@@ -36,6 +37,7 @@ class Student {
   }
 }
 let user3 = new Student('Jane', 'M.', 'User');
+console.log(user3);
 user3.sayHi();
 document.body.innerHTML += '<br/>' + greeter2(user3);
 

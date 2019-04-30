@@ -1,0 +1,30 @@
+@import "../../var.less";
+
+.tof() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clearfix() {
+  &:after {
+    content: '';
+    overflow: hidden;
+    display: table;
+    height: 0;
+    clear: both;
+  }
+}
+
+.opacity(@v) {
+  @opacity: @v * 100;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=@{opacity})";
+  opacity: @v;
+}
+
+.press-feedback() {
+  transition: opacity .3s ease;
+  &:active { 
+    .opacity(0.6);
+  }
+}

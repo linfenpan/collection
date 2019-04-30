@@ -1,0 +1,339 @@
+<template>
+<span>
+  <div class="zt-popup zt-popup-{{ position }} {{ className }}" s-transition="getTransition()" s-if="isShow">
+    <div class="zt-placeholder" style="height: {{ placeholderHeight }};"></div>
+    <div class="zt-content" s-ref="content">
+      <template s-if="content">
+        {{ content | raw }}
+      </template>
+      <template s-else>
+        <slot></slot>
+      </template>
+    </div>
+    <div class="zt-back" s-if="lock" on-click="tryToClose"></div>
+  </div>
+</span>
+</template>
+
+<script>
+import { DataTypes } from 'san';
+import { browser, extend, addClass, removeClass, onTransitionEnd } from './util';
+
+import BodyLock from './body-locker';
+
+const bodyLock = new BodyLock();
+let lockcrollCounter = 0;
+
+/**
+ * @event beforeShow 显示前，还不能获取到内容组件
+ * @event afterShow 显示后，已经能获取到内容组件了
+ * @event beforeClose 关闭前
+ * @event close 关闭了
+ * @event afterClose 关闭之后
+ * @event beforeDestroy 销毁之前
+ * @event closeOutside 点击了底部关闭层
+*/
+export default {
+  dataTypes: {
+    'position': DataTypes.string,
+    'effect': DataTypes.string,
+    'lock': DataTypes.bool,
+    'closeOutside': DataTypes.bool,
+    'autoDestroy': DataTypes.bool,
+    'lockScroll': DataTypes.bool,
+    'className': DataTypes.string,
+  },
+
+  initData() {
+    return {
+      isShow: false,
+      className: '',
+      content: '',
+      component: null,         // 如果传入了一个组件，则无视任何 content 或者 <slot></slot>
+      componentOptions: null,  // 如果传入了 component，则可以给 component 设置参数
+
+      position: 'center',      // top, center, bottom, 或者是百分比
+      effect: 'fade',          // 弹层的出现效果，喊 slideup, fade, slidedown，电脑端，就完全没有效果
+      lock: true,              // 是否锁定页面
+      closeOutside: true,      // 是否点击锁定层，关闭弹窗
+      autoDestroy: false,      // 是否在隐藏的时候，自动销毁
+      lockScroll: false,       // 是否锁定滚动条
+    };
+  },
+
+  computed: {
+    placeholderHeight() {
+      const data = this.data;
+      let pos = data.get('position');
+      if (/\d+%/.test(pos)) {
+        return pos;
+      }
+      return pos;
+    },
+  },
+
+  _bindComponent() {
+    const ctx = this;
+    const Component = ctx.data.get('component');
+
+    // 子组件依赖于弹窗组件
+    if (Component) {
+      if (ctx.__contentComponent) {
+        ctx.__contentComponent.dispose();
+        ctx.__contentComponent = null;
+      }
+
+      const elMain = ctx.ref('content');
+      const component = new Component(
+        extend(
+          { parent: ctx },
+          ctx.data.get('componentOptions') || {}
+        )
+      );
+      component.attach(elMain);
+      ctx.__contentComponent = component;
+    }
+  },
+
+  /**
+   * 如果内容，是组件，则获取该内容对应的组件索引
+  */
+  getContentComponent() {
+    return this.__contentComponent;
+  },
+
+  disposed() {
+    const __contentComponent = this.__contentComponent;
+    if (__contentComponent) {
+      __contentComponent.dispose();
+      this.__contentComponent = null;
+    }
+  },
+
+  show(callback) {
+    this.fire('beforeShow');
+    this.data.set('isShow', true);
+    this._lockScroll();
+
+    this.nextTick(() => {
+      this._bindComponent();
+      this.nextTick(() => {
+        callback && callback(this.ref('content'));
+        this.fire('afterShow');
+      });
+    });
+  },
+
+  hide() {
+    if (!this.data.get('isShow')) { return; }
+
+    this.fire('beforeClose');
+    this.data.set('isShow', false);
+    this._unlockScroll();
+    this.fire('close');
+    this.fire('afterClose');
+
+    const autoDestroy = this.data.get('autoDestroy');
+    if (autoDestroy) {
+      this.destroy();
+    }
+  },
+
+  // 销毁
+  destroy() {
+    // @notice 预留一点时间，去执行动画
+    this.destroy = function() {};
+    setTimeout(() => {
+      this.fire('beforeDestroy');
+      this.el && this.dispose();
+    }, 1000);
+  },
+
+  tryToClose() {
+    this.fire('closeOutside');
+    if (this.data.get('closeOutside')) {
+      this.hide();
+    }
+  },
+
+  getTransition() {
+    const ctx = this;
+    return {
+      enter(el, done) {
+        if (browser.msie) {
+          return done();
+        }
+
+        const effect = ctx.data.get('effect');
+        addClass(el, `zt-popup-e-${effect}-ready`);
+        el.clientWidth;
+        onTransitionEnd(el, function() {
+          done();
+          // // 在动画之后，不要使用 nextTick，用 setTimeout 能保证元素渲染完毕了
+          // 特别不准确...
+          // el.clientWidth;
+          // setTimeout(() => {
+          //   ctx.nextTick(() => {
+          //     ctx.fire('afterShowAnimation');
+          //   });
+          // }, 350);
+        }, { timeout: 500 });
+        addClass(el, `zt-popup-e-${effect}`);
+      },
+      leave(el, done) {
+        if (browser.msie) {
+          return done();
+        }
+
+        const effect = ctx.data.get('effect');
+        onTransitionEnd(el, function() {
+          removeClass(el, `zt-popup-e-${effect}-ready`);
+          done();
+        }, { timeout: 500 });
+        el.clientWidth;
+        removeClass(el, `zt-popup-e-${effect}`);
+      }
+    }
+  },
+
+  _canDoLockScroll() {
+    // 设置了 lockscroll 的，才有锁定滚动的功能
+    const lockscroll = this.data.get('lockScroll');
+    if (!lockscroll) { return false; }
+    return true;
+    // return browser.android || browser.ios;
+  },
+
+  _lockScroll() {
+    const ctx = this;
+    if (ctx._canDoLockScroll() == false || ctx.__islockscroll) { return; }
+
+    // 计数器 +1
+    // 标志锁定
+    lockcrollCounter++;
+    ctx.__islockscroll = true;
+    bodyLock.lock();
+  },
+
+  _unlockScroll() {
+    const ctx = this;
+    if (ctx._canDoLockScroll() == false || !ctx.__islockscroll) { return; }
+
+    // 计数器 -1
+    // 标志不锁定
+    lockcrollCounter--;
+    ctx.__islockscroll = false;
+    bodyLock.unlock();
+
+    // 如果计数器 = 0，解锁全部状态
+    if (lockcrollCounter <= 0) {
+      bodyLock.clear();
+    }
+  },
+}
+</script>
+
+<style lang="less">
+@import "./less/common.less";
+@backOpacity: 0.4;
+
+
+.zt-popup {
+  position: fixed;
+  top: 0; left: 0;
+  bottom: 0; right: 0;
+  z-index: 5000;
+  text-align: center;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  textarea, input[type=text], input[type=number], input[type=tel] { 
+    appearance: none; 
+  }
+
+  .zt-placeholder, .zt-content {
+    display: inline-block;
+    text-align: left;
+  }
+  .zt-placeholder {
+    line-height: 0;
+    width: 1px;
+    margin-left: -1px;
+    height: 100%;
+    overflow: hidden;
+  }
+  .zt-content {
+    position: relative;
+    z-index: 1;
+  }
+  .zt-back {
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%;
+    height: 200%;
+    background: #000;
+    .opacity(@backOpacity);
+  }
+}
+
+.zt-popup-top {
+  .zt-placeholder, .zt-content {
+    vertical-align: top;
+  }
+}
+
+.zt-popup-bottom {
+  .zt-placeholder, .zt-content {
+    vertical-align: bottom;
+  }
+}
+
+.zt-popup-center {
+  .zt-placeholder, .zt-content {
+    vertical-align: middle;
+  }
+}
+
+@transitionTime: .3s;
+// 动画效果: 透明
+.zt-popup-e-fade-ready {
+  .opacity(0);
+  transition: opacity @transitionTime ease;
+}
+.zt-popup-e-fade {
+  .opacity(1);
+}
+
+// 动画效果: 透明缩放
+.zt-popup-e-fadescale-ready {
+  .opacity(0);
+  transform: scale(0.9);
+  transition: opacity @transitionTime ease, transform @transitionTime ease;
+}
+.zt-popup-e-fadescale {
+  .opacity(1);
+  transform: scale(1);
+}
+
+// 动画效果: 下往上
+.zt-popup-e-slideup-ready {
+  .opacity(0);
+  transform: translateY(2rem);
+  transition: opacity @transitionTime ease, transform @transitionTime ease;
+}
+.zt-popup-e-slideup {
+  .opacity(1);
+  transform: translateY(0);
+}
+
+// 动画效果: 上往下
+.zt-popup-e-slidedown-ready {
+  .opacity(0);
+  transform: translateY(-2rem);
+  transition: opacity @transitionTime ease, transform @transitionTime ease;
+}
+.zt-popup-e-slidedown {
+  .opacity(1);
+  transform: translateY(0);
+}
+
+</style>
