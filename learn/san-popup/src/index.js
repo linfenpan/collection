@@ -111,6 +111,10 @@ export default {
     return new Modal(opts || {}).show();
   },
 
+  /**
+   * 全弹窗，默认的参数设置；可支持参数，参考 Popup.modal
+   * @param {object} opts 
+   */
   setupModal(opts) {
     return Modal.setup(opts);
   }

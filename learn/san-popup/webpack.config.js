@@ -59,7 +59,8 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, './dist'),
     library: 'Popup',
-    libraryTarget: 'window',
+    libraryTarget: 'umd',
+    libraryExport: ['default'],
   },
   module: {
     rules: [
