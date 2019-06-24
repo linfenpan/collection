@@ -1,0 +1,19 @@
+<template>
+  <div class="view-main">
+    主要内容
+  </div>
+</template>
+
+<script>
+import san from 'san';
+
+export default class Main extends san.Component {
+  
+}
+</script>
+
+<style lang="less">
+.view-main {
+  
+}
+</style>
