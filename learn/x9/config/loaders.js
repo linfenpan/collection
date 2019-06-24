@@ -1,4 +1,7 @@
 'use strict';
+const path = require('path');
+const cwd = path.resolve(__dirname, '../');
+
 module.exports = {
   babelLoader: {
     loader: 'babel-loader',
@@ -13,6 +16,10 @@ module.exports = {
 
   cssLoader: { 
     loader: 'css-loader' 
+  },
+
+  vueLoader: {
+    loader: 'vue-loader'
   },
 
   urlLoader: {
@@ -30,6 +37,7 @@ module.exports = {
       multiple: true,
       useFileCache: false,
       compress: true,
+      paths: [ path.resolve(cwd, './src') ],
       // plugins: [
       //   new LessPluginAutoPrefixer({
       //     add: true,
