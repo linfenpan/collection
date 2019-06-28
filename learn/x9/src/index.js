@@ -1,7 +1,7 @@
 'use strict';
 // // 参考资料: http://sortablejs.github.io/Sortable/
 // import Sortable from 'sortablejs';
-import App from './view/main/index.vue';
+import App from './view/test/index.vue';
 import store from './js/store';
 
 /**

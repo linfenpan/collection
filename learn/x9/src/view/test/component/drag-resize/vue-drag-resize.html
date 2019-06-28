@@ -1,0 +1,16 @@
+<!-- 从 https://www.npmjs.com/package/vue-drag-resize 1.3.2 拷贝下来更改的 -->
+<div class="vdr" :style="style"
+     :class="[active || isActive ? 'active' : 'inactive', { 'no-drag': isStaticMode }]"
+     @mousedown="bodyDown($event)"
+     @touchstart.stop.prevent="bodyDown($event)">
+    <slot></slot>
+    <div
+            v-for="stick in sticks"
+            class="vdr-stick"
+            :class="['vdr-stick-' + stick, isResizable ? '' : 'not-resizable']"
+            @mousedown.stop.prevent="stickDown(stick, $event)"
+            @touchstart.stop.prevent="stickDown(stick, $event)"
+            :style="vdrStick(stick)">
+    </div>
+
+</div>
