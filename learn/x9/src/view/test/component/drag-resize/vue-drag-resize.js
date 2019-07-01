@@ -57,19 +57,21 @@ export default {
                 return val >= 0
             }
         },
+        // @more 如果值小于等于0，则自动计算
         w: {
             type: Number,
             default: 100,
-            validator: function (val) {
-                return val > 0
-            }
+            // validator: function (val) {
+            //     return val > 0
+            // }
         },
+        // @more 如果值小于等于0，则自动计算
         h: {
             type: Number,
             default: 100,
-            validator: function (val) {
-                return val > 0
-            }
+            // validator: function (val) {
+            //     return val > 0
+            // }
         },
         minw: {
             type: Number,
@@ -175,6 +177,34 @@ export default {
         this.parentElement = this.$el.parentNode;
         this.parentWidth = this.parentW ? this.parentW : this.parentElement.clientWidth;
         this.parentHeight = this.parentH ? this.parentH : this.parentElement.clientHeight;
+
+
+        const $el = this.$el;
+        const style = $el.style;
+
+        // @more 自动计算宽高
+        const orgPosition = style.position;
+        if (orgPosition) {
+            style.position = 'relative';
+        }
+        if (this.w <= 0) {
+            if (this.h && this.h > 0) {
+                style.height = this.h + 'px';
+            }
+            style.width = 'auto';
+            this.rawWidth = this.$el.clientWidth;
+        }
+        if (this.h <= 0) {
+            if (this.w && this.w > 0) {
+                style.width = this.w + 'px';
+            }
+            style.height = 'auto';
+            this.rawHeight = this.$el.clientHeight;
+        }
+        style.width = style.height = '0px';
+        if (orgPosition) {
+            style.position = orgPosition;
+        }
 
         this.rawRight = this.parentWidth - this.rawWidth - this.rawLeft;
         this.rawBottom = this.parentHeight - this.rawHeight - this.rawTop;
