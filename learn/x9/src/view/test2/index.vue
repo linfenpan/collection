@@ -19,7 +19,14 @@ import mixin from './content/mixin';
 import draggable from 'vuedraggable';
 import elementDiv from './element/element-div.vue';
 import elementContainer from './element/element-container.vue';
+
+// @hack 给子组件使用
 import contentItems from './content/content-items.vue';
+Vue.mixin({
+  components: {
+    contentItems,
+  },
+});
 
 let ID = 1;
 let ContentWidth = 375;
