@@ -1,5 +1,8 @@
 /**
- * 简单的模板渲染
+  * 简单的模板渲染方法
+ * @example
+ *   var result = render('你好<%= this.name %>', { name: 'da宗熊' }); // -> '你好da宗熊'
+ *   使用与 ejs 类似，含三类语法: <% 代码块 %>，<%= 输出内容[被转义后的] %>，<%=# 输出内容[没被转义的] %>
  * @param {*} html 模板
  * @param {*} data 数据
  * @param {object} options
