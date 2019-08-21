@@ -40,3 +40,14 @@ result; // -> '你好da宗熊'
   */
 
   ```
+
+# 参数
+`render`的第三个值，是参数，有以下值:
+```javascript
+* @property {boolean} [options.expandAttr=false] 是否展开属性
+* @property {string} [options.nullValue=''] null或undefined的取值，应该是显示啥
+
+// 例如:
+render('hi <%= name %> <%= age %>', { name: 'da宗熊', age: null }, { expandAttr: true, nullValue: 'unknown' });
+// => 输出 "hi da宗熊 unknown"
+```

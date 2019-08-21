@@ -1,5 +1,5 @@
 <template>
-  <draggable :list="list" :group="group">
+  <draggable :list="list" :group="group" :direction="'vertical'">
     <content-item
       class="drag-resize-item"
       v-for="item in listMap.normal"
