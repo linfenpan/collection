@@ -1,8 +1,8 @@
 /*!
     @author da宗熊
-    @version 1.0.0
+    @version 1.0.1
     @license ISC
-    @lastModify 2016-11-22
+    @lastModify 2019-9-30
     @repository https://github.com/linfenpan/collection/tree/master/plugins/swipe
     @example
         var swiper = new Swiper(element, options)
@@ -13,6 +13,9 @@
           interval[自动切换到下一帧的时间], repeat[是否循环], wrapSelector[wrap选择器],
           childSelector[子元素选择器], slideCallback[切换到下一帧的回调]
         ]
+    @method
+        swiper.resize(); // 当内容宽度、高度有所变化时，调用
+        swiper.destroy(); // 销毁swiper
     @bug
         no listener at "transitionEnd" event, the behavior of the timer may be strange when we are away from the page
 */
@@ -29,6 +32,13 @@ function addListener(elem, event, callback, isBubble){
     var arr = event.split(" ");
     arr.forEach(function(event, index){
         elem.addEventListener(event, callback, isBubble || false);
+    });
+};
+
+function removeListener(elem, event, callback, isBubble){
+    var arr = event.split(" ");
+    arr.forEach(function(event, index){
+        elem.removeEventListener(event, callback, isBubble || false);
     });
 };
 
@@ -165,8 +175,14 @@ var TouchHolder = (function(){
         addListener(elem, event.start, eventsHandler.onStart);
         addListener(elem, event.move, eventsHandler.onMove);
         addListener(elem, event.end, eventsHandler.onEnd);
-
         !isTouchMode && addListener(elem, event.needCatch, eventsHandler.onPrevent, true);
+
+        holder.destroy = function() {
+            removeListener(elem, event.start, eventsHandler.onStart);
+            removeListener(elem, event.move, eventsHandler.onMove);
+            removeListener(elem, event.end, eventsHandler.onEnd);
+            !isTouchMode && removeListener(elem, event.needCatch, eventsHandler.onPrevent, true);
+        };
 
         return holder;
     };
@@ -461,6 +477,13 @@ Swiper.prototype = {
         if (this.interval) {
             window.clearTimeout(this.timer);
         }
+    },
+    // 销毁
+    destroy: function() {
+        this.stopTimer();
+        var holder = this.touchHolder;
+        holder && holder.destroy();
+        this.touchHolder = null;
     }
 };
 

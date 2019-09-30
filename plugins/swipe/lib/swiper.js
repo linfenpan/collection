@@ -285,6 +285,13 @@ Swiper.prototype = {
         if (this.interval) {
             window.clearTimeout(this.timer);
         }
+    },
+    // 销毁
+    destroy: function() {
+        this.stopTimer();
+        var holder = this.touchHolder;
+        holder && holder.destroy();
+        this.touchHolder = null;
     }
 };
 

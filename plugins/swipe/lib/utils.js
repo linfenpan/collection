@@ -13,6 +13,13 @@ function addListener(elem, event, callback, isBubble){
     });
 };
 
+function removeListener(elem, event, callback, isBubble){
+    var arr = event.split(" ");
+    arr.forEach(function(event, index){
+        elem.removeEventListener(event, callback, isBubble || false);
+    });
+};
+
 function hasProperty(obj, pro) {
     return obj.hasOwnProperty(pro);
 };

@@ -24,6 +24,9 @@ var banner = `/*!
           interval[自动切换到下一帧的时间], repeat[是否循环], wrapSelector[wrap选择器],
           childSelector[子元素选择器], slideCallback[切换到下一帧的回调]
         ]
+    @method
+        swiper.resize(); // 当内容宽度、高度有所变化时，调用
+        swiper.destroy(); // 销毁swiper
     @bug
         no listener at "transitionEnd" event, the behavior of the timer may be strange when we are away from the page
 */`;

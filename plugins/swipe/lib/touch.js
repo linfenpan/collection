@@ -67,8 +67,14 @@ var TouchHolder = (function(){
         addListener(elem, event.start, eventsHandler.onStart);
         addListener(elem, event.move, eventsHandler.onMove);
         addListener(elem, event.end, eventsHandler.onEnd);
-
         !isTouchMode && addListener(elem, event.needCatch, eventsHandler.onPrevent, true);
+
+        holder.destroy = function() {
+            removeListener(elem, event.start, eventsHandler.onStart);
+            removeListener(elem, event.move, eventsHandler.onMove);
+            removeListener(elem, event.end, eventsHandler.onEnd);
+            !isTouchMode && removeListener(elem, event.needCatch, eventsHandler.onPrevent, true);
+        };
 
         return holder;
     };
