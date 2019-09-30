@@ -6,22 +6,6 @@ void main() => runApp(new MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final wordPair = new WordPair.random();
-
-    // return new MaterialApp(
-    //   title: '首页',
-    //   home: new Scaffold(
-    //     appBar: new AppBar(
-    //       title: new Text('欢迎观临'),
-    //     ),
-    //     body: new Center(
-    //       // child: new Text('Hello world~'),
-    //       // child: new Text(wordPair.asCamelCase),
-    //       child: new RandomWords(),
-    //     )
-    //   )
-    // );
-
     return new MaterialApp(
       title: '滚动测试',
       home: new RandomWords(),
