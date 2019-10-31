@@ -19,3 +19,4 @@ while line:
 # 执行 js 内容，调用 run.js 中的 run 方法
 ctx = execjs.compile(jsstr)
 print ctx.call('run', 'da黑熊')
+print 'hehe'
