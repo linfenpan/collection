@@ -168,33 +168,9 @@
     }
   };
 
-  function Tracker(options, adapter) {
+  function Tracker(options) {
     var ctx = this;
-    options = extend({
-      url: '',
-      // 统计属性
-      statAttr: 'stat',
-      // 统计的参数
-      statParam: 'statparam',
-      // 停止统计的标志
-      stopAttr: 'stopstate',
-      // 是否需要指纹
-      fingerprint: false,
-      // 特殊属性切割符号，如 G_EquipInfo.xxx
-      splitTag: '_',
-      // 如果没有值，默认返回神马?
-      defaultValue: '-',
-      data: {}
-    }, options);
-
-    ctx.url = options.url;
-    ctx.dataSend = options.data;
-    ctx.splitTag = options.splitTag;
-    ctx.statAttr = options.statAttr;
-    ctx.stopAttr = options.stopAttr;
-    ctx.statParam = options.statParam;
-    ctx.fingerprint = options.fingerprint;
-    ctx.defaultValue = options.defaultValue;
+    ctx.update(options || {});
     ctx.isDebug = false;
   }
 
@@ -202,6 +178,51 @@
     _log: function() {
       var args = arguments;
       this.isDebug && window.console && console.log.apply(console, args);
+    },
+
+    // 更新参数
+    update: function(options) {
+      if (!options) { return; }
+
+      var ctx = this;
+
+      // [保存在上下文的key, options的key, 默认值]
+      var keysList = [
+        // 日志上报地址
+        ['url', 'url', ''],
+        // 日志的默认数据，重新 update，会覆盖掉之前的值
+        ['dataSend', 'data', {}],
+        // 特殊属性切割符号，如 G_EquipInfo.xxx
+        ['splitTag', 'splitTag', '_'],
+        // 统计属性
+        ['statAttr', 'statAttr', 'stat'],
+        // 停止统计的标志
+        ['stopAttr', 'stopAttr', 'statstop'],
+        // 统计的额外参数
+        ['statParam', 'statParam', 'statparam'],
+        // 是否需要指纹
+        ['fingerprint', 'fingerprint', false],
+        // 如果没有值，默认返回神马?
+        ['defaultValue', 'defaultValue', '-']
+      ];
+
+      for (var i = 0, max = keysList.length; i < max; i++) {
+        var keys = keysList[i];
+        var val = options[keys[1]];
+        var key0 = keys[0];
+
+        if (val == null) {
+          // 从历史中获取
+          ctx[key0] = ctx[key0] == null ? keys[2] : ctx[key0];
+        } else {
+          ctx[key0] = val;  
+        }
+      }
+    },
+
+    // 拓展默认数据
+    extendData: function(data) {
+      extend(this.dataSend, data || {});
     },
 
     getFingerprint: function() {
@@ -220,7 +241,6 @@
         statAttr: ctx.statAttr,
         stopAttr: ctx.stopAttr,
         statParam: ctx.statParam,
-        fingerprint: ctx.fingerprint,
         isListModeSend: false
       }, defaultOptions || {});
 
@@ -243,7 +263,7 @@
           }
         }
 
-        // 从当前元素，网上寻找的所有属性
+        // 从当前元素，往上寻找的所有属性
         var allAttr = ctx.getAllStat(target, statParam, stopAttr);
         // 当前元素的属性
         var currentStatAttr = ctx.compileStat(target, target.getAttribute(statAttr)) || {};
@@ -254,7 +274,12 @@
           ctx.compileStat(elRoot, options.data) || {}
         );
         // 是否需要指纹 + 默认数据 + 当前 stat属性 + statparam属性
-        var data = extend(options.fingerprint ? { fingerprint: ctx.getFingerprint() } : {}, dataDefault, currentStatAttr, allAttr);
+        var data = extend(
+          ctx.fingerprint ? { fingerprint: ctx.getFingerprint() } : {}, 
+          dataDefault,
+          allAttr,
+          currentStatAttr
+        );
 
         ctx._log(data);
         ctx.sendLog(data, options.isListModeSend);
