@@ -10431,31 +10431,15 @@
     // #[end]
   })(this);
   
+  // TODO
+  var window = {};
+  var san = this && this.san || window.san;
+  if (typeof exports === 'object' && typeof module === 'object') {
+    san = module.exports;
+  }
+  window.san = san;
   
-  // 自己测试的代码
-  function run(name) {
-    var san = this.san;
-    if (typeof exports === 'object' && typeof module === 'object') {
-      san = module.exports;
-    }
-    
-    var App = san.defineComponent({
-      template: `<div>
-          {{ name }}
-          <script>
-              window.xxx = 2;
-          </script>
-      </div>`,
-      initData: function() {
-        return { name: '呵呵' };
-      },
-      inited: function() {
-        this.owner = 1; // document.body;
-      }
-    });
-    var render = san.compileToRenderer(App);
-    var res = render({
-      name: name || ''
-    });
-    return res;
+  
+  function run() {
+    return window.san.Component.toString()
   }

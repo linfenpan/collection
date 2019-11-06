@@ -1,12 +1,26 @@
 <template>
-	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
+	<view class="page-index">
+    <view class="content">
+      <view class="list-item">
+        <navigator url="/pages/product-list/index">商品列表</navigator>
+      </view>
+      
+      <view class="list-item">
+        <navigator url="/pages/product/index?serverid=669&eid=201903041900113-669-TCTFO0YQ6X4G">商品详情</navigator>
+      </view>
+      
+      <view class="list-item">
+        <navigator url="/pages/dialog/dialog">弹窗测试</navigator>
+      </view>
+    </view>
+    
+		<!-- <image class="logo" src="/static/logo.png"></image>
 		<view>
 			<text class="title">{{title}}</text>
 		</view>
     <view class="info">
       <text class="author">{{ author }}</text>
-    </view>
+    </view> -->
 	</view>
 </template>
 
@@ -34,28 +48,10 @@
 	}
 </script>
 
-<style>
-	.content {
-		text-align: center;
-		height: 400upx;
-	}
-
-	.logo {
-		height: 200upx;
-		width: 200upx;
-		margin-top: 200upx;
-	}
-
-	.title {
-		font-size: 36upx;
-		color: #8f8f94;
-	}
-  
-  .info {
-    text-align: center;
-  }
-  .author {
-    font-size: 24upx;
-    color: #ff0000;
+<style lang="less">
+	.page-index {
+    .content {
+      padding: 20upx;
+    }
   }
 </style>

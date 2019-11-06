@@ -5,8 +5,28 @@
 			"style": {
 				"navigationBarTitleText": "Hello 藏宝阁"
 			}
-		}
-	],
+		},
+    {
+      "path": "pages/product-list/index",
+      "style": {
+        "navigationBarTitleText": "商品列表",
+        "transparentTitle": "auto",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path" : "pages/product/index",
+      "style" : {
+        "navigationBarTitleText": "商品详情"
+      }
+    },
+    {
+      "path" : "pages/dialog/dialog",
+      "style" : {
+        "navigationBarTitleText": "弹窗测试"
+      }
+    }
+  ],
 	"globalStyle": {
     "animationType": "slide-in-left",
 		"navigationBarTextStyle": "black",
