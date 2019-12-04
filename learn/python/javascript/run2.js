@@ -1,5 +1,8 @@
-// https://unpkg.com/san@3.7.0/dist/san.ssr.js
+if (typeof window !== 'undefined') {
+    window = void 0;
+}
 
+// https://unpkg.com/san@3.7.0/dist/san.ssr.js
 /**
  * San
  * Copyright 2016 Baidu Inc. All rights reserved.
@@ -8700,7 +8703,7 @@ var compileExprSource = {
   stringLiteralize: function (source) {
       return '"'
           + source
-              .replace(/\x5C/g, '\\\\')
+              .replace(new RegExp('\\x5C', 'g'), '\\\\')
               .replace(/"/g, '\\"')
               .replace(/\x0A/g, '\\n')
               .replace(/\x09/g, '\\t')
@@ -10119,7 +10122,7 @@ function componentCompilePreCode() {
   function stringLiteralize(source) {
       return '"'
           + source
-              .replace(/\x5C/g, '\\\\')
+              .replace(new RegExp('\\x5C', 'g'), '\\\\')
               .replace(/"/g, '\\"')
               .replace(/\x0A/g, '\\n')
               .replace(/\x09/g, '\\t')
@@ -10431,15 +10434,31 @@ function compileJSSource(ComponentClass) {
   // #[end]
 })(this);
 
-// TODO
-var window = {};
-var san = this && this.san || window.san;
-if (typeof exports === 'object' && typeof module === 'object') {
-  san = module.exports;
-}
-window.san = san;
 
+// 自己测试的代码
+function run(name) {
+    var san = this.san;
+    if (typeof exports === 'object' && typeof module === 'object') {
+        san = module.exports;
+    }
 
-function run() {
-  return window.san.Component.toString()
+    var App = san.defineComponent({
+        template: '<div>\
+            {{ name }}\
+            <script>\
+                window.xxx = 2;\
+            </script>\
+        </div>',
+        initData: function() {
+            return { name: '呵呵' };
+        },
+        inited: function() {
+            this.owner = 1; // document.body;
+        }
+    });
+    var render = san.compileToRenderer(App);
+    var res = render({
+        name: name || ''
+    });
+    return res;
 }

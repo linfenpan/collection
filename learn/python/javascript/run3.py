@@ -1,6 +1,7 @@
 #!/user/bin/env python
 # coding: utf-8
 
+# 成功版本，把 run3.js 里面的中文，统一转码，uglify - output.ascii_only = true 即可，另外 output.comments = false
 # window 默认 cp936
 # https://blog.csdn.net/weixin_35305721/article/details/79039308
 

@@ -10440,12 +10440,12 @@
     }
     
     var App = san.defineComponent({
-      template: `<div>
-          {{ name }}
-          <script>
-              window.xxx = 2;
-          </script>
-      </div>`,
+      template: '<div>\
+          {{ name }}\
+          <script>\
+              window.xxx = 2;\
+          </script>\
+      </div>',
       initData: function() {
         return { name: '呵呵' };
       },
