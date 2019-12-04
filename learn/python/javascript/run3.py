@@ -19,7 +19,7 @@ print sys.stdout.encoding
 print execjs.get().name
 
 # 打开 js 文件，并读取内容
-with open("./run1.js", "r") as f:
+with open("./run3.js", "r") as f:
   jsstr = f.read()
   f.close()
 
