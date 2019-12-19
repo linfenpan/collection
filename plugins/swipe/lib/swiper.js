@@ -46,6 +46,17 @@ Swiper.prototype = {
         this.setIndex(this.index);
         this.startTimer();
         this.init = noop;
+
+        var ctx = this;
+        // 页面突然可见了
+        ctx.fnPageshow = function() {
+            // NOTICE: 事件是全部小写的
+            if (!document[keyWithPrefix(prefix, "hidden")]) {
+                ctx.stopTimer();
+                ctx.setIndex(ctx.index, false);
+                ctx.startTimer();
+            }
+        };
     },
     reset: function(options){
         options = options || { };
@@ -279,11 +290,14 @@ Swiper.prototype = {
                 this.next();
                 this.startTimer();
             }.bind(this), this.interval);
+
+            document.addEventListener(prefix + "visibilitychange", this.fnPageshow, false);
         }
     },
     stopTimer: function(){
         if (this.interval) {
             window.clearTimeout(this.timer);
+            document.removeEventListener(prefix + "visibilitychange", this.fnPageshow, false);
         }
     },
     // 销毁

@@ -1,5 +1,19 @@
 var Empty = null;
 
+var keyWithPrefix = function(prefix, key){
+    return prefix ? prefix + key.replace(/^./, function(str){return str.toUpperCase()}) : key;
+}
+var prefix = "";
+;(function() {
+var list = ["webkit", "moz", "ms", ""];
+for(var i = 0, max = list.length; i < max; i++){
+    if(document[keyWithPrefix(list[i], "hidden")] !== undefined){
+        prefix = list[i];
+        break;
+    }
+}
+})();
+
 function noop(){ };
 
 function $(selector){

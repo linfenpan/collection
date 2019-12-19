@@ -1,8 +1,8 @@
 /*!
     @author da宗熊
-    @version 1.0.1
+    @version 1.0.2
     @license ISC
-    @lastModify 2019-9-30
+    @lastModify 2019-12-19
     @repository https://github.com/linfenpan/collection/tree/master/plugins/swipe
     @example
         var swiper = new Swiper(element, options)
@@ -17,10 +17,24 @@
         swiper.resize(); // 当内容宽度、高度有所变化时，调用
         swiper.destroy(); // 销毁swiper
     @bug
-        no listener at "transitionEnd" event, the behavior of the timer may be strange when we are away from the page
+        不会监听 "transitionEnd" 事件, 当页面嵌入在app的webview同时启动自动轮询时，因为visibilitychange事件不触发，所以动画会出现一瞬间的跳动。当然，不在webview内，一切正常得很~
 */
 !function(window){
 var Empty = null;
+
+var keyWithPrefix = function(prefix, key){
+    return prefix ? prefix + key.replace(/^./, function(str){return str.toUpperCase()}) : key;
+}
+var prefix = "";
+;(function() {
+var list = ["webkit", "moz", "ms", ""];
+for(var i = 0, max = list.length; i < max; i++){
+    if(document[keyWithPrefix(list[i], "hidden")] !== undefined){
+        prefix = list[i];
+        break;
+    }
+}
+})();
 
 function noop(){ };
 
@@ -238,6 +252,17 @@ Swiper.prototype = {
         this.setIndex(this.index);
         this.startTimer();
         this.init = noop;
+
+        var ctx = this;
+        // 页面突然可见了
+        ctx.fnPageshow = function() {
+            // NOTICE: 事件是全部小写的
+            if (!document[keyWithPrefix(prefix, "hidden")]) {
+                ctx.stopTimer();
+                ctx.setIndex(ctx.index, false);
+                ctx.startTimer();
+            }
+        };
     },
     reset: function(options){
         options = options || { };
@@ -471,11 +496,14 @@ Swiper.prototype = {
                 this.next();
                 this.startTimer();
             }.bind(this), this.interval);
+
+            document.addEventListener(prefix + "visibilitychange", this.fnPageshow, false);
         }
     },
     stopTimer: function(){
         if (this.interval) {
             window.clearTimeout(this.timer);
+            document.removeEventListener(prefix + "visibilitychange", this.fnPageshow, false);
         }
     },
     // 销毁

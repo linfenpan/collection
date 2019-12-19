@@ -28,7 +28,7 @@ var banner = `/*!
         swiper.resize(); // 当内容宽度、高度有所变化时，调用
         swiper.destroy(); // 销毁swiper
     @bug
-        no listener at "transitionEnd" event, the behavior of the timer may be strange when we are away from the page
+        不会监听 "transitionEnd" 事件, 当页面嵌入在app的webview同时启动自动轮询时，因为visibilitychange事件不触发，所以动画会出现一瞬间的跳动。当然，不在webview内，一切正常得很~
 */`;
 
 gulp.task("default", () => {
