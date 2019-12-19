@@ -4,6 +4,7 @@
     @license ISC
     @lastModify 2019-12-19
     @repository https://github.com/linfenpan/collection/tree/master/plugins/swipe
+    @demo https://linfenpan.github.io/demo/swiper/index.html
     @example
         var swiper = new Swiper(element, options)
     @options

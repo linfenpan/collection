@@ -15,6 +15,7 @@ var banner = `/*!
     @license <%= license %>
     @lastModify ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}
     @repository <%= repository.url %>
+    @demo https://linfenpan.github.io/demo/swiper/index.html
     @example
         var swiper = new Swiper(element, options)
     @options
