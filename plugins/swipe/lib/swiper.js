@@ -32,7 +32,7 @@ Swiper.prototype = {
     oldNextDistance: Empty, // 记录上一次 nextDistance 的值
     nextDistance: 0.2,  // 滚动多少距离，去到下一个
     timer: Empty,
-    interval: 3000,     // 3秒，自动切换到下一个
+    interval: 0,     // 3秒，自动切换到下一个
     repeat: true,       // 循环模式
 
     wrapSelector: ".swiper-wrap",

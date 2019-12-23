@@ -2,7 +2,7 @@
     @author da宗熊
     @version 1.0.2
     @license ISC
-    @lastModify 2019-12-19
+    @lastModify 2019-12-23
     @repository https://github.com/linfenpan/collection/tree/master/plugins/swipe
     @demo https://linfenpan.github.io/demo/swiper/index.html
     @example
@@ -239,7 +239,7 @@ Swiper.prototype = {
     oldNextDistance: Empty, // 记录上一次 nextDistance 的值
     nextDistance: 0.2,  // 滚动多少距离，去到下一个
     timer: Empty,
-    interval: 3000,     // 3秒，自动切换到下一个
+    interval: 0,     // 3秒，自动切换到下一个
     repeat: true,       // 循环模式
 
     wrapSelector: ".swiper-wrap",
