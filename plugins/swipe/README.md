@@ -58,7 +58,7 @@ new Swiper(elem[, options]);
 ## resetTime：重置事件
 ## nextDistance：到下一帧距离px或<1
 ## interval：自动切换到下一帧的时间，默认0，不自动切换
-## repeat：是否允许循环滑动
+## repeat：是否允许循环滑动，默认 false
 ## wrapSelector：wrap选择器，默认 .swiper-wrap
 ## childSelector：子元素选择器，默认 .swiper-item
 ## slideCallback：切换到下一帧的回调，动画完成前会执行
