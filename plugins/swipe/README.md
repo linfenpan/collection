@@ -3,7 +3,7 @@
 一个简单的广告切换组件，具体效果见: [例子](https://linfenpan.github.io/demo/swiper/index.html)
 
 # 使用
-需写入必要样式:
+需写入必要样式（可按需改写）:
 
 ```css
 .swiper {
