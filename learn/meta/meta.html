@@ -1,4 +1,8 @@
-
+<!--
+  参考文章： 
+    https://cloud.tencent.com/developer/article/1005266
+    https://segmentfault.com/a/1190000017784801
+-->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans" class="">
 <head>
@@ -26,29 +30,24 @@
       box-sizing: border-box;
       margin: 0 auto;
       background: #fff;
-    }
-    [data-dpr="1"] body {
-      max-width: 750px;
-    }
-    [data-dpr="2"] body {
-      max-width: 1500px;
-    }
-    [data-dpr="3"] body {
-      max-width: 2250px;
-    }
+    }    
     .sz-title {
-      font-size: 0.7rem;
+      font-size: 18px;
+      /*font-size: .9rem;*/
     }
     .sz-info {
-      font-size: 0.6rem;
+      font-size: 14px;
+      /*font-size: .7rem;*/
       color: #666;
     }
     #article {
       line-height: 1.65;
-      font-size: 0.65rem;
+      font-size: 16px;
+      /*font-size: .8rem;*/
     }
     .module {
-      margin-top: 0.75rem;
+      margin-top: 15px;
+      /*margin-top: .75rem;*/
     }
     .align-center {
       text-align: center;
@@ -57,6 +56,38 @@
       vertical-align: bottom;
       max-width: 100%;
     }
+    /** 修正不同 dpr 下的文字大小。懒一些的，用 rem */
+    [data-dpr="2"] body {
+      max-width: 1500px;
+    }
+    [data-dpr="2"] .sz-title {
+      font-size: 36px;
+    }
+    [data-dpr="2"] .sz-info {
+      font-size: 28px;
+    }
+    [data-dpr="2"] #article {
+      font-size: 32px;
+    }
+    [data-dpr="2"] .module {
+      margin-top: 30px;
+    }
+    
+    [data-dpr="3"] body {
+      max-width: 2250px;
+    }
+    [data-dpr="3"] .sz-title {
+      font-size: 54px;
+    }
+    [data-dpr="3"] .sz-info {
+      font-size: 42px;
+    }
+    [data-dpr="3"] #article {
+      font-size: 48px;
+    }
+    [data-dpr="3"] .module {
+      margin-top: 45px;
+    }
   </style>
   <script>
   (function() {
@@ -64,7 +95,8 @@
     var htmlEl = document.documentElement;
     var metaEl = document.querySelector('meta[name="viewport"]');
 
-    var maxFontSize = 40;
+    var maxFontSize = 40;      // 字体的最大宽度
+    var maxContentWidth = 750; // 内容的最大宽度
     var defaultFontSize = 0;
     try { defaultFontSize = parseFloat((htmlEl.currentStyle || getComputedStyle(htmlEl, null)).fontSize); } catch (e) {  }
 
@@ -73,7 +105,8 @@
 
     function _resize() {
       
-      dpr = window.devicePixelRatio || 1;
+      // dpr = window.devicePixelRatio || 1;
+      dpr = Math.ceil(window.devicePixelRatio || 1); // 模拟器里，会出现小数，你信吗？
       scale = 1 / dpr;
 
       // 设置viewport，进行缩放，达到高清效果
@@ -90,7 +123,7 @@
 
       // 计算 rem
       var rect = htmlEl.getBoundingClientRect();
-      var fontSize = maxFontSize * Math.min(window.innerWidth / dpr, 750) /  750 * dpr + 'px';
+      var fontSize = maxFontSize * Math.min(window.innerWidth / dpr, maxContentWidth) /  maxContentWidth * dpr + 'px';
 
       // 把文字，转为百分比
       if (defaultFontSize) {
@@ -116,7 +149,7 @@
   </script>
 </head>
 <body class="body">
-  <div class="zx-container theme-max-width">
+  <div class="zx-container theme-max-width">    
       <div class="
       s-zixun ">
           <div class="zixun-top-line"></div>
@@ -395,12 +428,12 @@
   -moz-box-flex:1;
   -ms-flex:1;
   flex:1;
-  border-left:1px solid hsla(0, 0%, 100%, .2);
+  border-left:1px solid #fff;
   padding:.25rem 0;
   padding-left:.5rem
 }
 .comp-coupon .coupon-desc {
-  border-top:1px solid hsla(0, 0%, 100%, .2);
+  border-top:1px solid #fff;
   padding:.375rem 0
 }
           </style>
