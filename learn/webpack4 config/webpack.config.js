@@ -98,6 +98,7 @@ module.exports = function(env, argv) {
         hot: true,
         open: !!processArgv.open,
         openPage: processArgv.open || '',
+        host: '0.0.0.0',
         useLocalIp: true,
         // 开发浏览器打开时，资源的路径
         publicPath: '/',
@@ -155,12 +156,19 @@ module.exports = function(env, argv) {
                 loader: 'babel-loader',
                 options: {
                   presets: [
-                    // 支持解析 esmodules，不然 umd 规范的文件，引用不进来
-                    [ "@babel/preset-env", { "targets": { "esmodules": true } } ]
+                    [ 
+                      "@babel/preset-env", {
+                        "targets": {
+                          // "esmodules": true, // 不想编出ie不识别的文件，就不要开此选项
+                          "browsers":[">= 99%", "not ie <= 8"],
+                        } 
+                      } 
+                    ]
                   ],
                   plugins: [
                     '@babel/plugin-proposal-class-properties',
-                    "@babel/plugin-transform-runtime"
+                    // 因为 _core/src/index.js 入口文件，已经引入了 es6-shim 了
+                    // ['@babel/plugin-transform-runtime', { "useESModules": true, "corejs": 3 }],
                   ]
                 }
               }
