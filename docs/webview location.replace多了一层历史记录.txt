@@ -1,0 +1,13 @@
+function locationReplace(url){
+  if(history.replaceState){
+    history.replaceState(null, document.title, url);
+    history.go(0);
+  }else{
+     location.replace(url);
+  }
+}
+
+
+²Î¿¼: https://www.zhangxinxu.com/wordpress/2017/02/page-link-url-history-null-not-record/
+	https://www.zhangxinxu.com/wordpress/2017/02/js-page-url-document-referrer/
+	https://stackoverflow.com/questions/14333620/android-webview-location-replace-doesnt-work
